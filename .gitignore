@@ -3,3 +3,4 @@ projectparts-env/
 *.sqlite3
 *.pyc
 __pycache__
+.vscode
