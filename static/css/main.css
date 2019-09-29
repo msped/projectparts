@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    src: url("../fonts/PaytoneOne-Regular.ttf");
+    font-family: 'Paytone';
+}
+
+@font-face {
+    src: url("../fonts/HammersmithOne-Regular.ttf");
+    font-family: 'Hammersmith';
+}
+
+.text-center {
+    text-align: center;
+}
+
+.navbar-brand {
+    font-family: 'Hammersmith', sans-serif;
+    font-size: 25pt;
+    letter-spacing: -2px;
+}
+
+.nav-item .nav-link {
+    font-family: 'Hammersmith', sans-serif;
+}
