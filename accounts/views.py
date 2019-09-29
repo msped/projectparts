@@ -17,7 +17,7 @@ def login(request):
                                      password=request.POST['password'])
             if user:
                 auth.login(user=user, request=request)
-                messages.success(request, "You have successfully loggin in.")
+                messages.success(request, "You have successfully logged in.")
                 pass # redirect to competition
             else:
                 login_form.add_error(None, "Your email or password are incorrect")
@@ -49,7 +49,8 @@ def register(request):
             if user:
                 auth.login(user=user, request=request)
                 messages.success(request, "You have successfully registered.")
-                return redirect(reverse('index'))
+                #return redirect(reverse('competition'))
+                pass
             else:
                 messages.error(request, "Unable to register account.")
     else:
