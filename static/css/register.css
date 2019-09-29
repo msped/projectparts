@@ -1,0 +1,24 @@
+.page-header {
+    margin: 40px 0;
+}
+
+h1 {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.text-muted {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.register-form {
+    margin: 25px auto;
+}
+
+.register-btn {
+    margin: 0 auto;
+}
+
+.login-link {
+    margin: 50px 0;
+}
+
