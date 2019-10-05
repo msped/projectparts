@@ -1,26 +1,16 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
 
-
-class EmailAuth:
-    """Auth by email"""
-    def authenticate(self, username=None, password=None):
-        """Get instance of user"""
-
-        try: 
-            user = User.objects.get(email=username)
+class EmailAuth(ModelBackend):
+    """Handles backend authenticate to be able to log in with an email (Django v2 provide by user Chetan https://stackoverflow.com/questions/37332190/django-login-with-email)"""
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        UserModel = get_user_model()
+        try:
+            user = UserModel.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
+        except UserModel.DoesNotExist:
+            return None
+        else:
             if user.check_password(password):
                 return user
-            return None
-        except User.DoesNotExist:
-            return None
-
-    def get_user(self, user_id):
-        """django auth sys to get user instance"""
-
-        try:
-            user = User.objects.get(pk=user_id)
-            if user.is_active:
-                return user
-            return None
-        except User.DoesNotExist:
-            return None
+        return None
