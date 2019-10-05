@@ -1,0 +1,23 @@
+h1, h2, .text-muted {
+    font-family: 'Hammersmith', sans-serif;
+    text-align: center;
+}
+
+.sub-heading {
+    margin-bottom: 25px;
+}
+
+.page-header {
+    margin-top: 25px;
+    margin-bottom: 50px
+}
+
+.control-label {
+    font-family: 'Hammersmith', sans-serif;
+    margin-bottom: 0;
+}
+
+.change-password {
+    text-align: center;
+    margin: 50px 0;
+}
