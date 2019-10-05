@@ -1,7 +1,8 @@
 from django import forms
+from django.core.validators import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
+from .models import Profile, BillingShipping
 
 class UserLoginForm(forms.Form):
     """Form to log a user in"""
@@ -44,18 +45,28 @@ class UserRegisterForm(UserCreationForm):
 
         return password2
 
-class UserDataForm(forms.Form):
+class UserDataForm(forms.ModelForm):
     """To change first name, last name, email and phone number"""
-    first_name = forms.CharField(label="First Name", max_length=25)
-    last_name = forms.CharField(label="Last Name", max_length=30)
-    phone_number = forms.CharField(label="Phone Number", max_length=11)
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
 
 
-class ShippingForm(forms.Form):
+class ProfileForm(forms.ModelForm):
+    """To change user phone number"""
+    class Meta:
+        model = Profile
+        fields = ['phone_number']
+
+
+class ShippingForm(forms.ModelForm):
     """To change billing / shipping form"""
-    address_line_1 = forms.CharField(label="Address Line 1", max_length=40)
-    address_line_2 = forms.CharField(label="Address Line 2", max_length=40, required=False)
-    town_city = forms.CharField(label="Town / City", max_length=40)
-    county = forms.CharField(label="County", max_length=40)
-    country = forms.CharField(label="Country", max_length=40)
-    postcode = forms.CharField(label="Postcode", max_length=10)
+    class Meta:
+        model = BillingShipping
+        fields = [
+            'address_line_1',
+            'address_line_2',
+            'town_city', 'county',
+            'country',
+            'postcode'
+        ]
