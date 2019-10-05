@@ -13,6 +13,11 @@
     font-family: 'Hammersmith';
 }
 
+.control-label {
+    font-family: 'Hammersmith', sans-serif;
+    margin-bottom: 0;
+}
+
 .flashes li {
     list-style: none
 }
