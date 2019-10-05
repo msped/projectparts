@@ -22,7 +22,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2']
 
     def clean_email(self):
         """checks if email is already in use"""
@@ -51,13 +51,11 @@ class UserDataForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-
 class ProfileForm(forms.ModelForm):
     """To change user phone number"""
     class Meta:
         model = Profile
         fields = ['phone_number']
-
 
 class ShippingForm(forms.ModelForm):
     """To change billing / shipping form"""
