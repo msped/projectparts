@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/999af8025a.js" SameSite="Lax"></script>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% block css %}{% endblock css %}
 
@@ -21,24 +22,24 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                     <a class="nav-link" href="">Home</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if request.resolver_match.url_name == 'competition' %}cactive{% endif %}">
                     <a class="nav-link" href="">Competition</a>
                 </li>
             </ul>
             <div class="navbar-collapse justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
+                    <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                     </li>
                     <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
                     {% else %}
-                    <li class="nav-item">
+                    <li class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
                     {% endif %}
@@ -68,8 +69,54 @@
         {% endblock content %}
     </div>
 
-    <footer>
-        
+    <footer class="container page-footer font-small blue">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <ul class="list-unstyled small-screen-center">
+                    <li>
+                        <a class="footer-text" href="">Home</a>
+                    </li>
+                    <li>
+                        <a class="footer-text" href="">Competition</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li>
+                        <a class="footer-text" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li>
+                        <a class="footer-text" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a class="footer-text" href="{% url 'register' %}">Register</a>
+                    </li>
+                    <li>
+                        <a class="footer-text" href="{% url 'login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="offset-col-col-md-6 col-sm-6 col-xs-6 social-links">
+                <h5 class="text-center">Follow us on Social Media <br> for winner accountments & updates!</h5>
+                <ul class="text-center">
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://www.twitter.com">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://www.instagram.com">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </footer>
 
     <!-- #region -->
