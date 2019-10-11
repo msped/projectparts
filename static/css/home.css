@@ -1,0 +1,50 @@
+.jumbotron {
+    margin: 2.5% 0 5% 0;
+  } 
+
+.jumbo-class h1, .jumbo-class p, .jumbo-class a {
+    font-family: 'Hammersmith', sans-serif;
+
+}
+
+h2 {
+    text-align: center;
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.easy-enter {
+    text-align: center;
+    margin: 20px 0 50px 0;
+    padding: 15px;
+}
+
+.easy-enter div p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.easy-enter div i {
+    font-size: 60pt;
+    color: rgb(104, 104, 104);
+}
+
+.ticket-site-info {
+    margin-top: 5%;
+}
+
+.ticket-site-info div p {
+    font-family: 'Playtone', sans-serif;
+}
+
+h3 {
+    font-family: 'Hammersmith', sans-serif;
+    font-size: 32pt;
+}
+
+.tickets-left-div, #tickets-left {
+    text-align: center;
+}
+
+#tickets-left {
+    font-family: 'Hammersmith', sans-serif;
+    font-size: 27pt;
+}
