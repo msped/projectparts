@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, BillingShipping
+from .models import Profile
 
 class UserLoginForm(forms.Form):
     """Form to log a user in"""
@@ -60,7 +60,7 @@ class ProfileForm(forms.ModelForm):
 class ShippingForm(forms.ModelForm):
     """To change billing / shipping form"""
     class Meta:
-        model = BillingShipping
+        model = Profile
         fields = [
             'address_line_1',
             'address_line_2',

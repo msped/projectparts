@@ -5,7 +5,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from accounts.forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
-from .models import Profile, BillingShipping
+from .models import Profile
 
 def login(request):
     """Logs a user in / display login page"""
@@ -74,7 +74,7 @@ def profilepage(request):
                 return redirect('profile')
         else:
             shipping_form = ShippingForm(request.POST,
-                                         instance=request.user.billingshipping)
+                                         instance=request.user.profile)
             if shipping_form.is_valid():
                 shipping_form.save()
                 messages.success(request, "User Information Updated.")
@@ -88,7 +88,7 @@ def profilepage(request):
         else:
             user_form = UserDataForm(instance=request.user)
             profile_form = ProfileForm(instance=request.user.profile)
-            shipping_form = ShippingForm(instance=request.user.billingshipping)
+            shipping_form = ShippingForm(instance=request.user.profile)
 
     forms = {
         'UserDataForm': user_form,
