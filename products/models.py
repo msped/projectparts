@@ -7,7 +7,7 @@ class Categories(models.Model):
     category = models.CharField(max_length=75)
 
     def __str__(self):
-        return self.category 
+        return self.category
 
 class Product(models.Model):
     """Model for each Product"""
@@ -20,3 +20,4 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+        
