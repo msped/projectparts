@@ -7,3 +7,9 @@ def products_view(request):
     products = Product.objects.filter()
 
     return render(request, 'products.html', {'products': products})
+
+def product_detail(request, product_id):
+    """Shows extra detail on a product"""
+    product = Product.objects.filter(id=product_id)
+
+    return render(request, 'product_detail.html', {'product': product})
