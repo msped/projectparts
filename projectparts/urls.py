@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
+from django.views import static
+from .settings import MEDIA_ROOT
+
 from home.views import home
 
 urlpatterns = [
@@ -24,4 +27,5 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls')),
     url(r'^cart/', include('cart.urls')),
     url(r'^tickets/', include('products.urls')),
+     url(r'^media/(?P<path>.*)$', static.serve, {'document_root': MEDIA_ROOT})
 ]
