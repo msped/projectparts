@@ -1,0 +1,27 @@
+h1, .text-muted {
+    font-family: 'Hammersmith', sans-serif;
+    text-align: center;
+}
+
+.tickets {
+    margin: 7% 0;
+}
+
+.card-title {
+    font-family: 'Hammersmith', sans-serif;
+    font-size: 14pt;
+    padding-top: 5px;
+}
+
+.card-img-top {
+    border-radius: 7px;
+}
+
+.card-body div p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.quick-add {
+    padding: 0;
+}
+

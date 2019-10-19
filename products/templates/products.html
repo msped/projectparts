@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/products.css' %}">{% endblock css %}
+
+{% block title%}Select Tickets{% endblock title %}
+
+{% block content %}
+<h1>Tickets</h1>
+<p class="text-muted">Pick the tickets you wish to play.</p>
+
+<!--Search-->
+
+<div class="tickets">
+    {% for product in products %}
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 card">
+        <div class="card-title">{{ product.name }}</div>
+        <img src="{{ MEDIA_URL }}{{ product.img }}" class="card-img-top" alt="{{ product.name }}">
+        <div class="card-body">
+            <div class="row">
+                <p>Ticket Price: £{{ product.ticket_price }}</p>
+            </div>
+            <div class="row">
+                <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 quick-add"
+                    action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input name="quantity" type="hidden" value="1">
+                        <button class="btn btn-sm btn-primary" type="submit">1</button>
+                    </div>
+                </form>
+                <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 quick-add"
+                    action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input name="quantity" type="hidden" value="5">
+                        <button class="btn btn-sm btn-primary" type="submit">5</button>
+                    </div>
+                </form>
+                <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 quick-add"
+                    action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input name="quantity" type="hidden" value="10">
+                        <button class="btn btn-sm btn-primary" type="submit">10</button>
+                    </div>
+                </form>
+                <a class="btn btn-sm btn-primary col-lg-6 col-md-6 col-sm-6 col-xs-6 extra-details"
+                    href="{% url 'product_detail' product.id%}">Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
