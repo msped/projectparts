@@ -7,18 +7,42 @@ h1, .text-muted {
     margin: 7% 0;
 }
 
+.card {
+    border: none;
+}
+
 .card-title {
     font-family: 'Hammersmith', sans-serif;
-    font-size: 14pt;
+    font-size: 13pt;
     padding-top: 5px;
+    margin: 0;
 }
 
-.card-img-top {
+.image-div {
+    height: 150px;
+}
+
+.card-img {
     border-radius: 7px;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background-position: center;
+    height: inherit;
 }
 
-.card-body div p {
+.card-body {
+    padding: .75rem;
+}
+
+.details {
+    margin-bottom: 5%;
+    
+}
+
+.details p {
     font-family: 'Hammersmith', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .quick-add {
