@@ -1,0 +1,48 @@
+h1 {
+    font-family: 'Hammersmith', sans-serif;
+    text-align: center;
+}
+
+h2, .text-muted {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+
+img {
+    border-radius: 7px;
+    margin: 50px 0;
+}
+
+.ticket-price p, .product-price p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.select-tickets {
+    margin: 25px 0 30px 0;
+}
+
+.ticket-price p {
+    text-align: center;
+    font-size: 14pt;
+}
+
+.form-control {
+    width: 25%;
+}
+
+.add-to-cart {
+    margin: 0 15px;
+}
+
+.description p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.description h2 {
+    text-decoration: underline;
+}
+
+.product-fits p {
+    font-family: 'Hammersmith', sans-serif;
+    font-size: 12pt;
+}
