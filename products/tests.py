@@ -21,3 +21,20 @@ class VehicleModelTests(TestCase):
 
         self.assertEqual(vehicle.make, 'Ford')
         self.assertEqual(vehicle.model, 'Focus')
+
+class CategoriesModelTests(TestCase):
+    """Test Categories Model"""
+
+    def test_str(self):
+        """Test __str__ return"""
+        test_name = Categories(category="Exhaust")
+        self.assertEqual(str(test_name), 'Exhaust')
+
+    def test_categories_model_creation(self):
+        """Test creation of a category"""
+        categories = Categories(
+            category='Interior'
+        )
+        categories.save()
+
+        self.assertEqual(categories.category, 'Interior')
