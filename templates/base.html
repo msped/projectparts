@@ -25,7 +25,7 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'competition' %}cactive{% endif %}">
+                <li class="nav-item {% if request.resolver_match.url_name == 'products' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'products' %}">Competition</a>
                 </li>
             </ul>
