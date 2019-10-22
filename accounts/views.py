@@ -5,12 +5,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from accounts.forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
-from .models import Profile
 
 def login(request):
     """Logs a user in / display login page"""
     if request.user.is_authenticated:
-        pass # redirect home
+        return redirect('home')
 
     if request.method == "POST":
         login_form = UserLoginForm(request.POST)
@@ -20,7 +19,7 @@ def login(request):
             if user:
                 auth.login(user=user, request=request)
                 messages.success(request, "You have successfully logged in.")
-                pass # redirect to competition
+                return redirect('home')
             else:
                 login_form.add_error(None, "Your email or password are incorrect")
     else:
@@ -50,8 +49,7 @@ def register(request):
             if user:
                 auth.login(user=user, request=request)
                 messages.success(request, "You have successfully registered.")
-                #return redirect(reverse('competition'))
-                pass
+                return redirect('home')
             else:
                 messages.error(request, "Unable to register account.")
     else:
