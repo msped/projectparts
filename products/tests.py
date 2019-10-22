@@ -68,3 +68,44 @@ class ProductAppViewsTest(TestCase):
         )
         response = self.client.get('/tickets/1/')
         self.assertEqual(response.status_code, 200)
+
+class ProductModelTests(TestCase):
+    """Tests for products Model"""
+
+    def test_str(self):
+        """Test __str__ return"""
+        test_name = Product(name='Product')
+        self.assertEqual(str(test_name), 'Product')
+
+    def test_product_creation_no_image(self):
+        """Test product model"""
+        category = Categories(
+            category="Exterior"
+        )
+        category.save()
+        vehicle = Vehicle(
+            make="Mercedes",
+            model="A Class"
+        )
+        vehicle.save()
+        product = Product(
+            name="Test Product",
+            description="Description",
+            img="",
+            category=category,
+            ticket_price="2.50",
+            product_price="795",
+            product_link="https://www.github.com",
+            fits=vehicle
+        )
+        product.save()
+
+        self.assertEqual(product.name, 'Test Product')
+        self.assertEqual(product.description, 'Description')
+        self.assertEqual(product.img, '')
+        self.assertEqual(product.category.category, 'Exterior')
+        self.assertEqual(product.ticket_price, '2.50')
+        self.assertEqual(product.product_price, '795')
+        self.assertEqual(product.product_link, 'https://www.github.com')
+        self.assertEqual(product.fits.make, 'Mercedes')
+        self.assertEqual(product.fits.model, 'A Class')
