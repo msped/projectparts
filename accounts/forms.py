@@ -28,7 +28,9 @@ class UserRegisterForm(UserCreationForm):
         """checks if email is already in use"""
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
-        if User.objects.filter(email=email).exclude(username=username):
+        if email == '':
+            raise forms.ValidationError(u'Email address is required')
+        elif User.objects.filter(email=email).exclude(username=username):
             raise forms.ValidationError(u'Email address must be unique')
         return email
 
