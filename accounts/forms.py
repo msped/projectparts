@@ -49,24 +49,38 @@ class UserRegisterForm(UserCreationForm):
 
 class UserDataForm(forms.ModelForm):
     """To change first name, last name, email and phone number"""
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
 class ProfileForm(forms.ModelForm):
     """To change user phone number"""
+    phone_number = forms.CharField(max_length=11)
+
     class Meta:
         model = Profile
         fields = ['phone_number']
 
 class ShippingForm(forms.ModelForm):
     """To change billing / shipping form"""
+    address_line_1 = forms.CharField(max_length=40)
+    address_line_2 = forms.CharField(max_length=40, required=False)
+    town_city = forms.CharField(max_length=40)
+    county = forms.CharField(max_length=40)
+    country = forms.CharField(max_length=40)
+    postcode = forms.CharField(max_length=10)
+
     class Meta:
         model = Profile
         fields = [
             'address_line_1',
             'address_line_2',
-            'town_city', 'county',
+            'town_city',
+            'county',
             'country',
             'postcode'
         ]
