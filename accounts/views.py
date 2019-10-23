@@ -36,7 +36,7 @@ def logout(request):
 def register(request):
     """register user"""
     if request.user.is_authenticated:
-        return redirect(reverse('index'))
+        return redirect('home')
 
     if request.method == 'POST':
         register_form = UserRegisterForm(request.POST)
