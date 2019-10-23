@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     """Information relating to a single user not in User model"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=11, blank=False, default='Phone Number')
+    phone_number = models.CharField(max_length=11, blank=False, default='Phone No.')
     address_line_1 = models.CharField(max_length=40, blank=False, default='Address Line 1')
     address_line_2 = models.CharField(max_length=40, blank=True, default='Address Line 2')
     town_city = models.CharField(max_length=40, blank=False, default='Town / City')
