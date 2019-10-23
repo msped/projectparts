@@ -5,6 +5,70 @@ from .forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, S
 
 # Create your tests here.
 
+class AccountViewsTest(TestCase):
+    """Test for Account Views"""
+
+    def setUp(self):
+        self.user = {
+            'username': 'test user',
+            'email': 'test@gmail.com',
+            'password': 'testpassword'
+        }
+        User.objects.create_user(**self.user)
+
+    def test_login_page_response(self):
+        """Test response of login page when not logged in"""
+        response = self.client.get('/accounts/login/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_profile_page_response_user_not_logged_in(self):
+        """Test where the profile page should return to login page if
+        no user logged in"""
+        response = self.client.get('/accounts/profile/', follow=True)
+        self.assertIn(b'<h1>Login</h1>', response.content)
+
+    def test_profile_page_response_user_logged_in(self):
+        """Test page response when user is logged in"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.get('/accounts/profile/', follow=True)
+        self.assertIn(b'<h1>Profile</h1>', response.content)
+
+    def test_logout_when_user_logged_in(self):
+        """Test logout function"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.get('/accounts/logout/', follow=True)
+        self.assertIn(b'<h1>Login</h1>', response.content)
+
+    def test_logout_when_logged_out(self):
+        """Test where the logout view should return to login page if
+        no user logged in"""
+        response = self.client.get('/accounts/logout/', follow=True)
+        self.assertIn(b'<h1>Login</h1>', response.content)
+
+    def test_change_password_when_user_logged_in(self):
+        """Test change password when a user is logged in"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.get('/accounts/change_password/', follow=True)
+        self.assertIn(b'<h1>Change Password</h1>', response.content)
+
+    def test_change_password_when_user_logged_out(self):
+        """Test where the change passowrd should return to login page if
+        no user logged in"""
+        response = self.client.get('/accounts/change_password/', follow=True)
+        self.assertIn(b'<h1>Login</h1>', response.content)
+
 class AccountFormsTests(TestCase):
     """Test all forms within the accounts app"""
 
