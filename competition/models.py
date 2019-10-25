@@ -6,14 +6,14 @@ from cart.models import Enteries
 
 class Competition(models.Model):
     """Model for each competition"""
-    tickets = models.IntegerField()
+    tickets = models.IntegerField(default=4000)
     tickets_left = models.IntegerField()
     question = models.CharField()
     answer_1 = models.CharField()
     answer_2 = models.CharField()
     answer_3 = models.CharField()
     correct_answer = models.CharField()
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=False)
     winner = models.ForeignKey(Enteries, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
