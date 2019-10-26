@@ -12,9 +12,11 @@ class Competition(models.Model):
     answer_3 = models.CharField(max_length=200)
     correct_answer = models.CharField(max_length=200)
     is_active = models.BooleanField(default=False)
-    winner = models.ForeignKey('cart.Enteries', on_delete=models.DO_NOTHING, null=True)
+    winner = models.ForeignKey('cart.Enteries', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
         if self.is_active:
             return f'Competition {self.id}: {self.tickets_left}'
+        if self.tickets_left > 0:
+            return f'Competition {self.id}: Pending'
         return f'Competition {self.id}: Ended'
