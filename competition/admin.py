@@ -3,8 +3,10 @@ from .models import Competition
 
 # Register your models here.
 
-class competitionAdmin(admin.ModelAdmin):
-    exlcude = ('winner',)
+class CompetitionAdmin(admin.ModelAdmin):
+    """Custom admin so that the winner cant be changed on the dashboard to
+    keep the competition fair"""
+    readonly_fields = ('winner',)
 
 
-admin.site.register(Competition, competitionAdmin)
+admin.site.register(Competition, CompetitionAdmin)
