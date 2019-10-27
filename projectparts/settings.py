@@ -28,8 +28,11 @@ SECRET_KEY = os.environ.get('SECERT_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ADMINS = [
+    ('Matt', os.environ.get("EMAIL_ADDRESS"))
+]
 
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -144,6 +147,9 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SERVER_EMAIL = 'noreply@projectparts.com'
+EMAIL_SUBJECT_PREFIX = ''
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_ADDRESS')
