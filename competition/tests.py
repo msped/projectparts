@@ -19,7 +19,7 @@ class ModelTest(TestCase):
         )
         comp.save()
 
-        self.assertEqual("Competition 1: Pending", "Competition 1: Pending")
+        self.assertEqual(str(comp), f"Competition {comp.id}: Pending")
 
     def test_str_comp_active(self):
         """Test str return for competition that is active"""
@@ -35,13 +35,13 @@ class ModelTest(TestCase):
         )
         comp.save()
 
-        self.assertEqual("Competition 1: 5000", "Competition 1: 5000")
+        self.assertEqual(str(comp), f"Competition {comp.id}: 5000")
 
     def test_str_comp_ended(self):
         """Test str return for competition has ended"""
         comp = Competition(
             tickets=5000,
-            tickets_left=5000,
+            tickets_left=0,
             question="Is this a test?",
             answer_1="Yes",
             answer_2="No",
@@ -50,7 +50,7 @@ class ModelTest(TestCase):
         )
         comp.save()
 
-        self.assertEqual("Competition 1: Ended", "Competition 1: Ended")
+        self.assertEqual(str(comp), f"Competition {comp.id}: Ended")
 
     def test_create_competition(self):
         """Test creation of a competition"""
