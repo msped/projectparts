@@ -20,3 +20,8 @@ def new_competition():
             'admin_email.html'
         )
     )
+
+def get_current_ticket_amount():
+    """Get tickets left in current competition for homepage"""
+    comp = Competition.objects.get(is_active=True)
+    return comp.tickets_left
