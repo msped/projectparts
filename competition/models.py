@@ -12,6 +12,7 @@ class Competition(models.Model):
     answer_3 = models.CharField(max_length=200, default="Answer 3")
     correct_answer = models.CharField(max_length=200, default="Correct Answer")
     is_active = models.BooleanField(default=False)
+    next_competition = models.BooleanField(default=True)
     winner = models.ForeignKey('cart.Enteries', on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
