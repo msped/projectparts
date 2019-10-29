@@ -1,7 +1,7 @@
 from random import randint
 from django.core.mail import mail_admins, send_mass_mail
 from django.template import loader
-from cart.models import Enteries
+from cart.models import Entries
 from .models import Competition
 
 def new_competition():
@@ -32,7 +32,7 @@ def pick_competition_winner():
     """Get Competition winner and send out emails"""
     current_comp = Competition.objects.get(is_active=True, tickets_left=0)
     r_number = randint(1, current_comp.tickets)
-    winning_ticket = Enteries.objects.get(
+    winning_ticket = Entries.objects.get(
         related_competition=current_comp.id,
         ticket_number=r_number,
         is_paid=True
@@ -42,9 +42,9 @@ def pick_competition_winner():
 
     winners_email = winning_ticket.user.email
 
-    enteries = Enteries.objects.get(related_competition=current_comp.id)
+    comp_entries = Entries.objects.get(related_competition=current_comp.id)
     recipient_list = []
-    for entry in enteries:
+    for entry in comp_entries:
         user_email = entry.user.email
         if winners_email != user_email:
             recipient_list.append(user_email)

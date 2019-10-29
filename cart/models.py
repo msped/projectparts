@@ -6,8 +6,8 @@ from competition.models import Competition
 
 # Create your models here.
 
-class Enteries(models.Model):
-    """Model for competition enteries / cart item for registered users"""
+class Entries(models.Model):
+    """Model for competition entries / cart item for registered users"""
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     related_competition = models.OneToOneField(Competition, on_delete=models.DO_NOTHING)
     product = models.OneToOneField(Product, on_delete=models.DO_NOTHING)
