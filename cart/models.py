@@ -13,6 +13,7 @@ class Entries(models.Model):
     product = models.OneToOneField(Product, on_delete=models.DO_NOTHING)
     ticket_number = models.IntegerField(null=True)
     is_paid = models.BooleanField(default=False)
+    entry_date = models.DateField(null=True)
 
     def __str__(self):
         return f'Number: {self.ticket_number} by User: {self.user}'
