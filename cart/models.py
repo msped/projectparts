@@ -6,14 +6,14 @@ from competition.models import Competition
 
 # Create your models here.
 
-class Entries(models.Model):
-    """Model for competition entries / cart item for registered users"""
+class Orders(models.Model):
+    """Model for users order / cart"""
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     related_competition = models.OneToOneField(Competition, on_delete=models.DO_NOTHING)
     product = models.OneToOneField(Product, on_delete=models.DO_NOTHING)
-    ticket_number = models.IntegerField(null=True)
+    quantity = models.IntegerField(default='1')
     is_paid = models.BooleanField(default=False)
-    entry_date = models.DateField(null=True)
+    order_date = models.DateField(null=True)
 
     def __str__(self):
-        return f'Number: {self.ticket_number} by User: {self.user}'
+        return f'Order {self.id} - Paid {self.is_paid}'
