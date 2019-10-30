@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, reverse
+from competition.models import Competition
+from .models import Orders
 
 # Create your views here.
 
@@ -11,26 +13,52 @@ def add_to_cart(request, product_id):
 
     quantity = int(request.POST.get('quantity'))
 
-    cart = request.session.get('cart', {})
+    comp = Competition.objects.get(is_active=True)
 
-    if product_id in cart:
-        cart[product_id] = int(cart[product_id]) + quantity
+    if request.user.is_authenticated:
+        order = Orders(
+            user=request.user.id,
+            related_competition=comp.id,
+            product=product_id,
+            quantity=quantity
+        )
+        order.save()
+        return redirect(reverse('products'))
     else:
-        cart[product_id] = cart.get(product_id, quantity)
+        cart = request.session.get('cart', {})
 
-    request.session['cart'] = cart
-    return redirect(reverse('home'))
+        if product_id in cart:
+            cart[product_id] = int(cart[product_id]) + quantity
+        else:
+            cart[product_id] = cart.get(product_id, quantity)
+
+        request.session['cart'] = cart
+        return redirect(reverse('products'))
 
 def update_cart(request, product_id):
     """Updates cart contents"""
 
     quantity = int(request.POST.get('quantity'))
 
-    cart = request.session.get('cart', {})
-
-    if quantity > 0:
-        cart[product_id] = quantity
+    if request.user.is_authenticated:
+        comp = Competition.objects.get(is_active=True)
+        order = Orders.objects.get(
+            user=request.user.id,
+            related_competition=comp.id,
+            product=product_id,
+            is_paid=False
+        )
+        if quantity > 0:
+            order.quantity = quantity
+            order.save()
+        else:
+            order.delete()
     else:
-        cart.pop(product_id)
+        cart = request.session.get('cart', {})
 
-    return redirect(reverse('view_cart'))
+        if quantity > 0:
+            cart[product_id] = quantity
+        else:
+            cart.pop(product_id)
+
+        return redirect(reverse('products'))
