@@ -12,7 +12,10 @@ def cart_contents(request):
         total = 0
         product_amount = 0
 
-        cart_tickets = Orders.objects.get(user=request.user.id, is_paid=False)
+        try:
+            cart_tickets = Orders.objects.get(user=request.user.id, is_paid=False)
+        except Orders.DoesNotExist:
+            return None
         for item in cart_tickets:
             product = get_object_or_404(Product, pk=item.id)
             total += product.ticket_price
