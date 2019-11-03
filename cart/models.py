@@ -8,9 +8,9 @@ from competition.models import Competition
 
 class Orders(models.Model):
     """Model for users order / cart"""
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
-    related_competition = models.OneToOneField(Competition, on_delete=models.DO_NOTHING)
-    product = models.OneToOneField(Product, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    related_competition = models.ForeignKey(Competition, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField(default='1')
     is_paid = models.BooleanField(default=False)
     order_date = models.DateField(null=True)
