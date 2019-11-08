@@ -5,4 +5,3 @@ projectparts-env/
 __pycache__
 .vscode
 .env
-*/migrations
