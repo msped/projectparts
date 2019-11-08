@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls')),
     url(r'^cart/', include('cart.urls')),
     url(r'^tickets/', include('products.urls')),
+    url(r'^checkout/', include('checkout.urls')),
     url(r'^media/(?P<path>.*)$', static.serve, {'document_root': MEDIA_ROOT})
 ]
