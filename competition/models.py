@@ -16,7 +16,8 @@ class Competition(models.Model):
     winner = models.ForeignKey(
         'checkout.Entries',
         on_delete=models.DO_NOTHING,
-        null=True, blank=True
+        null=True,
+        blank=True
     )
 
     def __str__(self):
