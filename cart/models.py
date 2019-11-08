@@ -11,7 +11,7 @@ class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     related_competition = models.ForeignKey(Competition, on_delete=models.DO_NOTHING)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
-    quantity = models.IntegerField(default='1')
+    quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)
     order_date = models.DateField(null=True)
 
