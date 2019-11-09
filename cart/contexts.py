@@ -13,7 +13,7 @@ def cart_contents(request):
         product_amount = 0
 
         try:
-            cart_tickets = Orders.objects.get(user=request.user.id, is_paid=False)
+            cart_tickets = Orders.objects.filter(user=request.user.id, is_paid=False)
         except Orders.DoesNotExist:
             return None
         for item in cart_tickets:
