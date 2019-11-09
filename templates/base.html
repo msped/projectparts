@@ -79,7 +79,7 @@
                     <li>
                         <a class="footer-text" href="{% url 'products' %}">Competition</a>
                     </li>
-                    {% if current_user.is_authenticated %}
+                    {% if user.is_authenticated %}
                     <li>
                         <a class="footer-text" href="{% url 'profile' %}">Profile</a>
                     </li>
