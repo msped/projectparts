@@ -1,5 +1,4 @@
 from django import forms
-from competition.models import Competition
 
 class PaymentForm(forms.Form):
     """Payment form for stripe"""
