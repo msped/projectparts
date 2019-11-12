@@ -13,6 +13,7 @@ class Orders(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)
+    user_answer_correct = models.BooleanField(default=False)
     order_date = models.DateField(null=True)
 
     def __str__(self):
