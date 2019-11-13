@@ -3,7 +3,7 @@ from django.shortcuts import render, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.utils import timezone
+from datetime import datetime
 import stripe
 from competition.models import Competition
 from cart.models import Orders
@@ -12,7 +12,7 @@ from .forms import PaymentForm
 
 # Create your views here.
 
-stripe.api_key = settings.STRIPE_SECERT
+stripe.api_key = settings.STRIPE_SECRET
 
 @login_required
 def checkout(request):
@@ -34,6 +34,7 @@ def checkout(request):
             for item in orders:
                 total += item.quantity * item.product.ticket_price
                 item.is_paid = True
+                item.order_date = datetime.today().strftime('%Y-%M-%D')
                 if user_answer == comp.correct_answer:
                     item.user_answer_correct = True
                 item.save()
