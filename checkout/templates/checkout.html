@@ -25,18 +25,20 @@
 <div class="row">
     <div class="order-details p-3 col-lg-8 col-md-8 col-sm-12 col-xs-12">
         <h2>Order Details</h2>
-        <div class="row">
-            {% for c in orders %}
-            <table>
-                <tr>
-                    <td><img src="{{ c.product.img }}" alt="{{ c.product.name }}"></td>
-                    <td>{{ c.product.name }}</td>
-                    <td>{{ c.quantity }}</td>
-                    <td>{{ c.product_amount }}</td>
-                </tr>
-            </table>
+        <table class="table table-borderless">
+            <tr>
+                <th scope="col" class="order-product">Product</th>
+                <th scope="col" class="order-qty">Quantity</th>
+                <th scope="col" class="order-price">Price</th>
+            </tr>
+            {% for p in orders %}
+            <tr>
+                <td>{{ p.product.name }}</td>
+                <td>{{ p.quantity }}</td>
+                <td>{{ p.price }}</td>
+            </tr>
             {% endfor %}
-        </div>
+        </table>
     </div>
 
     <div class="profile-details col-lg-4 col-md-4 col-sm-12 col-xs-12">
