@@ -14,10 +14,10 @@ def cart_contents(request):
 
         try:
             cart_tickets = Orders.objects.filter(user=request.user.id, is_paid=False)
-        except Orders.DoesNotExist:
+        except cart_tickets.DoesNotExist:
             return None
         for item in cart_tickets:
-            product = get_object_or_404(Product, pk=item.id)
+            product = get_object_or_404(Product, pk=item.product_id)
             total += product.ticket_price
             product_amount += 1
             cart_items.append({
@@ -40,7 +40,7 @@ def cart_contents(request):
         product_amount = 0
 
         for id, quantity in cart.items():
-            product = get_object_or_404(Product, pk=id)
+            product = get_object_or_404(Product, id=id)
             total += quantity * product.price
             product_amount += quantity
             cart_items.append({
