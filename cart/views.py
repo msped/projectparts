@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.models import User
 from competition.models import Competition
+from products.models import Product
 from .models import Orders
 
 # Create your views here.
@@ -14,12 +16,14 @@ def add_to_cart(request, product_id):
     quantity = int(request.POST.get('quantity'))
 
     comp = Competition.objects.get(is_active=True)
+    user = User.objects.get(id=request.user.id)
 
     if request.user.is_authenticated:
+        product = Product.objects.get(id=product_id)
         order = Orders(
-            user=request.user.id,
-            related_competition=comp.id,
-            product=product_id,
+            user=user,
+            related_competition=comp,
+            product=product,
             quantity=quantity
         )
         order.save()
