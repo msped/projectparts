@@ -8,9 +8,47 @@
 {% block title%}Cart{% endblock title %}
 
 {% block content %}
-<h1>Cart</h1>
+<div class="page-header">
+    <h1 class="text-center">Cart</h1>
+    <p class="text-center text-muted">Edit your cart or proceed to checkout.</p>
+</div>
 
 <div class="products">
-    
+    <div class="cart-items offset-lg-2 col-lg-8 offset-md-2 col-md-8 col-sm-12 col-xs-12">
+        <table class="table table-borderless">
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col"></th>
+            </tr>
+            {% for p in orders %}
+            <tr>
+                <td>{{ p.product.name }}</td>
+                <td>
+                    <a class="d-inline-block" href="{% url 'decrease_item' p.id %}">
+                        <i class="fas fa-minus-circle"></i>
+                    </a>
+                    <p class="d-inline-block p-1">{{ p.quantity }}</p>
+                    <a class="d-inline-block" href="{% url 'increase_item' p.id %}">
+                        <i class="fas fa-plus-circle"></i>
+                    </a>
+                </td>
+                <td>£{{ p.product.ticket_price }}</td>
+                <td>
+                    <a href="{% url 'remove_item' p.id %}">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="total col-md-3 offset-md-9 col-4 offset-8">
+            <p>Total: £{{ total }}</p>
+        </div>
+    </div>
+    <div class="checkout text-center">
+        <a class="btn btn-outline-dark" href="{% url 'checkout' %}">Go to Checkout</a>
+    </div>
 </div>
 {% endblock content %}
