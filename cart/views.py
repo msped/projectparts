@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from competition.models import Competition
 from products.models import Product
 from .models import Orders
@@ -10,7 +11,10 @@ from .models import Orders
 @login_required
 def view_cart(request):
     """Renders the cart view"""
-    orders = Orders.objects.filter(user=request.user.id)
+    try:
+        orders = Orders.objects.filter(user=request.user.id)
+    except Orders.DoesNotExist:
+        orders = False
     return render(request, 'cart.html', {'orders': orders})
 
 @login_required
@@ -21,15 +25,29 @@ def add_to_cart(request, product_id):
 
     comp = Competition.objects.get(is_active=True)
 
-    user = User.objects.get(id=request.user.id)
-    product = Product.objects.get(id=product_id)
-    order = Orders.objects.get_or_create(
-        user=user,
-        related_competition=comp,
-        product=product,
-        quantity=quantity
+    order = Orders.objects.filter(
+        user=request.user.id,
+        related_competition=comp.id,
+        product=product_id,
+        is_paid=False
     )
-    order.save()
+
+    if order.exists():
+        new_qty = order[0].quantity + quantity
+        order.update(quantity=new_qty)
+        messages.success(request, '{} tickets added to cart.'.format(quantity))
+    else:
+        product = Product.objects.get(id=product_id)
+        user = User.objects.get(id=request.user.id)
+        new_order = Orders.objects.create(
+            user=user,
+            related_competition=comp,
+            product=product,
+            quantity=quantity
+        )
+        new_order.save()
+        messages.success(request, '{} tickets added to cart.'.format(quantity))
+
     return redirect(reverse('products'))
 
 @login_required
@@ -41,7 +59,7 @@ def increase_item(request, order_id):
 
     order.quantity = qty
     order.save()
-    return redirect(reverse('view_cart'))
+    return qty
 
 @login_required
 def decrease_item(request, order_id):
@@ -52,13 +70,13 @@ def decrease_item(request, order_id):
 
     order.quantity = qty
     order.save()
-    return redirect(reverse('view_cart'))
+    return qty
 
 @login_required
 def remove_item(request, order_id):
     """Remove an item from the cart"""
-
     order = Orders.objects.filter(id=order_id)
     order.delete()
+    messages.error(request, 'Ticket(s) Removed.')
 
     return redirect(reverse('view_cart'))
