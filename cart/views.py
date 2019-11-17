@@ -59,7 +59,7 @@ def increase_item(request, order_id):
 
     order.quantity = qty
     order.save()
-    return qty
+    return redirect(reverse('view_cart'))
 
 @login_required
 def decrease_item(request, order_id):
@@ -70,7 +70,7 @@ def decrease_item(request, order_id):
 
     order.quantity = qty
     order.save()
-    return qty
+    return redirect(reverse('view_cart'))
 
 @login_required
 def remove_item(request, order_id):
