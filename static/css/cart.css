@@ -26,6 +26,10 @@ tr td a i {
     color: #4F4F4F;
 }
 
+.no-cart-items {
+    font-family: 'Roboto', sans-serif;
+}
+
 .total p {
     font-family: 'Hammersmith', sans-serif;
 }
