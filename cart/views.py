@@ -68,8 +68,11 @@ def decrease_item(request, order_id):
 
     qty = int(order.quantity) - 1
 
-    order.quantity = qty
-    order.save()
+    if qty == 0:
+        order.delete()
+    else:
+        order.quantity = qty
+        order.save()
     return redirect(reverse('view_cart'))
 
 @login_required
