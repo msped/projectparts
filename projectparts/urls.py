@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', home, name="home"),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^competition/', include('competition.urls')),
     url(r'^cart/', include('cart.urls')),
     url(r'^tickets/', include('products.urls')),
     url(r'^checkout/', include('checkout.urls')),
