@@ -3,5 +3,5 @@ from .views import checkout, checkout_complete
 
 urlpatterns = [
     url(r'^$', checkout, name="checkout"),
-    url(r'checkout_complete/', checkout_complete, name="checkout_complete")
+    url(r'complete/', checkout_complete, name="checkout_complete")
 ]
