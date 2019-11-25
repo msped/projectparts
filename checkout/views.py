@@ -1,6 +1,6 @@
 from random import randint
 from datetime import datetime
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -107,3 +107,30 @@ def checkout(request):
         'pushlishable': settings.STRIPE_PUBLISHABLE
     }
     return render(request, 'checkout.html', content)
+
+@login_required
+def checkout_complete(request, orders):
+    """View to be displayed when the checkout has been completed"""
+    comp = Competition.objects.get(is_active=True)
+    users_entries = {}
+    user_correct_answer = False
+    for item in orders:
+        if item.user_answer_correct:
+            user_correct_answer = True
+        entries_per_order = []
+        entries = Entries.objects.filter(order=item.id)
+        for ent in entries:
+            entries_per_order.append(ent.ticket_number)
+        n_order = {
+            item.id: entries_per_order
+        }
+        users_entries.update(n_order)
+
+    content = {
+        'user': request.user,
+        'order': orders,
+        'user_entries': users_entries,
+        'user_correct_answer': user_correct_answer,
+        'correct_answer': comp.correct_answer
+    }
+    return render(request, 'checkout_complete.html', content)
