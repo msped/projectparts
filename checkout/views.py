@@ -1,12 +1,14 @@
 from random import randint
-from django.shortcuts import render, reverse, get_object_or_404, redirect
+from datetime import datetime
+from django.shortcuts import render, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from datetime import datetime
 import stripe
+from competition.utlis import new_competition
 from competition.models import Competition
 from cart.models import Orders
+from .utils import email_order
 from .models import Entries
 from .forms import PaymentForm
 
@@ -36,10 +38,12 @@ def checkout(request):
         else:
 
             total = 0
+            tickets = 0
 
             if payment_form.is_valid():
                 for item in orders:
                     total += item.quantity * item.product.ticket_price
+                    tickets += item.quantity
                     item.is_paid = True
                     item.order_date = datetime.today().strftime('%Y-%M-%D')
                     if user_answer == comp.correct_answer:
@@ -56,19 +60,37 @@ def checkout(request):
                     messages.error(request, "Your card has been declined.")
 
                 if customer.paid:
+                    user_correct = False
                     if user_answer == comp.correct_answer:
+                        user_correct = True
                         for item in orders:
-                            create = True
-                            while create:
-                                ticket_number = randint(1, comp.tickets)
-                                entry, created = Entries.objects.get_or_create(
-                                    user=request.user.id,
-                                    competition_entry=comp.id,
-                                    product=item.product.id,
-                                    ticket_number=ticket_number
-                                )
-                                if created:
-                                    create = False
+                            tickets_per_order = item.quantity
+                            while tickets_per_order > 0:
+                                create = True
+                                while create:
+                                    ticket_number = randint(1, comp.tickets)
+                                    entry, created = Entries.objects.get_or_create(
+                                        user=request.user.id,
+                                        competition_entry=comp.id,
+                                        product=item.product.id,
+                                        ticket_number=ticket_number
+                                    )
+                                    if created:
+                                        tickets_per_order -= 1
+                                        create = False
+
+                    tickets_left = comp.tickets_left
+                    comp.tickets_left = tickets_left - tickets
+                    comp.save()
+                    email_order(request, orders, total, user_correct)
+                    if comp.tickets_left < 500:
+                        try:
+                            new_comp = Competition.objects.get(
+                                next_competition=True
+                            )
+                        except new_comp.DoesNotExist:
+                            new_competition()
+                    return redirect('checkout_complete', orders)
             else:
                 messages.error(
                     request,
