@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/checkout_complete.css' %}">{% endblock css %}
+
+{% block title%}Checkout{% endblock title %}
+
+{% block content %}
+<div class="page-header">
+    {% if user_correct_answer %}
+    <h1>Your order has been placed, Good Luck!</h1>
+    <h3>You got the answer correct with {{ correct_answer }} and have been entered into the draw.</h3>
+    <p>You will recieve an e-mail with your order details, <b>please check your spam folder.</b> <br>
+        Once the competition has ended the winner will be notified via e-mail.</p>
+    {% else %}
+    <h1>Better luck next time!</h1>
+    <h3>The answer you chose wasn't the correct answer so you won't be entered into the draw with this order.</h3>
+    <p>You will still recieve an e-mail with your order details, <b>please check your spam folder.</b></p>
+    {% endif %}
+    
+</div>
+
+<div class="row">
+    <div class="order-details p-3 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <h2>Order Details</h2>
+        <table class="table table-borderless">
+            <tr>
+                <th scope="col" class="order-product">Product</th>
+                <th scope="col" class="order-qty">Quantity</th>
+                <th scope="col" class="order-price">Price</th>
+            </tr>
+            {% for o in orders %}
+            <tr>
+                <td>{{ o.product.name }}</td>
+                <td>{{ o.quantity }}</td>
+                <td>{{ o.price }}</td>
+            </tr>
+            {% if user_entries is defined %}
+            <tr>
+                <td colspan="3">
+                {% for e in user_entries %}
+                {% if o.id == e.id %}
+                {% with order_no=o.id %}
+                <span>{{ e }}</span>
+                {% endwith %}
+                {% endif %}
+                {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="profile-details col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="user-details p-3 col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                <h3>User Details</h3>
+                <p>{{ user.first_name }} {{ user.last_name }} <br>
+                {{ user.email }} <br>
+                {{ user.profile.phone_number }}</p> 
+            </div>
+            <div class="billing-shipping p-3 col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                <h3>Billing / Shipping Address</h3>
+                <p>{{ user.profile.address_line_1 }} <br>
+                {{ user.profile.address_line_2 }} <br>
+                {{ user.profile.town_city }} <br>
+                {{ user.profile.county }} <br>
+                {{ user.profile.country }} <br>
+                {{ user.profile.postcode }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

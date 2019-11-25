@@ -1,0 +1,21 @@
+h1, h2, h3, p{
+    font-family: 'Hammersmith', sans-serif;
+    text-align: center;
+    padding: 5px;
+}
+
+.page-header {
+    margin: 20px 0;
+}
+
+.billing-shipping p, .user-details p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.order-details {
+    min-height: 300px;
+}
+
+.profile-details, .order-details, .card-details, .question {
+    margin-top: 25px;
+}
