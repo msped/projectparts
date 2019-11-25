@@ -23,11 +23,6 @@ def new_competition():
         )
     )
 
-def get_current_ticket_amount():
-    """Get tickets left in current competition for homepage"""
-    comp = Competition.objects.get(is_active=True)
-    return comp.tickets_left
-
 def pick_competition_winner():
     """Get Competition winner and send out emails"""
     current_comp = Competition.objects.get(is_active=True, tickets_left=0)
