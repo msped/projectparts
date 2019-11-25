@@ -2,11 +2,16 @@ from django.core.mail import send_mail
 from django.template import loader
 from django.utils.html import strip_tags
 
-def email_order(request, orders, total):
+def email_order(request, orders, total, user_correct):
     """Send out email to user with the order details"""
     html_email = loader.render_to_string(
         'email_templates/order_complete.html',
-        {'order': orders, 'total': total, 'user': request.user.first_name}
+        {
+            'order': orders,
+            'total': total,
+            'user': request.user.first_name,
+            'user_correct': user_correct
+        }
     )
     message = strip_tags(html_email)
     send_mail(
