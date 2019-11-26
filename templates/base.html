@@ -40,8 +40,23 @@
                             {% endif %}
                         </a>
                     </li>
-                    <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'users_orders'%}
+                        active{% endif %}" 
+                        href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            {% if request.resolver_match.url_name == 'profile' %}
+                            Profile
+                            {% elif request.resolver_match.url_name == 'users_orders' %}
+                            Your Orders
+                            {% else %}
+                            {{ request.user.first_name }}
+                            {% endif %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'users_orders' %}">Orders</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -90,6 +105,9 @@
                     {% if user.is_authenticated %}
                     <li>
                         <a class="footer-text" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li>
+                        <a class="footer-text" href="{% url 'users_orders' %}">Your Orders</a>
                     </li>
                     <li>
                         <a class="footer-text" href="{% url 'logout' %}">Logout</a>
