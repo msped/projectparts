@@ -5,6 +5,9 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from accounts.forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
+from cart.models import Orders
+from checkout.models import Entries
+from competition.models import Competition
 
 def login(request):
     """Logs a user in / display login page"""
@@ -109,3 +112,40 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
 
     return render(request, 'change_password.html', {'change_password_form': form})
+
+@login_required
+def users_orders(request):
+    """View for a user to view all orders that are made"""
+
+    try:
+        orders = Orders.objects.filter(
+            is_paid=True,
+            user=request.user.id
+        ).order_by('-related_competition')
+    except orders.DoesNotExist:
+        return render(request, 'users_orders.html', {
+            'users_orders': False
+        })
+
+    all_users_orders = []
+
+    for item in orders:
+        order_answer = item.user_answer_correct
+        entries_per_order = []
+        entries = Entries.objects.filter(order=item.id)
+        for ent in entries:
+            entries_per_order.append(ent.ticket_number)
+        order_total = item.quantity * item.product.ticket_price
+        order_to_add = [
+            item,
+            order_total,
+            order_answer,
+            entries_per_order
+        ]
+
+        all_users_orders.append(order_to_add)
+
+    content = {
+        'users_orders': all_users_orders
+    }
+    return render(request, 'users_orders.html', content)
