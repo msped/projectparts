@@ -17,6 +17,13 @@ class Categories(models.Model):
     def __str__(self):
         return self.category
 
+class Manufacturer(models.Model):
+    """Manufacturer Name"""
+    name = models.CharField(default='', max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     """Model for each Product"""
     name = models.CharField(default='', max_length=254)
@@ -27,6 +34,7 @@ class Product(models.Model):
     product_price = models.DecimalField(max_digits=7, decimal_places=2)
     product_link = models.URLField(default='#')
     fits = models.ForeignKey(Vehicle, on_delete=models.DO_NOTHING, null=True)
+    part_manufacturer = models.ForeignKey(Manufacturer, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
-        return self.name
+        return "{} {}".format(self.part_manufacturer.name, self.name)
