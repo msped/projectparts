@@ -1,5 +1,5 @@
 from django.test import TestCase
-from products.models import Product, Vehicle, Categories
+from products.models import Product, Vehicle, Categories, Manufacturer
 
 # Create your tests here.
 
@@ -74,8 +74,12 @@ class ProductModelTests(TestCase):
 
     def test_str(self):
         """Test __str__ return"""
-        test_name = Product(name='Product')
-        self.assertEqual(str(test_name), 'Product')
+        manufacturer = Manufacturer(
+            name="Test"
+        )
+        manufacturer.save()
+        test_name = Product(name='Product', part_manufacturer=manufacturer)
+        self.assertEqual(str(test_name), 'Test Product')
 
     def test_product_creation_no_image(self):
         """Test product model"""
@@ -88,6 +92,10 @@ class ProductModelTests(TestCase):
             model="A Class"
         )
         vehicle.save()
+        manufacturer = Manufacturer(
+            name="Eibach"
+        )
+        manufacturer.save()
         product = Product(
             name="Test Product",
             description="Description",
@@ -96,7 +104,8 @@ class ProductModelTests(TestCase):
             ticket_price="2.50",
             product_price="795",
             product_link="https://www.github.com",
-            fits=vehicle
+            fits=vehicle,
+            part_manufacturer=manufacturer
         )
         product.save()
 
@@ -109,3 +118,21 @@ class ProductModelTests(TestCase):
         self.assertEqual(product.product_link, 'https://www.github.com')
         self.assertEqual(product.fits.make, 'Mercedes')
         self.assertEqual(product.fits.model, 'A Class')
+        self.assertEqual(product.part_manufacturer.name, 'Eibach')
+
+class ManufacturerModelTests(TestCase):
+    """Test Vehicle Model"""
+
+    def test_str(self):
+        """Test __str__ return"""
+        test_name = Manufacturer(name='CarbonWurks')
+        self.assertEqual(str(test_name), 'CarbonWurks')
+
+    def test_vehicle_creation(self):
+        """Test creation of a vehicle"""
+        manufacturer = Manufacturer(
+            name="CarbonWurks",
+        )
+        manufacturer.save()
+
+        self.assertEqual(manufacturer.name, 'CarbonWurks')
