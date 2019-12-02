@@ -8,19 +8,21 @@ class VehicleModelTests(TestCase):
 
     def test_str(self):
         """Test __str__ return"""
-        test_name = Vehicle(make='Mercedes', model='A Class')
-        self.assertEqual(str(test_name), 'Mercedes A Class')
+        test_name = Vehicle(make='Mercedes', model='A Class', generation="W176")
+        self.assertEqual(str(test_name), 'Mercedes A Class W176')
 
     def test_vehicle_creation(self):
         """Test creation of a vehicle"""
         vehicle = Vehicle(
             make="Ford",
-            model="Focus"
+            model="Focus",
+            generation="MK3"
         )
         vehicle.save()
 
         self.assertEqual(vehicle.make, 'Ford')
         self.assertEqual(vehicle.model, 'Focus')
+        self.assertEqual(vehicle.generation, 'MK3')
 
 class CategoriesModelTests(TestCase):
     """Test Categories Model"""
@@ -54,7 +56,8 @@ class ProductAppViewsTest(TestCase):
         )
         vehicle = Vehicle.objects.create(
             make="Mercedes",
-            model="A Class"
+            model="A Class",
+            generation="W176"
         )
         Product.objects.create(
             name="Test Product",
@@ -89,7 +92,8 @@ class ProductModelTests(TestCase):
         category.save()
         vehicle = Vehicle(
             make="Mercedes",
-            model="A Class"
+            model="A Class",
+            generation="W176"
         )
         vehicle.save()
         manufacturer = Manufacturer(
@@ -118,6 +122,7 @@ class ProductModelTests(TestCase):
         self.assertEqual(product.product_link, 'https://www.github.com')
         self.assertEqual(product.fits.make, 'Mercedes')
         self.assertEqual(product.fits.model, 'A Class')
+        self.assertEqual(product.fits.generation, 'W176')
         self.assertEqual(product.part_manufacturer.name, 'Eibach')
 
 class ManufacturerModelTests(TestCase):
