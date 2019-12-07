@@ -5,7 +5,6 @@ $(document).ready(function(){
             success: function(data){
                 if (data !== $('#tickets-left').text()){
                     $('#tickets-left').text(data).animate({color: 'rgb(235, 25, 25)'}).animate({color: '#000'}, 750);
-                    console.log("Changed!: " + data);
                 }                
             }
         });
