@@ -6,7 +6,7 @@ from .models import Product, Categories, Manufacturer, Vehicle
 # Create your views here.
 def products_view(request):
     """Shows all products"""
-    products = Product.objects.filter()
+    products = Product.objects.filter()[:15]
     cars = Vehicle.objects.all()
     manufacturer_dropdown = Manufacturer.objects.all()
     categories_dropdown = Categories.objects.all()
