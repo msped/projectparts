@@ -7,11 +7,95 @@
 
 {% block title%}Select Tickets{% endblock title %}
 
+{% block head_js %}
+<script type="text/javascript">
+window.CSRF_TOKEN = "{{ csrf_token }}"
+</script>
+{% endblock head_js %}
+
 {% block content %}
 <h1>Tickets</h1>
 <p class="text-muted">Pick the tickets you wish to play.</p>
 
 <!--Search-->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-box">
+    <div class="card search-card">
+        <div class="card-header search-header" id="headingTwo">
+            <h6 class="collapsed mb-0" data-toggle="collapse" data-target="#advanced-search" aria-expanded="false"
+                aria-controls="advanced-search">
+                Advanced Search
+            </h6>
+        </div>
+        <div id="advanced-search" class="collapse" aria-labelledby="headingTwo" data-parent="#advanced-search">
+            <div class="card-body">
+                <form action="" method="GET">
+                    <div class="row">
+                        <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#make">Make</label>
+                            <select class="form-control" name="make" id="make">
+                                <option value="" disabled {% if request.GET.make|length == 0 %} selected {% endif %}>Select an Option</option>
+                                {% for m in makes %}
+                                <option value="{{ m }}" {% ifequal request.GET.make m %} selected {% endifequal %}>{{ m }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#model">Model</label>
+                            <select class="form-control" name="model" id="model">
+                                <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an Option</option>
+                                {% if request.GET.model|length > 0 %}
+                                <option value="{{ request.GET.model }}" selected> {{ request.GET.model}}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#generation">Generation</label>
+                            <select class="form-control" name="generation" id="generation">
+                                    <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an Option</option>
+                                    {% if request.GET.model|length > 0 %}
+                                    <option value="{{ request.GET.generation }}" selected> {{ request.GET.generation }}</option>
+                                    {% endif %}
+                            </select>
+                        </div>
+                    </div>    
+                    <div class="row search-options">
+                        <div class="categories col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#categories">Categories</label>
+                            <select class="form-control" name="categories" id="categories">
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% ifequal request.GET.categories cat.id|stringformat:'i' %} selected {% endifequal %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="manufacturer col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#manufacturer">Manufacturer</label>
+                            <select class="form-control" name="manufacturer" id="manufacturer">
+                                {% for man in manufacturer %}
+                                <option value="{{ man.id }}"{% ifequal request.GET.manufacturer man.id|stringformat:'i' %} selected {% endifequal %}>{{ man }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="sort-by col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#sort">Sort Options</label>
+                            <select class="form-control" name="sort" id="sort">
+                                <option value="name" {% ifequal request.GET.sort 'name' %} selected {% endifequal %}>A-Z</option>
+                                <option value="-name" {% ifequal request.GET.sort '-name' %} selected {% endifequal %}>Z-A</option>
+                                <option value="ticket_price" {% ifequal request.GET.sort 'ticket_price' %} selected {% endifequal %}>Low to High</option>
+                                <option value="-ticket_price" {% ifequal request.GET.sort '-ticket_price' %} selected {% endifequal %}>High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-btn col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="text-center">
+                            <a class="btn btn-outline-danger" href="{% url 'products' %}">Reset</a>
+                            <button class="btn btn-outline-dark" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row tickets">
     {% for product in products %}
@@ -58,3 +142,7 @@
     {% endfor %}
 </div>
 {% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/products.js' %}"></script>
+{% endblock js %}
