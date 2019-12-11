@@ -19,51 +19,56 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
 
 <!--Search-->
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-box">
-    <div class="card search-card">
-        <div class="card-header search-header" id="headingTwo">
-            <h6 class="collapsed mb-0" data-toggle="collapse" data-target="#advanced-search" aria-expanded="false"
-                aria-controls="advanced-search">
-                Advanced Search
-            </h6>
+    <form action="" method="GET">
+        <div class="row">
+            <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <label for="#make">Make</label>
+                <select class="form-control" name="make" id="make">
+                    <option value="" disabled {% if request.GET.make|length == 0 %} selected {% endif %}>Select an
+                        Option</option>
+                    {% for m in makes %}
+                    <option value="{{ m }}" {% ifequal request.GET.make m %} selected {% endifequal %}>{{ m }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <label for="#model">Model</label>
+                <select class="form-control" name="model" id="model">
+                    <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an
+                        Option</option>
+                    {% if request.GET.model|length > 0 %}
+                    <option value="{{ request.GET.model }}" selected> {{ request.GET.model}}</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <label for="#generation">Generation</label>
+                <select class="form-control" name="generation" id="generation">
+                    <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an
+                        Option</option>
+                    {% if request.GET.model|length > 0 %}
+                    <option value="{{ request.GET.generation }}" selected> {{ request.GET.generation }}</option>
+                    {% endif %}
+                </select>
+            </div>
         </div>
-        <div id="advanced-search" class="collapse" aria-labelledby="headingTwo" data-parent="#advanced-search">
-            <div class="card-body">
-                <form action="" method="GET">
-                    <div class="row">
-                        <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <label for="#make">Make</label>
-                            <select class="form-control" name="make" id="make">
-                                <option value="" disabled {% if request.GET.make|length == 0 %} selected {% endif %}>Select an Option</option>
-                                {% for m in makes %}
-                                <option value="{{ m }}" {% ifequal request.GET.make m %} selected {% endifequal %}>{{ m }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <label for="#model">Model</label>
-                            <select class="form-control" name="model" id="model">
-                                <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an Option</option>
-                                {% if request.GET.model|length > 0 %}
-                                <option value="{{ request.GET.model }}" selected> {{ request.GET.model}}</option>
-                                {% endif %}
-                            </select>
-                        </div>
-                        <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <label for="#generation">Generation</label>
-                            <select class="form-control" name="generation" id="generation">
-                                    <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an Option</option>
-                                    {% if request.GET.model|length > 0 %}
-                                    <option value="{{ request.GET.generation }}" selected> {{ request.GET.generation }}</option>
-                                    {% endif %}
-                            </select>
-                        </div>
-                    </div>    
+        <div class="card search-card">
+            <div class="card-header search-header" id="headingTwo">
+                <h6 class="collapsed mb-0" data-toggle="collapse" data-target="#advanced-search" aria-expanded="false"
+                    aria-controls="advanced-search">
+                    More Options
+                </h6>
+            </div>
+            <div id="advanced-search" class="collapse" aria-labelledby="headingTwo" data-parent="#advanced-search">
+                <div class="card-body">
                     <div class="row search-options">
                         <div class="categories col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <label for="#categories">Categories</label>
                             <select class="form-control" name="categories" id="categories">
                                 {% for cat in categories %}
-                                <option value="{{ cat.id }}" {% ifequal request.GET.categories cat.id|stringformat:'i' %} selected {% endifequal %}>{{ cat }}</option>
+                                <option value="{{ cat.id }}"
+                                    {% ifequal request.GET.categories cat.id|stringformat:'i' %} selected
+                                    {% endifequal %}>{{ cat }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -71,30 +76,36 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
                             <label for="#manufacturer">Manufacturer</label>
                             <select class="form-control" name="manufacturer" id="manufacturer">
                                 {% for man in manufacturer %}
-                                <option value="{{ man.id }}"{% ifequal request.GET.manufacturer man.id|stringformat:'i' %} selected {% endifequal %}>{{ man }}</option>
+                                <option value="{{ man.id }}"
+                                    {% ifequal request.GET.manufacturer man.id|stringformat:'i' %} selected
+                                    {% endifequal %}>{{ man }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="sort-by col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <label for="#sort">Sort Options</label>
                             <select class="form-control" name="sort" id="sort">
-                                <option value="name" {% ifequal request.GET.sort 'name' %} selected {% endifequal %}>A-Z</option>
-                                <option value="-name" {% ifequal request.GET.sort '-name' %} selected {% endifequal %}>Z-A</option>
-                                <option value="ticket_price" {% ifequal request.GET.sort 'ticket_price' %} selected {% endifequal %}>Low to High</option>
-                                <option value="-ticket_price" {% ifequal request.GET.sort '-ticket_price' %} selected {% endifequal %}>High to Low</option>
+                                <option value="name" {% ifequal request.GET.sort 'name' %} selected {% endifequal %}>A-Z
+                                </option>
+                                <option value="-name" {% ifequal request.GET.sort '-name' %} selected {% endifequal %}>
+                                    Z-A</option>
+                                <option value="ticket_price" {% ifequal request.GET.sort 'ticket_price' %} selected
+                                    {% endifequal %}>Low to High</option>
+                                <option value="-ticket_price" {% ifequal request.GET.sort '-ticket_price' %} selected
+                                    {% endifequal %}>High to Low</option>
                             </select>
                         </div>
                     </div>
-                    <div class="search-btn col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="text-center">
-                            <a class="btn btn-outline-danger" href="{% url 'products' %}">Reset</a>
-                            <button class="btn btn-outline-dark" type="submit">Search</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="search-btn col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="text-center">
+                <a class="btn btn-outline-danger" href="{% url 'products' %}">Reset</a>
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div class="row tickets">
@@ -113,26 +124,20 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
                 <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
                     action="{% url 'add_to_cart' product.id %}">
                     {% csrf_token %}
-                    <div class="">
-                        <input name="quantity" type="hidden" value="1">
-                        <button class="btn btn-sm btn-primary" type="submit">1</button>
-                    </div>
+                    <input name="quantity" type="hidden" value="1">
+                    <button class="btn btn-sm btn-primary" type="submit">1</button>
                 </form>
                 <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
                     action="{% url 'add_to_cart' product.id %}">
                     {% csrf_token %}
-                    <div class="">
-                        <input name="quantity" type="hidden" value="5">
-                        <button class="btn btn-sm btn-primary" type="submit">5</button>
-                    </div>
+                    <input name="quantity" type="hidden" value="5">
+                    <button class="btn btn-sm btn-primary" type="submit">5</button>
                 </form>
                 <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
                     action="{% url 'add_to_cart' product.id %}">
                     {% csrf_token %}
-                    <div class="">
-                        <input name="quantity" type="hidden" value="10">
-                        <button class="btn btn-sm btn-primary" type="submit">10</button>
-                    </div>
+                    <input name="quantity" type="hidden" value="10">
+                    <button class="btn btn-sm btn-primary" type="submit">10</button>
                 </form>
                 <a class="btn btn-sm btn-primary col-lg-6 col-md-6 col-sm-6 col-6 extra-details"
                     href="{% url 'product_detail' product.id %}">Details</a>
