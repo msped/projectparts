@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load staticfiles %}
+{% load static %}
 {% load bootstrap_tags %}
 
 {% block css %}<link rel="stylesheet" href="{% static 'css/products.css' %}">{% endblock css %}
@@ -65,6 +65,7 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
                         <div class="categories col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <label for="#categories">Categories</label>
                             <select class="form-control" name="categories" id="categories">
+                                <option value="" disabled {% if request.GET.categories|length == 0 %} selected {% endif %}>Select an Option</option>
                                 {% for cat in categories %}
                                 <option value="{{ cat.id }}"
                                     {% ifequal request.GET.categories cat.id|stringformat:'i' %} selected
@@ -75,6 +76,7 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
                         <div class="manufacturer col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <label for="#manufacturer">Manufacturer</label>
                             <select class="form-control" name="manufacturer" id="manufacturer">
+                                <option value="" disabled {% if request.GET.manufacturer|length == 0 %} selected {% endif %}>Select an Option</option>
                                 {% for man in manufacturer %}
                                 <option value="{{ man.id }}"
                                     {% ifequal request.GET.manufacturer man.id|stringformat:'i' %} selected
