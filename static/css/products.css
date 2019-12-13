@@ -1,8 +1,10 @@
-h1, .text-muted {
+.text-muted {
     font-family: 'Hammersmith', sans-serif;
-    text-align: center;
 }
 
+h1 {
+    text-align: center;
+}
 .search-box {
     margin-top: 30px;
 }
@@ -17,6 +19,10 @@ h1, .text-muted {
     word-wrap: break-word;
     margin-bottom: 20px; 
     border: 0px solid rgba(0,0,0,.125);
+}
+
+label {
+    font-family: 'Roboto', sans-serif;
 }
 
 h6 {

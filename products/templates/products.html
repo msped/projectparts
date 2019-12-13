@@ -14,11 +14,12 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
 {% endblock head_js %}
 
 {% block content %}
-<h1>Tickets</h1>
-<p class="text-muted">Pick the tickets you wish to play.</p>
+<h1 class="text-center">Tickets</h1>
+<p class="text-muted text-center">Pick the tickets you wish to play.</p>
 
 <!--Search-->
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-box">
+    <p class="text-muted">Pick your car to see more results, this page has limited products available.</p>
     <form action="" method="GET">
         <div class="row">
             <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
