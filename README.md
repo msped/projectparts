@@ -30,11 +30,9 @@ Wireframes for the site can be viewed [here](https://github.com/msped/projectpar
 
 ### Database Design
 
-Design of the database can be viewed [here]()
+Design of the database can be viewed [here](https://github.com/msped/projectparts/blob/master/assets/wireframes/Project%20Parts%20ERD.png)
 
 ## Features
-
-In this section, you should go over the different parts of your project, and describe each in a sentence or so.
 
 ### Existing Features
 
@@ -42,11 +40,29 @@ Feature 1 - allows users X to achieve Y, by having them fill out Z
 ...
 For some/all of your features, you may choose to reference the specific project files that implement them, although this is entirely optional.
 
-In addition, you may also use this section to discuss plans for additional features to be implemented in the future:
+- Products page displays 15 products as a standard, showing full products when using search filters.
+
+- When orders have been made they are viewable in the users profile.
+
+- Profile details are editable within a users profile.
+
+- Each carts item is automatically assigned an entry to number to the competition.
+
+- New competition is automatically created when active competition is below a certain number of entries.
+
+- Competition automatically ends, picks a winner and announces the winner via e-mail before starting the next competition.  
 
 ### Features Left to Implement
 
-Another feature idea
+More ideas I would like to implement on the site are:
+
+- Promotional e-mails with new or discounted products.
+
+- Add a vehicle API for better vehicle search functionality.
+
+- To add a bundle feature for multiple products with a discount based on amount of products in a bundle.
+
+- Discount Codes at checkout.
 
 ## Technologies Used
 
@@ -59,11 +75,13 @@ Below are the techbologies used with this project.
 - [jQuery](https://jquery.com/)
 
 - [Django](https://www.djangoproject.com/)
-    - [Django Forms Boostrap](https://pypi.org/project/django-forms-bootstrap/)
+  - [Django Forms Boostrap](https://pypi.org/project/django-forms-bootstrap/)
 
 - [Font Awesome](https://fontawesome.com/)
 
-- 
+- [Pillow](https://python-imaging.github.io/)
+
+- [Stripe](https://stripe.com/gb)
 
 ## Testing
 
