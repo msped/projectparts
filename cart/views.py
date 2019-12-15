@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
 from competition.models import Competition
 from products.models import Product
+from .contexts import cart_contents
 from .models import Orders
 
 # Create your views here.
@@ -59,7 +61,15 @@ def increase_item(request, order_id):
 
     order.quantity = qty
     order.save()
-    return redirect(reverse('view_cart'))
+
+    cart_total = cart_contents(request)
+
+    data = {
+        'qty': qty,
+        'total': cart_total['total']
+    }
+
+    return JsonResponse(data)
 
 @login_required
 def decrease_item(request, order_id):
@@ -68,12 +78,17 @@ def decrease_item(request, order_id):
 
     qty = int(order.quantity) - 1
 
-    if qty == 0:
-        order.delete()
-    else:
-        order.quantity = qty
-        order.save()
-    return redirect(reverse('view_cart'))
+    order.quantity = qty
+    order.save()
+
+    cart_total = cart_contents(request)
+
+    data = {
+        'qty': qty,
+        'total': cart_total['total']
+    }
+
+    return JsonResponse(data)
 
 @login_required
 def remove_item(request, order_id):
