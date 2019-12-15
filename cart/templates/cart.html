@@ -23,21 +23,22 @@
                 <th scope="col">Price</th>
                 <th scope="col"></th>
             </tr>
-            {% for p in orders %}
+            {% for o in orders %}
             <tr>
-                <td>{{ p.product.name }}</td>
+                <td>{{ o.product.name }}</td>
                 <td>
-                    <a class="d-inline-block" href="{% url 'decrease_item' p.id %}">
+                    <span class="remove-one-item" id="remove-one-item">
                         <i class="fas fa-minus-circle"></i>
-                    </a>
-                    <p class="d-inline-block p-1">{{ p.quantity }}</p>
-                    <a class="d-inline-block" href="{% url 'increase_item' p.id %}">
+                    </span>
+                    <input type="hidden" class="order-id" value="{{ o.id }}">
+                    <p class="p-1 order-qty">{{ o.quantity }}</p>
+                    <span class="add-one-item">
                         <i class="fas fa-plus-circle"></i>
-                    </a>
+                    </span>
                 </td>
-                <td>£{{ p.product.ticket_price }}</td>
+                <td>£{{ o.product.ticket_price }}</td>
                 <td>
-                    <a href="{% url 'remove_item' p.id %}">
+                    <a href="{% url 'remove_item' o.id %}">
                         <i class="far fa-trash-alt"></i>
                     </a>
                 </td>
@@ -45,7 +46,7 @@
             {% endfor %}
         </table>
         <div class="total col-md-3 offset-md-9 col-4 offset-8">
-            <p>Total: £{{ total }}</p>
+            <p>Total: £ <span id="order-total">{{ total }}</span></p>
         </div>
         {% else %}
         <p class="text-center no-cart-items">There are no items in your cart, add some <a href="{% url 'products' %}">tickets.</a></p>
@@ -56,3 +57,5 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block js %}<script src="{% static 'js/cart.js' %}"></script>{% endblock js %}
