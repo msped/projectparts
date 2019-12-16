@@ -28,16 +28,20 @@
         <table class="table table-borderless">
             <tr>
                 <th scope="col" class="order-product">Product</th>
-                <th scope="col" class="order-qty">Quantity</th>
-                <th scope="col" class="order-price">Price</th>
+                <th scope="col" class="order-qty text-center">Quantity</th>
+                <th scope="col" class="order-price text-center">Price</th>
             </tr>
-            {% for p in orders %}
+            {% for o in orders %}
             <tr>
-                <td>{{ p.product.name }}</td>
-                <td>{{ p.quantity }}</td>
-                <td>{{ p.price }}</td>
+                <td>{{ o.product }}</td>
+                <td class="text-center">{{ o.quantity }}</td>
+                <td class="text-center">{{ o.product.ticket_price }}</td>
             </tr>
             {% endfor %}
+            <tr>
+                <td colspan="2"></td>
+                <td><b>Total: £{{ total }}</b></td>
+            </tr>
         </table>
     </div>
 
