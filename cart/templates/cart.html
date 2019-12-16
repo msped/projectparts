@@ -48,12 +48,13 @@
         <div class="total col-md-3 offset-md-9 col-4 offset-8">
             <p>Total: £ <span id="order-total">{{ total }}</span></p>
         </div>
+
+        <div class="checkout text-center">
+            <a class="btn btn-outline-dark" href="{% url 'checkout' %}">Go to Checkout</a>
+        </div>
         {% else %}
         <p class="text-center no-cart-items">There are no items in your cart, add some <a href="{% url 'products' %}">tickets.</a></p>
         {% endif %}
-    </div>
-    <div class="checkout text-center">
-        <button type="button" class="btn btn-outline-dark {% if orders is null %}disabled{% endif %}" href="{% url 'checkout' %}">Go to Checkout</button>
     </div>
 </div>
 {% endblock content %}
