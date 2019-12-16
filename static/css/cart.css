@@ -18,8 +18,12 @@ h1 {
     min-height: 300px;
 }
 
-#remove-one-item, .order-qty, .add-one-item{
+#remove-one-item, .order-qty, .add-one-item {
     display: inline-block
+}
+
+.add-one-item, #remove-one-item {
+    cursor: pointer;
 }
 
 tr td a {
