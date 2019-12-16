@@ -57,38 +57,40 @@ def increase_item(request, order_id):
     """increases cart item by one"""
     order = Orders.objects.get(id=order_id)
 
-    qty = int(order.quantity) + 1
+    if order.is_paid is False:
+        qty = int(order.quantity) + 1
 
-    order.quantity = qty
-    order.save()
+        order.quantity = qty
+        order.save()
 
-    cart_total = cart_contents(request)
+        cart_total = cart_contents(request)
 
-    data = {
-        'qty': qty,
-        'total': cart_total['total']
-    }
+        data = {
+            'qty': qty,
+            'total': cart_total['total']
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
 
 @login_required
 def decrease_item(request, order_id):
     """decreases cart item by one"""
     order = Orders.objects.get(id=order_id)
 
-    qty = int(order.quantity) - 1
+    if order.is_paid is False:
+        qty = int(order.quantity) - 1
 
-    order.quantity = qty
-    order.save()
+        order.quantity = qty
+        order.save()
 
-    cart_total = cart_contents(request)
+        cart_total = cart_contents(request)
 
-    data = {
-        'qty': qty,
-        'total': cart_total['total']
-    }
+        data = {
+            'qty': qty,
+            'total': cart_total['total']
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
 
 @login_required
 def remove_item(request, order_id):
