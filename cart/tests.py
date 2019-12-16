@@ -75,46 +75,6 @@ class CartAppTest(TestCase):
         response = self.client.get('/cart/', follow=True)
         self.assertIn(b'<h1>Login</h1>', response.content)
 
-    def test_add_one_item_to_order(self):
-        """Test the add one item to order url / view,
-        should increament item quantity by one"""
-        self.client.post(
-            '/accounts/login/',
-            self.user,
-            follow=True
-        )
-        user_test = User.objects.get(username='test user')
-        comp_test = Competition.objects.get(is_active=True)
-        product_test = Product.objects.filter().first()
-        test_name = Orders.objects.create(
-            user=user_test,
-            related_competition=comp_test,
-            quantity=1,
-            product=product_test
-        )
-        response = self.client.get('/cart/add_one/' + str(test_name.id), follow=True)
-        self.assertIn(b'<p class="d-inline-block p-1">2</p>', response.content)
-
-    def test_remove_one_item_to_order(self):
-        """Test the remove one item to order url / view,
-        should decreament item quantity by one"""
-        self.client.post(
-            '/accounts/login/',
-            self.user,
-            follow=True
-        )
-        user_test = User.objects.get(username='test user')
-        comp_test = Competition.objects.get(is_active=True)
-        product_test = Product.objects.filter().first()
-        test_name = Orders.objects.create(
-            user=user_test,
-            related_competition=comp_test,
-            quantity=2,
-            product=product_test
-        )
-        response = self.client.get('/cart/remove_one/' + str(test_name.id), follow=True)
-        self.assertIn(b'<p class="d-inline-block p-1">1</p>', response.content)
-
     def test_remove_test(self):
         """Test remove item view, should delete item from DB"""
         self.client.post(
