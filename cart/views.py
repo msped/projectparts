@@ -14,7 +14,7 @@ from .models import Orders
 def view_cart(request):
     """Renders the cart view"""
     try:
-        orders = Orders.objects.filter(user=request.user.id)
+        orders = Orders.objects.filter(user=request.user.id, is_paid=False)
     except Orders.DoesNotExist:
         orders = False
     return render(request, 'cart.html', {'orders': orders})
