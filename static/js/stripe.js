@@ -1,4 +1,6 @@
 $(function() {
+    Stripe.setPublishableKey('pk_test_Um7FHiRm0SgosZhvLa3RubN700KnQ9jDll')
+
     $('#payment-form').submit(function(){
         if ($("#user-answer option:selected").text() !== "Please select an option"){        
             var form = this;
@@ -10,6 +12,7 @@ $(function() {
             };
             
         Stripe.createToken(card, function(status, response) {
+            console.log(response)
             if (status === 200) {
                 $("#credit-card-errors").hide();
                 $("#id_stripe_id").val(response.id);
@@ -26,7 +29,7 @@ $(function() {
             $("#validate_card_btn").attr("disabled", false);
             }
         });
-        return False;
+        return false;
         }
     });
 });
