@@ -1,4 +1,4 @@
-h1, h2, h3, p{
+h1, h2, h3, p {
     font-family: 'Hammersmith', sans-serif;
     text-align: center;
     padding: 5px;
@@ -8,14 +8,15 @@ h1, h2, h3, p{
     margin: 20px 0;
 }
 
-.billing-shipping p, .user-details p {
-    font-family: 'Hammersmith', sans-serif;
+.row {
+    margin-top: 50px;
 }
 
-.order-details {
-    min-height: 300px;
+.far, .fas {
+    font-size: 45pt;
+    color: rgb(104, 104, 104)
 }
 
-.profile-details, .order-details, .card-details, .question {
-    margin-top: 25px;
+.orders-page {
+    margin: 40px 20px 0 20px;
 }
