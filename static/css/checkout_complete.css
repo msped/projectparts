@@ -1,6 +1,5 @@
 h1, h2, h3, p {
     font-family: 'Hammersmith', sans-serif;
-    text-align: center;
     padding: 5px;
 }
 
@@ -9,14 +8,33 @@ h1, h2, h3, p {
 }
 
 .row {
-    margin-top: 50px;
+    margin-top: 45px;
+}
+
+.info {
+    margin: 10px;
+    text-align: center;
 }
 
 .far, .fas {
-    font-size: 45pt;
+    font-size: 50pt;
     color: rgb(104, 104, 104)
+}
+
+.fa-check {
+    color: #007D00;
+}
+
+.fa-times {
+    color: #E90001;
 }
 
 .orders-page {
     margin: 40px 20px 0 20px;
+}
+
+@media (min-width: 768px) {
+    .info {
+        text-align: initial;
+    }
 }

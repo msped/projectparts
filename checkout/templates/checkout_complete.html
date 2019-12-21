@@ -9,47 +9,51 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Checkout Complete</h1>
-    <h3>Your order has been placed, please check your e-mails.</h3>
+    <h1 class="text-center">We have received you order{% if user_correct %}, Good Luck!{% endif %}</h1>
 </div>
-<div class="page-content">
+
+<div>
     <div class="row">
-        <div class="offset-lg-2 col-lg-2 offset-md-2 col-md-2 col-sm-12 col-xs-12">
+        {% if user_correct %}
+        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
             <div class="text-center">
-                <i class="far fa-envelope icon"></i>
+                <i class="fas fa-check"></i>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <p>We have sent you an e-mail with whether you have been entered 
-                into the competition.</p>
+        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <p>You got the answer correct with {{ correct_answer }} and have been entered into the draw. <br> 
+            The associated entry numbers have been sent via e-mail.</p>
         </div>
-    </div>
-    <div class="row">
-        <div class="offset-lg-2 col-lg-2 offset-md-2 col-md-2 col-sm-12 col-xs-12">
+        {% else %}
+        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
             <div class="text-center">
-                <i class="far fa-clock"></i>
+                <i class="fas fa-times"></i>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <p>When the competition ends you will get an e-mail notifying you 
-                if you have won!</p>
+        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <p>The answer you chose wasn't the correct answer so you won't be entered into the draw with this order.</p>
         </div>
+        {% endif %}
     </div>
     <div class="row">
-        <div class="offset-lg-2 col-lg-2 offset-md-2 col-md-2 col-sm-12 col-xs-12">
+        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
             <div class="text-center">
                 <i class="fas fa-list"></i>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <p>Your order has been emailed to you, if you got the answer 
-                correct it will also show you the associated entries.</p>
+        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
+           <p>We have e-mailed you this order, if it is not in your inbox please check your spam folder.</p>
         </div>
     </div>
-
-    <div class="orders-page col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>You can view all of your orders, including this one, and associated entry numbers <a href="{% url 'users_orders' %}">here.</a></p>
+    <div class="row">
+        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="text-center">
+                <i class="far fa-folder"></i>
+            </div>
+        </div>
+        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <p>If you wish to view your previous orders, <a href="{% url 'users_orders' %}">Click here.</a></p>
+        </div>
     </div>
 </div>
-
 {% endblock content %}
