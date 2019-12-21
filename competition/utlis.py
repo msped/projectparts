@@ -1,6 +1,7 @@
 from random import randint
 from django.core.mail import mail_admins, send_mass_mail
 from django.template import loader
+from django.utils.html import strip_tags
 from cart.models import Orders
 from .models import Competition
 
@@ -10,22 +11,30 @@ def new_competition():
     Competition().save()
 
     # Send e-mail to admin to alert of new competition creation
-    message = """Hello,\n\n A new competition has been created ready for when
-    the current competition ends.\n\n Please go to the admin panel to add the
-    question and associated answers.\n\n Regards,\n Project Parts"""
+    html_message = loader.render_to_string(
+        'email_templates/admin_email.html'
+        )
+    message = strip_tags(html_message)
     mail_admins(
         'New Competition has been created.',
         message,
         fail_silently=True,
         connection=None,
-        html_message=loader.render_to_string(
-            'email_templates/admin_email.html'
-        )
+        html_message=html_message
     )
 
 def pick_competition_winner():
     """Get Competition winner and send out emails"""
     current_comp = Competition.objects.get(is_active=True, tickets_left=0)
+
+    # Change to next competition to minimize 
+    current_comp.is_active = False
+    current_comp.save()
+    next_comp = Competition.objects.get(next_competition=True)
+    next_comp.is_active = True
+    next_comp.next_competition = False
+    next_comp.save()
+
     r_number = randint(1, current_comp.tickets)
     winning_ticket = Orders.objects.get(
         related_competition=current_comp.id,
@@ -84,11 +93,3 @@ def pick_competition_winner():
         winners_email
     )
     send_mass_mail((participants, winner), fail_silently=True)
-
-    # Change to next competition
-    current_comp.is_active = False
-    current_comp.save()
-    next_comp = Competition.objects.get(next_competition=True)
-    next_comp.is_active = True
-    next_comp.next_competition = False
-    next_comp.save()
