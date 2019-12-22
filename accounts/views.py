@@ -4,10 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.paginator import Paginator
 from accounts.forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
 from cart.models import Orders
 from checkout.models import Entries
-from competition.models import Competition
 
 def login(request):
     """Logs a user in / display login page"""
@@ -145,7 +145,11 @@ def users_orders(request):
 
         all_users_orders.append(order_to_add)
 
+    paginator = Paginator(all_users_orders, 15)
+    page = request.GET.get('page')
+    user_orders = paginator.get_page(page)
+
     content = {
-        'users_orders': all_users_orders
+        'users_orders': user_orders
     }
     return render(request, 'users_orders.html', content)

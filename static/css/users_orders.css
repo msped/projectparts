@@ -8,4 +8,15 @@
 
 td.entries-row {
     border: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 10.5pt;
+}
+
+.fas {
+    color: rgba(0, 0, 0, .5);
+    font-size: 14pt;
+}
+
+.fas:hover {
+    color: rgba(0, 0, 0, 1);
 }

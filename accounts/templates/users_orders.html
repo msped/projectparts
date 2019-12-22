@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load bootstrap_tags %}
+{% load custom_tags %}
 
 {% block css %}<link rel="stylesheet" href="{% static 'css/users_orders.css' %}">{% endblock css %}
 
@@ -15,35 +16,57 @@
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     {% if users_orders %}
-    <table class="table">
+    <table class="table table-sm">
         <tr>
-            <th>Order ID</th>
+            <th class="text-center">ID</th>
             <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Order Total</th>
-            <th>Answer Correct</th>
-            <th>Competition</th>
+            <th class="text-center">Qty</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Answer Correct</th>
+            <th class="text-center">Comp</th>
+            <th>Order Date</th>
         </tr>
         {% for o in users_orders %}
         <tr>
-            <td>{{ o.0.id }}</td>
-            <td>{{ o.0.product.name }}</td>
-            <td>{{ o.0.quantity }}</td>
-            <td>{{ o.1 }}</td>
-            <td>{% if o.2 %}
+            <td class="text-center">{{ o.0.id }}</td>
+            <td><a href="{% url 'product_detail' o.0.product.id %}">{{ o.0.product.name }}</a></td>
+            <td class="text-center">{{ o.0.quantity }}</td>
+            <td class="text-center">{{ o.1 }}</td>
+            <td class="text-center">{% if o.2 %}
                 Yes
                 {% else %}
                 No
                 {% endif %}
             </td>
-            <td>{{ o.0.related_competition.id }}</td>
+            <td class="text-center">{{ o.0.related_competition.id }}</td class="text-center">
+            <td>{{ o.0.order_date }}</td>        
         </tr>
+        {% if o.2 %}
         <tr>
             <td class="entries-row">Entries:</td>
-            <td colspan="4" class="entries-row">{{ o.4 }}</td>
+            <td colspan="6" class="entries-row">{{ o.3 }}</td>
         </tr>
+        {% endif %}
         {% endfor %}
     </table>
+
+    <div class="text-center">
+        <span class="step-links">
+            {% if users_orders.has_previous %}
+                <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                <a href="?page={{ users_orders.previous_page_number }}"><i class="fas fa-angle-left"></i></a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ users_orders.number }} of {{ users_orders.paginator.num_pages }}
+            </span>
+    
+            {% if users_orders.has_next %}
+                <a href="?page={{ users_orders.next_page_number }}"><i class="fas fa-angle-right"></i></a>
+                <a href="?page={{ users_orders.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+            {% endif %}
+        </span>
+    </div>
     {% else %}
     <h2 class="text-center">You have no previous orders.</h2>
     {% endif %}
