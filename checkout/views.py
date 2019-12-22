@@ -10,6 +10,7 @@ from products.models import Product
 from competition.utlis import new_competition, pick_competition_winner
 from competition.models import Competition
 from cart.models import Orders
+from cart.contexts  import cart_contents
 from .utils import email_order, get_total
 from .models import Entries
 from .forms import PaymentForm
@@ -28,6 +29,15 @@ def checkout(request):
         is_paid=False,
         related_competition=comp.id
     )
+
+    cart_count = cart_contents(request)
+
+    if cart_count['product_count'] == 0:
+        messages.error(
+            request,
+            "You have no tickets to checkout."
+        )
+        return redirect('products')
 
     if request.method == "POST":
         payment_form = PaymentForm(request.POST)
