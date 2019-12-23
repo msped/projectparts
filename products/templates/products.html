@@ -52,7 +52,6 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
                 </select>
             </div>
         </div>
-        <p class="text-muted">*Pick your car to see more results, this page has limited products available.</p>
         <div class="card search-card">
             <div class="card-header search-header" id="headingTwo">
                 <h6 class="collapsed mb-0" data-toggle="collapse" data-target="#advanced-search" aria-expanded="false"
@@ -113,41 +112,69 @@ window.CSRF_TOKEN = "{{ csrf_token }}"
 
 <div class="row tickets">
     {% for product in products %}
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 card">
-        <div class="image-div">
-            <img src="{{ product.img.url }}" class="card-img" alt="{{ product.name }}">
-        </div>
-        <div class="card-title">{{ product.name }}</div>
-        <div class="card-body">
-            <div class="details">
-                <p>For: {{ product.fits }}</p>
-                <p>Ticket Price: £{{ product.ticket_price }}</p>
-            </div>
-            <div class="row">
-                <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
-                    action="{% url 'add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <input name="quantity" type="hidden" value="1">
-                    <button class="btn btn-sm btn-primary" type="submit">1</button>
-                </form>
-                <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
-                    action="{% url 'add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <input name="quantity" type="hidden" value="5">
-                    <button class="btn btn-sm btn-primary" type="submit">5</button>
-                </form>
-                <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
-                    action="{% url 'add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <input name="quantity" type="hidden" value="10">
-                    <button class="btn btn-sm btn-primary" type="submit">10</button>
-                </form>
-                <a class="btn btn-sm btn-primary col-lg-6 col-md-6 col-sm-6 col-6 extra-details"
-                    href="{% url 'product_detail' product.id %}">Details</a>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+        <div class="card">
+            <a href="{% url 'product_detail' product.id %}">
+                <div class="image-div">
+                    <img src="{{ product.img.url }}" class="card-img" alt="{{ product.name }}">
+                </div>
+                <div class="card-title">{{ product.name }}</div>
+                <div class="card-body">
+                    <div class="details">
+                        <p>For: {{ product.fits }}</p>
+                        <p>Ticket Price: £{{ product.ticket_price }}</p>
+                    </div>
+                </div>
+            </a>
+            <div class="row card-footer">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <form method="post" class="offset-lg-1 offset-md-1 offset-sm-1 col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
+                                        action="{% url 'add_to_cart' product.id %}">
+                                        {% csrf_token %}
+                                        <input name="quantity" type="hidden" value="1">
+                                        <button class="btn btn-sm btn-light" type="submit"> 1</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
+                                        action="{% url 'add_to_cart' product.id %}">
+                                        {% csrf_token %}
+                                        <input name="quantity" type="hidden" value="5">
+                                        <button class="btn btn-sm btn-light" type="submit"> 5</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
+                                        action="{% url 'add_to_cart' product.id %}">
+                                        {% csrf_token %}
+                                        <input name="quantity" type="hidden" value="10">
+                                        <button class="btn btn-sm btn-light" type="submit">10</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add"
+                                        action="{% url 'add_to_cart' product.id %}">
+                                        {% csrf_token %}
+                                        <input name="quantity" type="hidden" value="20">
+                                        <button class="btn btn-sm btn-light" type="submit">20</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
     {% endfor %}
+</div>
+
+<div class="text-center">
+    <p class="text-muted">Pick your car to see more results, this page has limited products available.</p>
 </div>
 {% endblock content %}
 

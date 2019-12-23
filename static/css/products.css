@@ -5,6 +5,15 @@
 h1 {
     text-align: center;
 }
+
+.card {
+    border: 1px solid #000
+}
+
+.card a {
+    text-decoration: none;
+}
+
 .search-box {
     margin-top: 30px;
 }
@@ -55,13 +64,15 @@ h6 {
 
 .card-title {
     font-family: 'Hammersmith', sans-serif;
+    color: #000;
     font-size: 13pt;
     padding-top: 5px;
     margin: 0;
 }
 
 .image-div {
-    height: 250px;
+    width: 100%;
+    height: 100%
 }
 
 .card-img {
@@ -69,22 +80,37 @@ h6 {
     background-repeat: no-repeat;
     overflow: hidden;
     background-position: center;
-    height: inherit;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .card-body {
-    padding: .75rem;
+    padding: .5rem .5rem 0 .5rem;
+}
+
+.card-footer {
+    background-color: #fff;
+    border-top: none;
+    padding: 0 1.25rem .5rem 1.25rem;
 }
 
 .details {
     margin-bottom: 5%;
-    
 }
 
 .details p {
     font-family: 'Hammersmith', sans-serif;
+    color: #000;
     margin: 0;
     padding: 0;
+}
+
+.table td {
+    border-top: none;
+}
+
+.table-sm td {
+    padding:0;
 }
 
 .quick-add {
