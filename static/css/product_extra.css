@@ -55,20 +55,8 @@ img {
     font-size: 12pt;
 }
 
-.large-screen-view {
-    display: none;
-}
-
 @media (min-width: 768px) {
-    .large-screen-view {
-        display: initial;
-    }
-
     .input-group>.form-control {
         width: 35%; 
-    }
-
-    .mobile-view {
-        display: none;
     }
 }

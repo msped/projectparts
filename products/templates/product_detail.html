@@ -8,48 +8,27 @@
 {% block title%}{{ product.name }}{% endblock title %}
 
 {% block content %}
-<div class="large-screen-view">
-    <div class="row">
-        <div class="col-6">
-            <img src="{{ product.img.url }}" class="img-fluid" alt="{{ product.name }}">
-        </div>
-        <div class="col-6 product-info">
-            <div class="product-name">
-                <h1>{{ product.name }}</h1>
-            </div>
-            <div class="select-tickets">
-                <div class="ticket-price">
-                    <p>Ticket Price: £{{ product.ticket_price }}</p>
-                </div>
-                <form method="post" class="text-center" action="{% url 'add_to_cart' product.id %}">
-                    {% csrf_token %}
-                    <div class="input-group offset-2 col-8">
-                        <input name="quantity" class="form-control" type="number" value="0" min="1" max="99">
-                        <button class="btn btn-sm btn-primary add-to-cart" type="submit">Add</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="mobile-view">
-    <center>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
         <img src="{{ product.img.url }}" class="img-fluid" alt="{{ product.name }}">
-    </center>
-    <h1> {{ product.name }}</h1>
-    <div class="row select-tickets">
-        <div class="offset-lg-4 col-lg-4 offset-md-3 col-md-6 col-sm-12 col-xs-12 ticket-price">
-            <p>Ticket Price: £{{ product.ticket_price }}</p>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12 product-info">
+        <div class="product-name">
+            <h1>{{ product.name }}</h1>
         </div>
-        <form method="post" class="offset-lg-4 col-lg-4 offset-md-3 col-md-6 col-sm-12 col-xs-12"
-            action="{% url 'add_to_cart' product.id %}">
-            {% csrf_token %}
-            <div class="input-group">
-                <input name="quantity" class="form-control" type="number" value="0" min="1" max="99">
-                <button class="btn btn-sm btn-primary add-to-cart" type="submit">Add</button>
+        <div class="select-tickets">
+            <div class="ticket-price">
+                <p>Ticket Price: £{{ product.ticket_price }}</p>
             </div>
-        </form>
+            <form method="post" class="text-center" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+                <div class="input-group offset-2 col-8">
+                    <input name="quantity" class="form-control" type="number" value="0" min="1" max="99">
+                    <button class="btn btn-sm btn-primary add-to-cart" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -67,7 +46,7 @@
         *Please be aware we try to keep up to date with which products fit which 
         vehicles however we aren't always 100% accurate. For more information 
         please check the the manufacturer or the supplier 
-        <a href="{{ product.product_link }}">here.</a>
+        <a href="{{ product.product_link }}" target="_blank">here.</a>
     </p>
 </div>
 {% endblock content %}
