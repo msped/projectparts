@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $('#make').on('change', function(){
         $('.added-value-model').remove();
-        make = $('#make').find(":selected").text();
+        var make = $('#make').find(":selected").text();
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -21,8 +21,8 @@ $(document).ready(function(){
 
     $('#model').on('change', function(){
         $('.added-value-generation').remove();
-        make = $('#make').find(":selected").text();
-        model = $('#model').find(":selected").text();
+        var make = $('#make').find(":selected").text();
+        var model = $('#model').find(":selected").text();
         $.ajax({
             type: 'POST',
             url: '/tickets/gens/',
