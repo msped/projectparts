@@ -20,37 +20,44 @@ def view_cart(request):
     return render(request, 'cart.html', {'orders': orders})
 
 @login_required
-def add_to_cart(request, product_id):
+def add_to_cart(request):
     """Adds specified quantity of a product into the cart"""
 
-    quantity = int(request.POST.get('quantity'))
+    if request.method == "POST":
 
-    comp = Competition.objects.get(is_active=True)
+        quantity = int(request.POST.get('qty'))
+        product_id = int(request.POST.get('product_id'))
 
-    order = Orders.objects.filter(
-        user=request.user.id,
-        related_competition=comp.id,
-        product=product_id,
-        is_paid=False
-    )
+        comp = Competition.objects.get(is_active=True)
 
-    if order.exists():
-        new_qty = order[0].quantity + quantity
-        order.update(quantity=new_qty)
-        messages.success(request, '{} tickets added to cart.'.format(quantity))
-    else:
-        product = Product.objects.get(id=product_id)
-        user = User.objects.get(id=request.user.id)
-        new_order = Orders.objects.create(
-            user=user,
-            related_competition=comp,
-            product=product,
-            quantity=quantity
+        order = Orders.objects.filter(
+            user=request.user.id,
+            related_competition=comp.id,
+            product=product_id,
+            is_paid=False
         )
-        new_order.save()
-        messages.success(request, '{} tickets added to cart.'.format(quantity))
 
-    return redirect(reverse('products'))
+        if order.exists():
+            new_qty = order[0].quantity + quantity
+            order.update(quantity=new_qty)
+        else:
+            product = Product.objects.get(id=product_id)
+            user = User.objects.get(id=request.user.id)
+            new_order = Orders.objects.create(
+                user=user,
+                related_competition=comp,
+                product=product,
+                quantity=quantity
+            )
+            new_order.save()
+
+        cart_amount = cart_contents(request)
+
+        data = {
+            'cart_amount': cart_amount['product_count']
+        }
+
+    return JsonResponse(data)
 
 @login_required
 def increase_item(request, order_id):
