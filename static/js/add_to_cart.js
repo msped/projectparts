@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $('form').submit(function(e){
+    $('.add-qty-to-cart').submit(function(e){
         e.preventDefault();
 
         var qty = $(this).find('.quantity').val();
