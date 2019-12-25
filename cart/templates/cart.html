@@ -59,4 +59,9 @@
 </div>
 {% endblock content %}
 
-{% block js %}<script src="{% static 'js/cart.js' %}"></script>{% endblock js %}
+{% block js %}
+<script>
+    var cart_product_count = {{ product_count }};
+</script>
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock js %}
