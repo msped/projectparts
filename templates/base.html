@@ -34,7 +34,7 @@
                 <ul class="navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     <li class="nav-item {% if request.resolver_match.url_name == 'view_cart' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'view_cart' %}">Cart
+                        <a class="nav-link" id="cart" href="{% url 'view_cart' %}">Cart
                             <label class="badge badge-warning" id="product-count">{{ product_count }}</label>
                         </a>
                     </li>
