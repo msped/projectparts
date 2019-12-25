@@ -1,6 +1,11 @@
 $(document).ready(function(){
     $('#make').on('change', function(){
-        $('.added-value-model').remove();
+        $('#model').empty();
+        $('#generation').empty();
+        var template = '<option class="added-value-model" disabled selected value=""> Select an Option</option>'; 
+        $('#model').append(template);
+        var template = '<option class="added-value-model" disabled selected value=""> Select an Option</option>'; 
+        $('#generation').append(template);
         var make = $('#make').find(":selected").text();
         $.ajax({
             type: 'POST',
@@ -20,7 +25,9 @@ $(document).ready(function(){
     });
 
     $('#model').on('change', function(){
-        $('.added-value-generation').remove();
+        $('#generation').empty();
+        var template = '<option class="added-value-model" disabled selected value=""> Select an Option</option>'; 
+        $('#generation').append(template);
         var make = $('#make').find(":selected").text();
         var model = $('#model').find(":selected").text();
         $.ajax({
