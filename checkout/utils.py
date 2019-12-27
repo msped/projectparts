@@ -19,8 +19,6 @@ def email_order(request, orders, total, user_correct):
         }
         users_entries.update(n_order)
 
-    print(users_entries)
-
     html_email = loader.render_to_string(
         'email_templates/order_complete.html',
         {
