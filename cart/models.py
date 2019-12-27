@@ -9,7 +9,7 @@ from competition.models import Competition
 class Orders(models.Model):
     """Model for users order / cart"""
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    related_competition = models.ForeignKey(Competition, on_delete=models.DO_NOTHING)
+    related_competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)

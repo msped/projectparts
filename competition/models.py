@@ -15,7 +15,7 @@ class Competition(models.Model):
     next_competition = models.BooleanField(default=True)
     winner = models.ForeignKey(
         'checkout.Entries',
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         null=True,
         blank=True
     )
