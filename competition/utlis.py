@@ -2,7 +2,7 @@ from random import randint
 from django.core.mail import mail_admins, send_mass_mail
 from django.template import loader
 from django.utils.html import strip_tags
-from cart.models import Orders
+from checkout.models import Entries
 from .models import Competition
 
 def new_competition():
@@ -27,7 +27,7 @@ def pick_competition_winner():
     """Get Competition winner and send out emails"""
     current_comp = Competition.objects.get(is_active=True, tickets_left=0)
 
-    # Change to next competition to minimize 
+    # Change to next competition to minimize
     current_comp.is_active = False
     current_comp.save()
     next_comp = Competition.objects.get(next_competition=True)
@@ -36,23 +36,23 @@ def pick_competition_winner():
     next_comp.save()
 
     r_number = randint(1, current_comp.tickets)
-    winning_ticket = Orders.objects.get(
-        related_competition=current_comp.id,
+    winning_ticket = Entries.objects.get(
+        competition_entry=current_comp.id,
         ticket_number=r_number
     )
-    current_comp.winner = winning_ticket.id
+    current_comp.winner = winning_ticket
     current_comp.save()
 
-    winners_email = winning_ticket.user.email
+    winners_email = [winning_ticket.user.email,]
 
-    comp_entries = Orders.objects.get(related_competition=current_comp.id)
+    comp_entries = Entries.objects.filter(competition_entry=current_comp.id)
     recipient_list = []
     for entry in comp_entries:
         user_email = entry.user.email
         if winners_email != user_email:
             recipient_list.append(user_email)
 
-    message = """"
+    message = """
     Hurah!\n
     A winner has been chosen for competition {}, congratulations to {} {}! \n
     They have won a {} for their {}.\n
@@ -63,8 +63,8 @@ def pick_competition_winner():
         current_comp.id,
         winning_ticket.user.first_name,
         winning_ticket.user.last_name,
-        winning_ticket.product.name,
-        winning_ticket.product.fits
+        winning_ticket.order.product,
+        winning_ticket.order.product.fits
     )
     participants = (
         'A winner has been chosen! A new competition has also started.',
@@ -76,14 +76,14 @@ def pick_competition_winner():
     winner_message = """
     Congratulations, you won competition {}!\n
     Your winning number {} has won you {}.\n
-    Please sit tight, we will contact you with 2 working days.\n
+    Please sit tight, we will contact you within 2 working days.\n
     Again, congratulations and thanks for playing!\n
     Many Thanks,\n
     Project Parts Team
     """.format(
         current_comp.id,
         winning_ticket.ticket_number,
-        winning_ticket.product.name
+        winning_ticket.order.product
     )
 
     winner = (
