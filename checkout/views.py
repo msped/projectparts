@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import stripe
-from products.models import Product
 from competition.utlis import new_competition, pick_competition_winner
 from competition.models import Competition
 from cart.models import Orders
