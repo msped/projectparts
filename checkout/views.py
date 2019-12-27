@@ -92,31 +92,29 @@ def checkout(request):
                                     create = True
                                     while create:
                                         ticket_number = randint(1, comp.tickets)
-                                        product = Product.objects.get(
-                                            id=item.product.id
-                                        )
                                         entry, created = Entries.objects.get_or_create(
-                                            user=user,
+                                            defaults={
+                                                'user': user,
+                                                'order': item
+                                            },
                                             competition_entry=comp,
-                                            order=item,
-                                            product=product,
                                             ticket_number=ticket_number
                                         )
                                         if created:
                                             tickets_per_order -= 1
                                             create = False
 
-                        tickets_left = comp.tickets_left
-                        comp.tickets_left = tickets_left - tickets
+                            tickets_left = comp.tickets_left
+                            comp.tickets_left = tickets_left - tickets
                         comp.save()
                         email_order(request, orders, total, user_correct)
                         request.session['user_correct'] = user_correct
                         if comp.tickets_left < 500:
                             try:
-                                new_comp = Competition.objects.get(
+                                Competition.objects.get(
                                     next_competition=True
                                 )
-                            except new_comp.DoesNotExist:
+                            except Competition.DoesNotExist:
                                 new_competition()
 
                         if comp.tickets_left == 0:
