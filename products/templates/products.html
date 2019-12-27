@@ -175,7 +175,6 @@
 {% block js %}
 <script>
     window.CSRF_TOKEN = "{{ csrf_token }}"
-    var cart_product_count = {{ product_count }};
 </script>
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="{% static 'js/products.js' %}"></script>

@@ -159,6 +159,10 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     <!--My Files-->
+    <script>
+        var cart_product_count = {{ product_count }};
+    </script>
+    <script src="{% static 'js/main.js' %}"></script>
     {% block js %}{% endblock js %}
 </body>
 </html>
