@@ -5,7 +5,6 @@ $(document).ready(function() {
 
         var qty = $(this).find('.quantity').val();
         var product_id = $(this).find('.product_id').val();
-        console.log("qty: " + qty + " Prod id: " + product_id)
 
         $.ajax({
             url: '/cart/add/',
