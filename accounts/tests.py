@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django import forms
+from competition.models import Competition
 from .forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
 
 # Create your tests here.
@@ -15,6 +16,8 @@ class AccountViewsTest(TestCase):
             'password': 'testpassword'
         }
         User.objects.create_user(**self.user)
+
+        Competition(is_active=True).save()
 
     def test_login_page_response(self):
         """Test response of login page when not logged in"""
@@ -69,6 +72,25 @@ class AccountViewsTest(TestCase):
         response = self.client.get('/accounts/change_password/', follow=True)
         self.assertIn(b'<h1>Login</h1>', response.content)
 
+    def test_users_orders_when_user_logged_in(self):
+        """Test users orders when a user is logged in"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.get('/accounts/orders/', follow=True)
+        self.assertIn(
+            b'<p class="text-center text-muted">View all your previous orders here.</p>',
+            response.content
+        )
+
+    def test_users_orders_when_user_logged_out(self):
+        """Test where the change passowrd should return to login page if
+        no user logged in"""
+        response = self.client.get('/accounts/orders/', follow=True)
+        self.assertIn(b'<h1>Login</h1>', response.content)
+
 class AccountFormsTests(TestCase):
     """Test all forms within the accounts app"""
 
@@ -77,7 +99,7 @@ class AccountFormsTests(TestCase):
             username='test user',
             email='test@gmail.com',
             password='testpassword'
-        )  
+        )
         user.save()
 
     def test_register_form_correct_data(self):
