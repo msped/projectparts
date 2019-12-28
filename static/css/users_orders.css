@@ -12,6 +12,10 @@ td.entries-row {
     font-size: 10.5pt;
 }
 
+.current {
+    font-family: 'Roboto', sans-serif;
+}
+
 .fas {
     color: rgba(0, 0, 0, .5);
     font-size: 14pt;

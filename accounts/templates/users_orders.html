@@ -58,7 +58,7 @@
             {% endif %}
     
             <span class="current">
-                Page {{ users_orders.number }} of {{ users_orders.paginator.num_pages }}
+                {{ users_orders.number }} of {{ users_orders.paginator.num_pages }}
             </span>
     
             {% if users_orders.has_next %}
