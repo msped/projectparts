@@ -14,7 +14,10 @@ def get_current_ticket_amount(request):
 def winners(request):
     """Page to display previous winners for the competition"""
 
-    previous_comp = Competition.objects.filter(is_active=False, winner__isnull=False)    
+    previous_comp = Competition.objects.filter(
+        is_active=False,
+        winner__isnull=False
+    ).order_by('-id')
 
     paginator = Paginator(previous_comp, 15)
     page = request.GET.get('page')
