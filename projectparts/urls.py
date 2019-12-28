@@ -17,15 +17,15 @@ from django.contrib import admin
 from django.conf.urls import url, include
 from django.urls import path
 from django.views import static
-from .settings import MEDIA_ROOT
-
 from home.views import home
+from .settings import MEDIA_ROOT
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', home, name="home"),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^competition/', include('competition.urls')),
+    url(r'^contact/', include('contact.urls')),
     url(r'^cart/', include('cart.urls')),
     url(r'^tickets/', include('products.urls')),
     url(r'^checkout/', include('checkout.urls')),
