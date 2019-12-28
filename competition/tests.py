@@ -73,3 +73,18 @@ class ModelTest(TestCase):
         self.assertEqual(comp.answer_3, "Maybe")
         self.assertEqual(comp.correct_answer, "Yes")
         self.assertEqual(comp.is_active, False)
+
+class TestCompetitionViews(TestCase):
+    """Test all views in the competition app"""
+    def test_winners_page_response(self):
+        """Test response of winners page"""
+        response = self.client.get('/competition/winners/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_current_ticket_amount(self):
+        """Test reponse of view that returns the current ticket
+        amount of the homepage"""
+        comp = Competition.objects.create(is_active=True)
+        comp.save()
+        ticket_amount = self.client.get('/competition/get_current/')
+        self.assertEqual(ticket_amount.content, b'4000')
