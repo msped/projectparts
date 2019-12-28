@@ -32,6 +32,9 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'winners' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'winners' %}">Winners</a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'winners' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                </li>
             </ul>
             <div class="navbar-collapse justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav navbar-right">
@@ -105,6 +108,9 @@
                     </li>
                     <li>
                         <a class="footer-text" href="{% url 'winners' %}">Winners</a>
+                    </li>
+                    <li>
+                        <a class="footer-text" href="{% url 'contact' %}">Contact</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li>
