@@ -13,4 +13,4 @@ class Entries(models.Model):
     ticket_number = models.IntegerField()
 
     def __str__(self):
-        return f'Comp: {self.competition_entry} | Ticket No: {self.ticket_number}'
+        return f'{self.competition_entry} | Ticket No: {self.ticket_number}'
