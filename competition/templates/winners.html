@@ -18,11 +18,14 @@
     {% for c in prev_comp %}
     <div class="card flex-row flex-wrap">
         <div class="card-header">
-            <img src="{{ c.winner.order.product.img.url }}" class="card-img" alt="{{ c.winner.order.product.name }}">
+            <a href="{% url 'product_detail' c.winner.order.product.id %}">
+                <img src="{{ c.winner.order.product.img.url }}" class="card-img" alt="{{ c.winner.order.product.name }}">
+            </a>
         </div>
         <div class="card-block px-2">
             <h2 class="card-title">Competition: {{ c.id }}</h2>
-            <p class="card-text">{{ c.winner.user.first_name }} has won a {{ c.winner.order.product }} for there {{ c.winner.order.product.fits }}.</p>
+            <p class="card-text">{{ c.winner.user.first_name }} has won a {{ c.winner.order.product }} for there {{ c.winner.order.product.fits }} with number {{ c.winner.ticket_number }}</p>
+            <p class="card-text">This ticket only cost £{{ c.winner.order.product.ticket_price }}.</p>
             <p class="card-text">Question: {{ c.question}}<br> Answer: {{ c.correct_answer }}</p>
         </div>
     </div>
