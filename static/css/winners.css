@@ -11,15 +11,18 @@
 }
 
 .card {
-    padding: 10px;
+    padding: 15px;
 }
 
-.card-header {
-    width: 250px;
-    padding: .5rem .5rem;
-    background-color: #fff;
-    border-bottom: none;
+.card-title {
+    margin-top: 10px;
 }
+
+.header {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .card-text {
     font-family: 'Roboto', sans-serif;
     font-size: 11pt;
@@ -45,4 +48,7 @@
 
 .fas:hover {
     color: rgba(0, 0, 0, 1);
+}
+
+@media (min-width: 768px) {
 }
