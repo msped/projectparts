@@ -135,6 +135,7 @@ def checkout(request):
     }
     return render(request, 'checkout.html', content)
 
+@login_required
 def checkout_complete(request):
     """View to be displayed when the checkout has been completed"""
 
