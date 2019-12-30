@@ -7,8 +7,11 @@ from competition.models import Competition
 
 def get_current_ticket_amount(request):
     """Get tickets left in current competition for homepage"""
-    comp = Competition.objects.get(is_active=True)
-    tickets_left = comp.tickets_left
+    try:
+        comp = Competition.objects.get(is_active=True)
+        tickets_left = comp.tickets_left
+    except Competition.DoesNotExist:
+        tickets_left = "No Competition Acitve"
     return HttpResponse(tickets_left)
 
 def winners(request):
