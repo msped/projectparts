@@ -50,6 +50,10 @@
     font-family: 'Hammersmith', sans-serif;
 }
 
+img {
+    width: 30px
+}
+
 .active {
     color: #000;
 }
