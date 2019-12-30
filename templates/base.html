@@ -63,7 +63,14 @@
                             {% endif %}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'profile' %}">
+                                Profile
+                                {% if profile_incomplete %}
+                                <div class="check-engine">
+                                    <img src="{% static 'images/check-engine.png' %}" alt="Check Engine">
+                                </div>
+                                {% endif %}
+                            </a>
                             <a class="dropdown-item" href="{% url 'users_orders' %}">Orders</a>
                         </div>
                     </li>
