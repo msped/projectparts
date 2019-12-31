@@ -11,7 +11,7 @@ def get_current_ticket_amount(request):
         comp = Competition.objects.get(is_active=True)
         tickets_left = comp.tickets_left
     except Competition.DoesNotExist:
-        tickets_left = "No Competition Acitve"
+        tickets_left = "No Competition Active"
     return HttpResponse(tickets_left)
 
 def winners(request):
