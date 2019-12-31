@@ -16,13 +16,15 @@ The site will offer 'tickets' at a fraction of the cost of the full product pric
 
 - A User will want a payment system in-order to pay for the tickets they wish to play.
 
+- A User will want to search through previous orders.
+
 - A User will want to be able to see the price of the full product as if they were to buy it compared to the ticket price.
 
 - A User will want to be able to quick add set amount of tickets.
 
 - Users will want to be able to read more about each product on there own page with more description.
 
-- User will want a cart that tickets can be added to and updated with the amount. A cart will display the tick price, quantity and the full total.
+- User will want a cart that tickets can be added to and updated with the amount. A cart will display the ticket price, quantity and the full total.
 
 ### Wireframes
 
@@ -37,20 +39,22 @@ Design of the database can be viewed [here](https://github.com/msped/projectpart
 ### Existing Features
 
 Feature 1 - allows users X to achieve Y, by having them fill out Z
-...
-For some/all of your features, you may choose to reference the specific project files that implement them, although this is entirely optional.
 
 - Products page displays 15 products as a standard, showing full products when using search filters.
 
 - When orders have been made they are viewable in the users profile.
 
-- Profile details are editable within a users profile.
+- Profile details are editable within a users profile. If a profile is incomplete a check engine light will display next to the users first name on the navbar.
 
 - Each carts item is automatically assigned an entry to number to the competition.
 
 - New competition is automatically created when active competition is below a certain number of entries.
 
-- Competition automatically ends, picks a winner and announces the winner via e-mail before starting the next competition.  
+- Competition automatically ends, picks a winner and announces the winner via e-mail before starting the next competition.
+
+- All previous winners are viewable on the winners page with associated question, answer, ticket number and product won.
+
+- When a user enters a competition they will receive an e-mail with the order and entries if the user got the answer correct.
 
 ### Features Left to Implement
 
@@ -102,12 +106,13 @@ Different configuration files?
 Separate git branch?
 In addition, if it is not obvious, you should also describe how to run your code locally.
 
+Locally the code is ran using a virutal environment (venv). To access the venv you need to start the venv, for exmaple in my case `projectparts-env\scripts\activate.bat`. Once
+the venv has been started you can then run `python manage.py runserver` and go to http://127.0.0.1:8000/ to see the development site on your local machine.
+
 ## Credits
 
-### Content
+### Content / Media
 
-The text for section Y was copied from the Wikipedia article Z
+The check engine light used in the incompletion of a users profile is from [here](https://en.wikipedia.org/wiki/Check_engine_light#/media/File:Motorkontrollleuchte.svg).
 
-### Media
-
-The photos used in this site were obtained from ...
+All other text and images where taken from the corresponding site that is on the product detail page, linked at the bottom.
