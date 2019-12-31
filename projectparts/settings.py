@@ -27,13 +27,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ADMINS = [
     ('Matt', os.environ.get("EMAIL_ADDRESS"))
 ]
 
-ALLOWED_HOSTS = ['https://projectparts.herokuapp.com/']
+ALLOWED_HOSTS = ['projectparts.herokuapp.com/']
 
 # Application definition
 
