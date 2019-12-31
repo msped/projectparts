@@ -33,7 +33,7 @@ ADMINS = [
     ('Matt', os.environ.get("EMAIL_ADDRESS"))
 ]
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://projectparts.herokuapp.com/']
 
 # Application definition
 
