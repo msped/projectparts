@@ -5,7 +5,3 @@ projectparts-env/
 __pycache__
 .vscode
 .env
-static/
-media/
-*.png
-*.jpg
