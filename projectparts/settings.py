@@ -92,20 +92,24 @@ WSGI_APPLICATION = 'projectparts.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'projectparts',
-#        'USER': os.environ.get('DB_USER'),
-#        'PASSWORD': os.environ.get('DB_PASSWORD'),
-#        'HOST': 'localhost',
-#        'PORT': '',
-#    }
-#}
 
-DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-}
+
+if "DATABASE_URL" in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    }
+else:
+    print("Database URL not found. Using Postgres from local.")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'projectparts',
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
 
 
 # Password validation
