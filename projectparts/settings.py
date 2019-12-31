@@ -27,13 +27,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ADMINS = [
     ('Matt', os.environ.get("EMAIL_ADDRESS"))
 ]
 
-ALLOWED_HOSTS = ['projectparts.herokuapp.com/']
+ALLOWED_HOSTS = ['projectparts.herokuapp.com/', '127.0.0.1']
 
 # Application definition
 
@@ -107,7 +107,7 @@ else:
             'USER': os.environ.get('DB_USER'),
             'PASSWORD': os.environ.get('DB_PASSWORD'),
             'HOST': 'localhost',
-            'PORT': '5432',
+            'PORT': '',
         }
     }
 
