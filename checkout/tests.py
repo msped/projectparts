@@ -120,17 +120,6 @@ class TestCheckoutApp(TestCase):
         })
         self.assertTrue(form.is_valid())
 
-    def test_payment_form_invalid(self):
-        """Test payment form invalid"""
-        form = PaymentForm({
-            'credit_card_number': '',
-            'cvv': '444',
-            'expiry_month': '12',
-            'expiry_year': '',
-            'stripe_id': 'testID'
-        })
-        self.assertFalse(form.is_valid())
-
     def test_get_total_util(self):
         """Test utils function get_total"""
         orders = Orders.objects.all()

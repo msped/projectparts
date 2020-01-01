@@ -140,7 +140,6 @@ def checkout_complete(request):
     """View to be displayed when the checkout has been completed"""
 
     user_correct = request.session['user_correct']
-    print(user_correct)
     del request.session['user_correct']
 
     content = {
