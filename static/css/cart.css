@@ -41,3 +41,7 @@ tr td a i {
 .total p {
     font-family: 'Hammersmith', sans-serif;
 }
+
+td {
+    font-size: 11pt;
+}
