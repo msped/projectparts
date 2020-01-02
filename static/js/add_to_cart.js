@@ -17,17 +17,29 @@ $(document).ready(function() {
             },
             type: 'POST',
             success: function(d){
-                console.log(form)
-                form.closest('.card-footer').children('.add-options').fadeOut('fast', function(){
-                    form.closest('.card-footer').children('.added-to-cart').fadeIn();
-                });
-                $('#product-count').css('display', 'initial').text(d.cart_amount);
-                setTimeout(function(){
-                    form.closest('.card-footer').children('.added-to-cart').fadeOut('fast', function(){
-                        form.closest('.card-footer').children('.add-options').fadeIn(); 
+
+                if (window.location.pathname == "/tickets/" + product_id + "/") {
+                    form.closest('.add').children('.add-options').fadeOut('fast', function(){
+                        form.closest('.add').children('.added-to-cart').fadeIn();
                     });
-                    
-                }, 3000)
+                    $('#product-count').css('display', 'initial').text(d.cart_amount);
+                    setTimeout(function(){
+                        form.closest('.add').children('.added-to-cart').fadeOut('fast', function(){
+                            form.closest('.add').children('.add-options').fadeIn(); 
+                        });
+                    }, 3000)
+                } else {
+                    form.closest('.card-footer').children('.add-options').fadeOut('fast', function(){
+                        form.closest('.card-footer').children('.added-to-cart').fadeIn();
+                    });
+                    $('#product-count').css('display', 'initial').text(d.cart_amount);
+                    setTimeout(function(){
+                        form.closest('.card-footer').children('.added-to-cart').fadeOut('fast', function(){
+                            form.closest('.card-footer').children('.add-options').fadeIn(); 
+                        });
+                    }, 3000)
+                }
+                
                 
             }
         })

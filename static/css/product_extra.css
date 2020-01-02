@@ -38,7 +38,7 @@ img {
     width: 25%;
 }
 
-.add-to-cart {
+.add-to-cart-btn  {
     margin: 0 15px;
 }
 
@@ -53,6 +53,20 @@ img {
 .product-fits p {
     font-family: 'Hammersmith', sans-serif;
     font-size: 12pt;
+}
+
+.added-to-cart p.text-center {
+    margin-bottom: 0;
+}
+
+.added-to-cart {
+    background-color: #3ac23c;
+    display: none;
+}
+
+.added-to-cart p {
+    font-family: 'Roboto', sans-serif;
+    margin: 5px;
 }
 
 @media (min-width: 768px) {

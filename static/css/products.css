@@ -131,10 +131,6 @@ h6 {
     margin: 5px;
 }
 
-/*.added-to-cart {
-    display: none;
-}*/
-
 @media (min-width: 576px) {
     .image-div {
         height: 150px;

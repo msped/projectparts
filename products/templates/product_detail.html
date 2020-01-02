@@ -21,14 +21,21 @@
             <div class="ticket-price">
                 <p>Ticket Price: £{{ product.ticket_price }}</p>
             </div>
-            <form method="post" class="text-center add-qty-to-cart" action="">
-                {% csrf_token %}
-                <div class="input-group offset-2 col-8">
-                    <input type="hidden" name="product_id" class="product_id" value="{{ product.id }}">
-                    <input name="quantity" class="form-control quantity" type="number" value="0" min="1" max="99">
-                    <button class="btn btn-sm btn-primary add-to-cart" type="submit">Add</button>
+            <div class="add">
+                <div class="added-to-cart col-12">
+                    <p class="text-center">Added to Cart</p>
                 </div>
-            </form>
+                <div class="add-options">
+                    <form method="post" class="text-center add-qty-to-cart" action="">
+                        {% csrf_token %}
+                        <div class="input-group offset-2 col-8">
+                            <input type="hidden" name="product_id" class="product_id" value="{{ product.id }}">
+                            <input name="quantity" class="form-control quantity" type="number" value="0" min="1" max="99">
+                            <button class="btn btn-sm btn-primary add-to-cart-btn" type="submit">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
