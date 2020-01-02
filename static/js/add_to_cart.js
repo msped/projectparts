@@ -3,8 +3,10 @@ $(document).ready(function() {
     $('.add-qty-to-cart').submit(function(e){
         e.preventDefault();
 
-        var qty = $(this).find('.quantity').val();
-        var product_id = $(this).find('.product_id').val();
+        form = $(this);
+
+        var qty = form.find('.quantity').val();
+        var product_id = form.find('.product_id').val();
 
         $.ajax({
             url: '/cart/add/',
@@ -15,9 +17,18 @@ $(document).ready(function() {
             },
             type: 'POST',
             success: function(d){
-                $('#cart').animate({color: '#00B500'});
+                console.log(form)
+                form.closest('.card-footer').children('.add-options').fadeOut('fast', function(){
+                    form.closest('.card-footer').children('.added-to-cart').fadeIn();
+                });
                 $('#product-count').css('display', 'initial').text(d.cart_amount);
-                $('#cart').animate({color: 'rgba(0, 0, 0, .5)'}, 750);
+                setTimeout(function(){
+                    form.closest('.card-footer').children('.added-to-cart').fadeOut('fast', function(){
+                        form.closest('.card-footer').children('.add-options').fadeIn(); 
+                    });
+                    
+                }, 3000)
+                
             }
         })
     })
