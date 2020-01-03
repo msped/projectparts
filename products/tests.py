@@ -125,6 +125,81 @@ class ProductModelTests(TestCase):
         self.assertEqual(product.fits.generation, 'W176')
         self.assertEqual(product.part_manufacturer.name, 'Eibach')
 
+    def test_product_fits_multiple_true(self):
+        """Test product model"""
+        category = Categories(
+            category="Exterior"
+        )
+        category.save()
+        manufacturer = Manufacturer(
+            name="Eibach"
+        )
+        manufacturer.save()
+        product = Product(
+            name="Test Product",
+            description="Description",
+            img="",
+            category=category,
+            ticket_price="2.50",
+            product_price="795",
+            product_link="https://www.github.com",
+            part_manufacturer=manufacturer,
+            fits_multiple=True            
+        )
+        product.save()
+
+        self.assertEqual(product.name, 'Test Product')
+        self.assertEqual(product.description, 'Description')
+        self.assertEqual(product.img, '')
+        self.assertEqual(product.category.category, 'Exterior')
+        self.assertEqual(product.ticket_price, '2.50')
+        self.assertEqual(product.product_price, '795')
+        self.assertEqual(product.product_link, 'https://www.github.com')
+        self.assertEqual(product.part_manufacturer.name, 'Eibach')
+        self.assertTrue(product.fits_multiple)
+
+    def test_product_fits_multiple_false(self):
+        """Test product model with fits multiple as false"""
+        category = Categories(
+            category="Exterior"
+        )
+        category.save()
+        vehicle = Vehicle(
+            make="Mercedes",
+            model="A Class",
+            generation="W176"
+        )
+        vehicle.save()
+        manufacturer = Manufacturer(
+            name="Eibach"
+        )
+        manufacturer.save()
+        product = Product(
+            name="Test Product",
+            description="Description",
+            img="",
+            category=category,
+            ticket_price="2.50",
+            product_price="795",
+            product_link="https://www.github.com",
+            fits=vehicle,
+            part_manufacturer=manufacturer
+        )
+        product.save()
+
+        self.assertEqual(product.name, 'Test Product')
+        self.assertEqual(product.description, 'Description')
+        self.assertEqual(product.img, '')
+        self.assertEqual(product.category.category, 'Exterior')
+        self.assertEqual(product.ticket_price, '2.50')
+        self.assertEqual(product.product_price, '795')
+        self.assertEqual(product.product_link, 'https://www.github.com')
+        self.assertEqual(product.fits.make, 'Mercedes')
+        self.assertEqual(product.fits.model, 'A Class')
+        self.assertEqual(product.fits.generation, 'W176')
+        self.assertEqual(product.part_manufacturer.name, 'Eibach')
+        self.assertFalse(product.fits_multiple)
+
 class ManufacturerModelTests(TestCase):
     """Test Vehicle Model"""
 
