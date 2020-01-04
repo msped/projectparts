@@ -7,6 +7,10 @@
 
 }
 
+h1.display-4 {
+    font-size: 2.5rem;
+}
+
 h2 {
     text-align: center;
     font-family: 'Hammersmith', sans-serif;
@@ -23,7 +27,7 @@ h2 {
 }
 
 .easy-enter div i {
-    font-size: 60pt;
+    font-size: 40pt;
     color: rgb(104, 104, 104);
 }
 
@@ -47,4 +51,14 @@ h3 {
 #tickets-left {
     font-family: 'Hammersmith', sans-serif;
     font-size: 27pt;
+}
+
+@media (min-width: 768px) {
+    .easy-enter div i {
+        font-size: 60pt;
+    }
+
+    .display-4 {
+        font-size: 3.5rem;
+    }
 }
