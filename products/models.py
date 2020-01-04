@@ -49,7 +49,4 @@ class Product(models.Model):
     fits_multiple = models.BooleanField(default=False)
 
     def __str__(self):
-        if self.fits_multiple:
-            return "Fits multiple vehicles."
-        else:
-            return "{} {}".format(self.part_manufacturer.name, self.name)
+        return "{} {}".format(self.part_manufacturer.name, self.name)

@@ -49,7 +49,11 @@
 
 <div class="product-fits">
     <p>Manufacturer: {{ product.part_manufacturer }}</p>
+    {% if product.fits_multiple %}
+    <p>This item can fit multiple vehicles, check before entering whether it can fit your vehicle.*</p>
+    {% else %}
     <p>Fits: {{ product.fits }}*</p>
+    {% endif %}
     <p class="text-muted">
         *Please be aware we try to keep up to date with which products fit which 
         vehicles however we aren't always 100% accurate. For more information 

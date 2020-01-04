@@ -27,7 +27,12 @@
                 <h2 class="card-title">Competition: {{ c.id }}</h2>
                 <p class="card-text">{{ c.winner.user.first_name }} has won a 
                     {{ c.winner.order.product }} for there 
-                    {{ c.winner.order.product.fits }} with ticket number 
+                    {% if c.winner.order.product.fits_multiple %}
+                    vehicle 
+                    {% else %}
+                    {{ c.winner.order.product.fits }}
+                    {% endif %}
+                     with ticket number 
                     {{ c.winner.ticket_number }}.
                 </p>
                 <p class="card-text">
