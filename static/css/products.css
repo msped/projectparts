@@ -132,8 +132,18 @@ h6 {
     margin: 5px;
 }
 
+.quick-add button {
+    padding: .2rem .2rem;
+}
+
 @media (min-width: 576px) {
     .image-div {
         height: 150px;
+    }
+}
+
+@media (min-width: 768px) {
+    .quick-add button {
+        padding: .3rem .3rem;
     }
 }
