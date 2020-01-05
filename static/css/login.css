@@ -18,5 +18,10 @@ h1 {
 
 .register-link {
     margin: 50px 0;
+    font-family: 'Hammersmith', monospace;
+}
+
+.register-link a {
+    font-family: 'Hammersmith', monospace;
 }
 

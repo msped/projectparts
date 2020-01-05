@@ -25,5 +25,10 @@ h1 {
 
 .login-link {
     margin: 50px 0;
+    font-family: 'Hammersmith', monospace;
+}
+
+.login-link a {
+    font-family: 'Hammersmith', monospace;
 }
 
