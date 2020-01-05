@@ -59,17 +59,22 @@ class ProductAppViewsTest(TestCase):
             model="A Class",
             generation="W176"
         )
-        Product.objects.create(
+        manufacturer = Manufacturer(
+            name="Test Manufacturer"
+        )
+        manufacturer.save()
+        prod = Product(
             name="Test Product",
             description="Description",
-            img="media/default.jpg",
             category=category,
             ticket_price="2.50",
             product_price="795",
             product_link="https://www.github.com",
-            fits=vehicle
+            fits=vehicle,
+            part_manufacturer=manufacturer
         )
-        response = self.client.get('/tickets/1/')
+        prod.save()
+        response = self.client.get('/tickets/' + str(prod.id) +'/')
         self.assertEqual(response.status_code, 200)
 
 class ProductModelTests(TestCase):
