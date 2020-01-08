@@ -174,9 +174,29 @@
     {% endfor %}
 </div>
 
+<!--Solution for keep search results provdied by u/hale-hortler https://www.reddit.com/r/django/comments/e6dnl6/paginated_search_results_reset_when_going_to_next/ -->
 <div class="text-center">
-    <p class="text-muted">Pick your car to see more results, this page has limited products available.</p>
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page=1{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-double-left"></i></a>
+            <a href="?page={{ products.previous_page_number }}{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-left"></i></a>
+        {% endif %}
+
+        <span class="current">
+            {{ products.number }} of {{ products.paginator.num_pages }}
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-right"></i></a>
+            <a href="?page={{ products.paginator.num_pages }}{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-double-right"></i></a>
+        {% endif %}
+    </span>
 </div>
+
+<div class="text-center">
+    <p class="text-muted">Pick your car to see more tailored results.</p>
+</div>
+{% endif %}
 {% endblock content %}
 
 {% block js %}
