@@ -1,12 +1,13 @@
 import json
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 from .models import Product, Categories, Manufacturer, Vehicle
 
 # Create your views here.
 def products_view(request):
     """Shows all products"""
-    products = Product.objects.filter()[:20]
+    products = Product.objects.all()
     cars = Vehicle.objects.all()
     manufacturer_dropdown = Manufacturer.objects.all()
     categories_dropdown = Categories.objects.all()
@@ -64,8 +65,12 @@ def products_view(request):
                 category=categories
             ).order_by(sort_options)
 
+    paginator = Paginator(products, 20)
+    page = request.GET.get('page')
+    products_paginator = paginator.get_page(page)
+
     return render(request, 'products.html', {
-        'products': products,
+        'products': products_paginator,
         'makes': makes,
         'manufacturer': manufacturer_dropdown,
         'categories': categories_dropdown
