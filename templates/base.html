@@ -57,12 +57,12 @@
             </ul>
             <div class="navbar-collapse justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav navbar-right">
-                    {% if user.is_authenticated %}
                     <li class="nav-item {% if request.resolver_match.url_name == 'view_cart' %}active{% endif %}">
                         <a class="nav-link" id="cart" href="{% url 'view_cart' %}">Cart
                             <label class="badge badge-warning" id="product-count">{{ product_count }}</label>
                         </a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link {% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'users_orders'%}
                         active{% endif %}" 
