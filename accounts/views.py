@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from accounts.forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
 from cart.models import Orders
 from checkout.models import Entries
+from .utils import add_session_items_to_db
 
 def login(request):
     """Logs a user in / display login page"""
@@ -21,6 +22,7 @@ def login(request):
                                      password=request.POST['password'])
             if user:
                 auth.login(user=user, request=request)
+                add_session_items_to_db(request)
                 messages.success(request, "You have successfully logged in.")
                 return redirect('home')
             else:
@@ -51,6 +53,7 @@ def register(request):
 
             if user:
                 auth.login(user=user, request=request)
+                add_session_items_to_db(request)
                 messages.success(request, "You have successfully registered.")
                 return redirect('home')
             else:
