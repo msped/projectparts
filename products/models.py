@@ -23,7 +23,7 @@ class Manufacturer(models.Model):
     name = models.CharField(default='', max_length=100)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 class Product(models.Model):
     """Model for each Product"""
@@ -42,11 +42,9 @@ class Product(models.Model):
     )
     part_manufacturer = models.ForeignKey(
         Manufacturer,
-        on_delete=models.DO_NOTHING,
-        null=True,
-        blank=True
+        on_delete=models.DO_NOTHING
     )
     fits_multiple = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{} {}".format(self.part_manufacturer.name, self.name)
+        return f"{self.part_manufacturer} {self.name}"
