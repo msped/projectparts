@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, reverse
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
@@ -10,100 +9,111 @@ from .models import Orders
 
 # Create your views here.
 
-@login_required
 def view_cart(request):
     """Renders the cart view"""
-    try:
-        orders = Orders.objects.filter(user=request.user.id, is_paid=False)
-    except Orders.DoesNotExist:
-        orders = False
-    return render(request, 'cart.html', {'orders': orders})
+    return render(request, 'cart.html')
 
-@login_required
 def add_to_cart(request):
     """Adds specified quantity of a product into the cart"""
 
     if request.method == "POST":
-
         quantity = int(request.POST.get('qty'))
         product_id = int(request.POST.get('product_id'))
 
-        comp = Competition.objects.get(is_active=True)
+        if request.user.is_authenticated:
+            comp = Competition.objects.get(is_active=True)
 
-        order = Orders.objects.filter(
-            user=request.user.id,
-            related_competition=comp.id,
-            product=product_id,
-            is_paid=False
-        )
-
-        if order.exists():
-            new_qty = order[0].quantity + quantity
-            order.update(quantity=new_qty)
-        else:
-            product = Product.objects.get(id=product_id)
-            user = User.objects.get(id=request.user.id)
-            new_order = Orders.objects.create(
-                user=user,
-                related_competition=comp,
-                product=product,
-                quantity=quantity
+            order = Orders.objects.filter(
+                user=request.user.id,
+                related_competition=comp.id,
+                product=product_id,
+                is_paid=False
             )
-            new_order.save()
 
-        cart_amount = cart_contents(request)
+            if order.exists():
+                new_qty = order[0].quantity + quantity
+                order.update(quantity=new_qty)
+            else:
+                product = Product.objects.get(id=product_id)
+                user = User.objects.get(id=request.user.id)
+                new_order = Orders.objects.create(
+                    user=user,
+                    related_competition=comp,
+                    product=product,
+                    quantity=quantity
+                )
+                new_order.save()
+        else:
+            cart = request.session.get('cart', {})
+            if product_id in cart:
+                cart[product_id] = int(cart[product_id]) + quantity
+            else:
+                cart[product_id] = cart.get(product_id, quantity)
 
-        data = {
-            'cart_amount': cart_amount['product_count']
-        }
+            request.session['cart'] = cart
+
+    cart_amount = cart_contents(request)
+
+    data = {
+        'cart_amount': cart_amount['product_count']
+    }
 
     return JsonResponse(data)
 
-@login_required
 def increase_item(request, order_id):
     """increases cart item by one"""
-    order = Orders.objects.get(id=order_id)
 
-    if order.is_paid is False:
-        qty = int(order.quantity) + 1
+    if request.user.is_authenticated:
+        order = Orders.objects.get(id=order_id)
+        if order.is_paid is False:
+            qty = int(order.quantity) + 1
+            order.quantity = qty
+            order.save()
+    else:
+        cart = request.session.get('cart', {})
+        print(cart)
+        cart[order_id] = int(cart[order_id]) + 1
+        request.session['cart'] = cart
+    cart_total = cart_contents(request)
 
-        order.quantity = qty
-        order.save()
+    data = {
+        'qty': qty,
+        'total': cart_total['total']
+    }
 
-        cart_total = cart_contents(request)
+    return JsonResponse(data)
 
-        data = {
-            'qty': qty,
-            'total': cart_total['total']
-        }
-
-        return JsonResponse(data)
-
-@login_required
 def decrease_item(request, order_id):
     """decreases cart item by one"""
-    order = Orders.objects.get(id=order_id)
+    if request.user.is_authenticated:
+        order = Orders.objects.get(id=order_id)
+        if order.is_paid is False:
+            qty = int(order.quantity) - 1
+            order.quantity = qty
+            order.save()
+    else:
+        cart = request.session.get('cart', {})
+        cart[order_id] = int(cart[order_id]) - 1
+        qty = cart[order_id]
+        request.session['cart'] = cart
+    cart_total = cart_contents(request)
 
-    if order.is_paid is False:
-        qty = int(order.quantity) - 1
+    data = {
+        'qty': qty,
+        'total': cart_total['total']
+    }
 
-        order.quantity = qty
-        order.save()
+    return JsonResponse(data)
 
-        cart_total = cart_contents(request)
-
-        data = {
-            'qty': qty,
-            'total': cart_total['total']
-        }
-
-        return JsonResponse(data)
-
-@login_required
 def remove_item(request, order_id):
     """Remove an item from the cart"""
-    order = Orders.objects.filter(id=order_id)
-    order.delete()
-    messages.error(request, 'Ticket(s) Removed.')
+    if request.user.is_authenticated:
+        order = Orders.objects.filter(id=order_id)
+        order.delete()
+        messages.error(request, 'Ticket(s) Removed.')
+    else:
+        cart = request.session.get('cart', {})
+        cart.pop(order_id)
+        request.session['cart'] = cart
 
     return redirect(reverse('view_cart'))
