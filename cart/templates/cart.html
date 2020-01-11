@@ -15,7 +15,7 @@
 
 <div class="products">
     <div class="cart-items offset-lg-2 col-lg-8 offset-md-2 col-md-8 col-sm-12 col-xs-12">
-        {% if orders %}
+        {% if cart_items|length > 0 %}
         <table class="table table-borderless">
             <tr>
                 <th scope="col">Product</th>
@@ -23,7 +23,7 @@
                 <th scope="col">Price</th>
                 <th scope="col"></th>
             </tr>
-            {% for o in orders %}
+            {% for o in cart_items %}
             <tr>
                 <td>{{ o.product.name }}</td>
                 <td>
