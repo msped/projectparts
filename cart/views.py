@@ -22,27 +22,23 @@ def add_to_cart(request):
 
         if request.user.is_authenticated:
             comp = Competition.objects.get(is_active=True)
+            user = User.objects.get(id=request.user.id)
+            product = Product.objects.get(id=product_id)
 
-            order = Orders.objects.filter(
-                user=request.user.id,
-                related_competition=comp.id,
-                product=product_id,
+            order, created = Orders.objects.get_or_create(
+                defaults={
+                    'quantity': quantity
+                },
+                user=user,
+                related_competition=comp,
+                product=product,
                 is_paid=False
             )
 
-            if order.exists():
-                new_qty = order[0].quantity + quantity
-                order.update(quantity=new_qty)
-            else:
-                product = Product.objects.get(id=product_id)
-                user = User.objects.get(id=request.user.id)
-                new_order = Orders.objects.create(
-                    user=user,
-                    related_competition=comp,
-                    product=product,
-                    quantity=quantity
-                )
-                new_order.save()
+            if not created:
+                new_qty = order.quantity + quantity
+                order.quantity = new_qty
+                order.save()
         else:
             cart = request.session.get('cart', {})
             if product_id in cart:
