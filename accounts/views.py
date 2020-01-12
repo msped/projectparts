@@ -26,7 +26,10 @@ def login(request):
                 messages.success(request, "You have successfully logged in.")
                 return redirect('home')
             else:
-                login_form.add_error(None, "Your email or password are incorrect")
+                login_form.add_error(
+                    None,
+                    "Your email or password are incorrect"
+                )
     else:
         login_form = UserLoginForm()
     return render(request, 'login.html', {'login_form': login_form})
@@ -84,8 +87,8 @@ def profilepage(request):
                 messages.success(request, "User Information Updated.")
                 return redirect('profile')
     else:
-        user = User.objects.filter(id=request.user.id).first()
-        if user.profile.phone_number == '':
+        if request.user.profile.phone_number == '' and \
+           request.user.profile.address_line_1 == 'Address Line 1':
             user_form = UserDataForm(instance=request.user)
             profile_form = ProfileForm()
             shipping_form = ShippingForm()
@@ -114,7 +117,11 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'change_password.html', {'change_password_form': form})
+    return render(
+        request,
+        'change_password.html',
+        {'change_password_form': form}
+    )
 
 @login_required
 def users_orders(request):
