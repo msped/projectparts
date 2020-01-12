@@ -29,7 +29,7 @@
         {% for orders in users_orders %}
         <tr>
             <td class="text-center">{{ orders.0.id }}</td>
-            <td><a href="{% url 'product_detail' o.0.product.id %}">{{ orders.0.product.name }}</a></td>
+            <td><a href="{% url 'product_detail' orders.0.product.id %}">{{ orders.0.product.name }}</a></td>
             <td class="text-center">{{ orders.0.quantity }}</td>
             <td class="text-center">{{ orders.1 }}</td>
             <td class="text-center">{% if orders.2 %}
