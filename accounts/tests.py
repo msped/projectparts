@@ -114,7 +114,7 @@ class AccountFormsTests(TestCase):
         })
         self.assertTrue(form.is_valid())
 
-    def test_register_form_incorrect_email_data(self):
+    def test_register_form_existing_email_data(self):
         """Test the register form with the same email data"""
         form = UserRegisterForm({
             'first_name': 'John',
