@@ -101,15 +101,23 @@ def decrease_item(request, order_id):
 
     return JsonResponse(data)
 
-def remove_item(request, order_id):
+def remove_item(request):
     """Remove an item from the cart"""
-    if request.user.is_authenticated:
-        order = Orders.objects.filter(id=order_id)
-        order.delete()
-        messages.error(request, 'Ticket(s) Removed.')
-    else:
-        cart = request.session.get('cart', {})
-        cart.pop(order_id)
-        request.session['cart'] = cart
+    if request.method == "POST":
+        order_id = request.POST.get('order_id')
+        if request.user.is_authenticated:
+            order = Orders.objects.filter(id=order_id)
+            order.delete()
+        else:
+            cart = request.session.get('cart', {})
+            cart.pop(order_id)
+            request.session['cart'] = cart
 
-    return redirect(reverse('view_cart'))
+    cart_total = cart_contents(request)
+
+    data = {
+        'total': cart_total['total'],
+        'cart_amount': cart_total['product_count']
+    }
+
+    return JsonResponse(data)
