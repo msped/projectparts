@@ -45,3 +45,13 @@ tr td a i {
 td {
     font-size: 11pt;
 }
+
+.tickets-removed {
+    background-color: #f83b3b;
+}
+
+.tickets-removed p {
+    text-align: center;
+    vertical-align: middle;
+    font-family: 'Roboto', sans-serif;
+}

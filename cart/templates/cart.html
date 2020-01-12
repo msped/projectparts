@@ -38,9 +38,8 @@
                 </td>
                 <td>£{{ o.product.ticket_price }}</td>
                 <td>
-                    <a href="{% url 'remove_item' o.id %}">
-                        <i class="far fa-trash-alt"></i>
-                    </a>
+                    <i class="far fa-trash-alt remove-item"></i>
+                    <input type="hidden" class="order-id" value="{{ o.id }}">
                 </td>
             </tr>
             {% endfor %}
@@ -60,5 +59,8 @@
 {% endblock content %}
 
 {% block js %}
+<script>
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+</script>
 <script src="{% static 'js/cart.js' %}"></script>
 {% endblock js %}
