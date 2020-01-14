@@ -4,13 +4,13 @@ from competition.models import Competition
 from cart.models import Orders
 from products.models import Product, Vehicle, Categories, Manufacturer
 from .models import Entries
-from .utils import get_total
+from .utils import get_total, get_users_tickets
 from .forms import PaymentForm
 
 # Create your tests here.
-
 class TestCheckoutApp(TestCase):
     """All tests for the Checkout App"""
+
     def setUp(self):
         self.user = {
             'username': 'test user',
@@ -125,3 +125,9 @@ class TestCheckoutApp(TestCase):
         orders = Orders.objects.all()
         total = get_total(orders)
         self.assertEqual(float(total), 12.50)
+
+    def test_get_users_tickets(self):
+        """Test utils function to get users ticket amount"""
+        orders = Orders.objects.all()
+        ticket_amount = get_users_tickets(orders)
+        self.assertEqual(ticket_amount, 5)
