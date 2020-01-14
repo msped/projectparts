@@ -1,3 +1,4 @@
+from random import randint
 from django.core.mail import send_mail
 from django.template import loader
 from django.utils.html import strip_tags
@@ -47,3 +48,42 @@ def get_total(orders):
         total += item.quantity * item.product.ticket_price
 
     return total
+
+def create_entries(orders, user, comp, tickets):
+    """Creates a users entries with a random number"""
+    for item in orders:
+        tickets_per_order = item.quantity
+        while tickets_per_order > 0:
+            create = True
+            while create:
+                ticket_number = randint(1, comp.tickets)
+                entry, created = Entries.objects.get_or_create(
+                    defaults={
+                        'user': user,
+                        'order': item
+                    },
+                    competition_entry=comp,
+                    ticket_number=ticket_number
+                )
+                if created:
+                    tickets_per_order -= 1
+                    create = False
+
+    tickets_left = comp.tickets_left
+    comp.tickets_left = tickets_left - tickets
+    comp.save()
+
+def is_user_answer_correct(request, user_answer, comp):
+    """Checks if a user answer is correct"""
+    user_correct = False
+    if user_answer == comp.correct_answer:
+        user_correct = True
+    request.session['user_correct'] = user_correct
+    return user_correct
+
+def get_users_tickets(orders):
+    """Add up all of a users tickets"""
+    tickets = 0
+    for order in orders:
+        tickets += order.quantity
+    return tickets
