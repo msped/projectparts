@@ -23,39 +23,30 @@ def new_competition():
         html_message=html_message
     )
 
-def pick_competition_winner():
-    """Get Competition winner and send out emails"""
-    current_comp = Competition.objects.get(is_active=True, tickets_left=0)
+def check_for_new_competition(comp):
+    """"Check if the next competition has been created, if not create one"""
+    if comp.tickets_left < 500:
+        try:
+            Competition.objects.get(
+                next_competition=True
+            )
+        except Competition.DoesNotExist:
+            new_competition()
 
-    # Change to next competition to minimize
-    current_comp.is_active = False
-    current_comp.save()
-    next_comp = Competition.objects.get(next_competition=True)
-    next_comp.is_active = True
-    next_comp.next_competition = False
-    next_comp.save()
 
-    r_number = randint(1, current_comp.tickets)
-    winning_ticket = Entries.objects.get(
-        competition_entry=current_comp.id,
-        ticket_number=r_number
-    )
-    current_comp.winner = winning_ticket
-    current_comp.save()
-
-    winners_email = [winning_ticket.user.email,]
-
+def end_of_competition_emails(current_comp, winning_ticket):
+    """Sends out e-mails at the end of a competition to players and winner"""
     comp_entries = Entries.objects.filter(competition_entry=current_comp.id)
+    winners_email = [winning_ticket.user.email,]
     recipient_list = []
     for entry in comp_entries:
-        user_email = entry.user.email
-        if winners_email != user_email:
-            recipient_list.append(user_email)
+        if winners_email != entry.user.email:
+            recipient_list.append(entry.user.email)
 
     message = """
     Hurah!\n
     A winner has been chosen for competition {}, congratulations to {} {}! \n
-    They have won a {} for their {}.\n
+    They have won a {}.\n
     Good luck next time!\n
     Many Thanks, \n
     Project Parts Team
@@ -63,8 +54,7 @@ def pick_competition_winner():
         current_comp.id,
         winning_ticket.user.first_name,
         winning_ticket.user.last_name,
-        winning_ticket.order.product,
-        winning_ticket.order.product.fits
+        winning_ticket.order.product
     )
     participants = (
         'A winner has been chosen! A new competition has also started.',
@@ -93,3 +83,25 @@ def pick_competition_winner():
         winners_email
     )
     send_mass_mail((participants, winner), fail_silently=True)
+
+def pick_competition_winner():
+    """Get Competition winner and send out emails"""
+    current_comp = Competition.objects.get(is_active=True, tickets_left=0)
+
+    # Change to next competition to minimize
+    current_comp.is_active = False
+    current_comp.save()
+    next_comp = Competition.objects.get(next_competition=True)
+    next_comp.is_active = True
+    next_comp.next_competition = False
+    next_comp.save()
+
+    r_number = randint(1, current_comp.tickets)
+    winning_ticket = Entries.objects.get(
+        competition_entry=current_comp.id,
+        ticket_number=r_number
+    )
+    current_comp.winner = winning_ticket
+    current_comp.save()
+
+    end_of_competition_emails(current_comp, winning_ticket)
