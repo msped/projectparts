@@ -1,16 +1,18 @@
 from random import randint
+from datetime import date
 from django.core.mail import send_mail
 from django.template import loader
 from django.utils.html import strip_tags
 from checkout.models import Entries
+from competition.utlis import (
+    pick_competition_winner,
+    check_for_new_competition,
+)
 
 def email_order(request, orders, total, user_correct):
     """Send out email to user with the order details"""
-    user_correct = False
     users_entries = {}
     for item in orders:
-        if item.user_answer_correct:
-            user_correct = True
         entries_per_order = []
         entries = Entries.objects.filter(order=item.id)
         for ent in entries:
@@ -87,3 +89,27 @@ def get_users_tickets(orders):
     for order in orders:
         tickets += order.quantity
     return tickets
+
+def update_orders(orders, user_answer, comp):
+    """Update users orders in database"""
+    for item in orders:
+        item.is_paid = True
+        item.order_date = date.today()
+        if user_answer == comp.correct_answer:
+            item.user_answer_correct = True
+        item.save()
+
+def customer_paid(request, orders, user_answer, comp, tickets, user, total):
+    """Function handle all process if a customer has paid"""
+    update_orders(orders, user_answer, comp)
+    user_correct = is_user_answer_correct(
+        request,
+        user_answer,
+        comp
+    )
+    if user_correct:
+        create_entries(orders, user, comp, tickets)
+    email_order(request, orders, total, user_correct)
+    check_for_new_competition(comp)
+    if comp.tickets_left == 0:
+        pick_competition_winner()
