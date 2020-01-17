@@ -18,3 +18,11 @@ h1, h2, h3, .competition-answer {
 .submit-button {
     margin: 40px 0;
 }
+
+.loading {
+    display: none;
+}
+
+.loading img {
+    height: 40px;
+}
