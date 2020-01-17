@@ -74,7 +74,7 @@
     height: 2px;
     left: 50%;
     position: absolute;
-    background: #000;
+    background: #d6282b;
     transition: 0.3s ease 0s, left 0.3s ease 0s;
     width: 0;
   }
@@ -110,7 +110,7 @@ footer {
     font-family: 'Oswald', serif;
     font-size: 12pt;
     letter-spacing: .5px;
-    color: rgba(0,0,0,.5);
+    color: #000
     
 }
 
