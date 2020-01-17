@@ -2,7 +2,9 @@ $(function() {
     Stripe.setPublishableKey('pk_test_Um7FHiRm0SgosZhvLa3RubN700KnQ9jDll')
 
     $('#payment-form').submit(function(){
-        if ($("#user-answer option:selected").text() !== "Please select an option"){        
+        if ($("#user-answer option:selected").text() !== "Please select an option"){      
+            $('.submit').hide();
+            $('.loading').show();  
             var form = this;
             var card = {
                 number: $("#id_credit_card_number").val(),
@@ -23,9 +25,11 @@ $(function() {
 
                 form.submit();
             } else {
-            $("#stripe-error-messages").text(response.error.message);
-            $("#credit-card-errors").show();
-            $("#validate_card_btn").attr("disabled", false);
+                $('#loading').hide();
+                $('#submit').show();
+                $("#stripe-error-messages").text(response.error.message);
+                $("#credit-card-errors").show();
+                $("#validate_card_btn").attr("disabled", false);
             }
         });
         return false;
