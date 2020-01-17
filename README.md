@@ -113,6 +113,8 @@ the venv has been started you can then run `python manage.py runserver` and go t
 
 ### Content / Media
 
+Loading gif was obtained from [here](https://www.estabulo.co.uk/wp-content/plugins/interactive-3d-flipbook-powered-physics-engine/assets/images/dark-loader.gif)
+
 The check engine light used in the incompletion of a users profile is from [here](https://en.wikipedia.org/wiki/Check_engine_light#/media/File:Motorkontrollleuchte.svg).
 
 All other text and images where taken from the corresponding site that is on the product detail page, linked at the bottom.
