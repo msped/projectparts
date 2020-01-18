@@ -20,14 +20,12 @@ def contact_view(request):
             data = {
                 'sent': True
             }
-            return JsonResponse(data)
         else:
             data = {
                 'sent': False,
                 'error': "Invalid Form"
             }
-            return JsonResponse(data)
-
+        return JsonResponse(data)
     else:
         form = ContactForm()
 
