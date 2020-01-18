@@ -136,6 +136,12 @@ h6 {
     padding: .2rem .2rem;
 }
 
+.quick-add button:hover {
+    color: #df5151;
+    background-color: #e2e6ea;
+}
+
+
 @media (min-width: 576px) {
     .image-div {
         height: 150px;
