@@ -37,27 +37,27 @@ $(document).ready(function() {
         });
     });
 
-    $('td').on('click', '.remove-item', function(e) {
+    $('td').on('click', '.remove-item', function (e) {
         order_id = $(this).closest('td').find('.order-id').val();
         row = $(this).closest('tr');
-        template = `<td colspan="4" class="tickets-removed"><p>Ticket(s) Removed.</p></td>`;
-        $.ajax({
-            url: '/cart/remove/',
-            data: {
-                'order_id': order_id,
-                'csrfmiddlewaretoken': CSRF_TOKEN
-            },
-            type: 'POST',
-            success: function(d){
-                $('#product-count').css('display', 'initial').text(d.cart_amount);
-                order_total.text(d.total);
-                row.empty().append(template);
-                setTimeout(function(){
-                    row.fadeOut( 'slow', function(){
-                        row.remove();
-                    });
-                }, 3000);
-            }
-        });
+        if (confirm("Do you wish to remove this item from your cart?")) {
+            $.ajax({
+                url: '/cart/remove/',
+                data: {
+                    'order_id': order_id,
+                    'csrfmiddlewaretoken': CSRF_TOKEN
+                },
+                type: 'POST',
+                success: function (d) {
+                    $('#product-count').css('display', 'initial').text(d.cart_amount);
+                    order_total.text(d.total);
+                    setTimeout(function () {
+                        row.fadeOut('slow', function () {
+                            row.remove();
+                        });
+                    }, 500);
+                }
+            });
+        }
     });
 });

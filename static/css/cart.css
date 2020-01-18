@@ -18,11 +18,11 @@ h1 {
     min-height: 300px;
 }
 
-#remove-one-item, .order-qty, .add-one-item {
+.remove-one-item, .order-qty, .add-one-item {
     display: inline-block
 }
 
-.add-one-item, #remove-one-item {
+.add-one-item, .remove-one-item, .remove-item {
     cursor: pointer;
 }
 
@@ -44,14 +44,4 @@ tr td a i {
 
 td {
     font-size: 11pt;
-}
-
-.tickets-removed {
-    background-color: #f83b3b;
-}
-
-.tickets-removed p {
-    text-align: center;
-    vertical-align: middle;
-    font-family: 'Roboto', sans-serif;
 }
