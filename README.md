@@ -107,11 +107,13 @@ Separate git branch?
 In addition, if it is not obvious, you should also describe how to run your code locally.
 
 Locally the code is ran using a virutal environment (venv). To access the venv you need to start the venv, for exmaple in my case `projectparts-env\scripts\activate.bat`. Once
-the venv has been started you can then run `python manage.py runserver` and go to http://127.0.0.1:8000/ to see the development site on your local machine.
+the venv has been started you can then run `python manage.py runserver` and go to `http://127.0.0.1:8000/` to see the development site on your local machine.
 
 ## Credits
 
 ### Content / Media
+
+The jumbotron image on the homepage was obtain from [here](https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwisoejaoZDnAhVB1BoKHQEIDHwQjRx6BAgBEAQ&url=https%3A%2F%2Fwww.rias.co.uk%2Fnews-and-guides%2Fdemystifying-insurance%2Fdo-car-modifications-affect-car-insurance-premiums%2F&psig=AOvVaw0ARVj92T-jmSWrHYQHcJ-q&ust=1579543813621550).
 
 Loading gif was obtained from [here](https://www.estabulo.co.uk/wp-content/plugins/interactive-3d-flipbook-powered-physics-engine/assets/images/dark-loader.gif)
 
