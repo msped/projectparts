@@ -1,14 +1,22 @@
 .jumbotron {
     margin: 2.5% 0 5% 0;
-  } 
+    background-image: url('../images/jumbo-image.jpg');
+    background-size: cover;
+}
 
 .jumbo-class h1, .jumbo-class p, .jumbo-class a {
     font-family: 'Hammersmith', sans-serif;
+}
 
+.jumbo-class h1, .jumbo-class p {
+    background-color: rgba(255, 255, 255, .5);
+    padding-left: 5px; 
+    
 }
 
 h1.display-4 {
     font-size: 3rem;
+    width: 100%;
 }
 
 h2 {
@@ -58,7 +66,12 @@ h3 {
         font-size: 60pt;
     }
 
-    .display-4 {
+    h1.display-4 {
         font-size: 3.5rem;
+        width: 65%;
+    }
+
+    p.lead {
+        width: 30%;
     }
 }
