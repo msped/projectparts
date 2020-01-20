@@ -46,5 +46,8 @@ class Product(models.Model):
     )
     fits_multiple = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f"{self.part_manufacturer} {self.name}"
