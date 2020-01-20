@@ -66,8 +66,8 @@ def increase_item(request, order_id):
             order.save()
     else:
         cart = request.session.get('cart', {})
-        print(cart)
         cart[order_id] = int(cart[order_id]) + 1
+        qty = cart[order_id]
         request.session['cart'] = cart
     cart_total = cart_contents(request)
 
