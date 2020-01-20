@@ -1,5 +1,5 @@
 $(function() {
-    Stripe.setPublishableKey('pk_test_Um7FHiRm0SgosZhvLa3RubN700KnQ9jDll')
+    Stripe.setPublishableKey('pk_test_Um7FHiRm0SgosZhvLa3RubN700KnQ9jDll');
 
     $('#payment-form').submit(function(){
         if ($("#user-answer option:selected").text() !== "Please select an option"){      

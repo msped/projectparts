@@ -27,7 +27,7 @@ $(document).ready(function() {
                         form.closest('.add').children('.added-to-cart').fadeOut('fast', function(){
                             form.closest('.add').children('.add-options').fadeIn(); 
                         });
-                    }, 3000)
+                    }, 3000);
                 } else {
                     form.closest('.card-footer').children('.add-options').fadeOut('fast', function(){
                         form.closest('.card-footer').children('.added-to-cart').fadeIn();
@@ -37,11 +37,11 @@ $(document).ready(function() {
                         form.closest('.card-footer').children('.added-to-cart').fadeOut('fast', function(){
                             form.closest('.card-footer').children('.add-options').fadeIn(); 
                         });
-                    }, 3000)
+                    }, 3000);
                 }
                 
                 
             }
-        })
-    })
-})
+        });
+    });
+});

@@ -7,15 +7,15 @@ $(document).ready(function(){
             type: $(this).attr('method'),
             url: $(this).attr('action'),
             success: function(response){
-                console.log(response.sent)
+                console.log(response.sent);
                 if(response.sent){
                     $('.contact-form').css('display', 'none');
                     $('.contact-form-success').css('display', 'initial');
                 } else {
-                    $('#form-errors').text(response)
+                    $('#form-errors').text(response);
                 }                
             }
         });
-        return false
-    })
-})
+        return false;
+    });
+});
