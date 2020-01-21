@@ -2,10 +2,15 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.paginator import Paginator
-from accounts.forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
+from accounts.forms import (
+    UserLoginForm,
+    UserRegisterForm,
+    UserDataForm,
+    ProfileForm,
+    ShippingForm
+)
 from cart.models import Orders
 from checkout.models import Entries
 from .utils import add_session_items_to_db

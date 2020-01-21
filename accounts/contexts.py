@@ -11,7 +11,7 @@ def check_profile(request):
             profile_incomplete = True
         else:
             profile_incomplete = False
-    else: 
+    else:
         profile_incomplete = False
 
     return {

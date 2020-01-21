@@ -3,11 +3,15 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 
 class EmailAuth(ModelBackend):
-    """Handles backend authenticate to be able to log in with an email (Django v2 provide by user Chetan https://stackoverflow.com/questions/37332190/django-login-with-email)"""
+    """Handles backend authenticate to be able to log in with an email
+    (Django v2 provide by user Chetan
+    https://stackoverflow.com/questions/37332190/django-login-with-email)"""
     def authenticate(self, request, username=None, password=None, **kwargs):
         UserModel = get_user_model()
         try:
-            user = UserModel.objects.get(Q(username__iexact=username) | Q(email__iexact=username))
+            user = UserModel.objects.get(
+                Q(username__iexact=username) | Q(email__iexact=username)
+            )
         except UserModel.DoesNotExist:
             return None
         else:
