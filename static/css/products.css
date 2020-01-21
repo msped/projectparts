@@ -28,7 +28,7 @@ h1 {
     min-width: 0;
     word-wrap: break-word;
     margin-bottom: 20px; 
-    border: 0px solid rgba(0,0,0,.125);
+    border: 0 solid rgba(0,0,0,.125);
 }
 
 label {
@@ -40,7 +40,7 @@ h6 {
 }
 
 .search-header {
-    padding: .25rem 0rem;
+    padding: .25rem 0;
     background-color: #fff;
     border-bottom: none;
     cursor: pointer;
