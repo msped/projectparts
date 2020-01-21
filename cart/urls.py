@@ -1,5 +1,11 @@
 from django.conf.urls import url
-from .views import view_cart, add_to_cart, remove_item, decrease_item, increase_item
+from .views import (
+    view_cart,
+    add_to_cart,
+    remove_item,
+    decrease_item,
+    increase_item
+)
 
 urlpatterns = [
     url(r'^$', view_cart, name='view_cart'),

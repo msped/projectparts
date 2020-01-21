@@ -30,8 +30,8 @@ def cart_contents(request):
             })
     else:
 
-        for id, quantity in cart.items():
-            product = get_object_or_404(Product, pk=id)
+        for product_id, quantity in cart.items():
+            product = get_object_or_404(Product, pk=product_id)
             total += quantity * product.ticket_price
             product_amount += 1
             cart_items.append({
