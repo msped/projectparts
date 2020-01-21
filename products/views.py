@@ -1,6 +1,5 @@
-import json
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 from .models import Product, Categories, Manufacturer, Vehicle
 
@@ -89,10 +88,10 @@ def get_models(request):
         models_db = Vehicle.objects.filter(make=make)
 
         models = []
-        for m in models_db:
-            models.append(m.model)
+        for model in models_db:
+            models.append(model.model)
 
-    return HttpResponse(json.dumps(models), content_type="application/json")
+    return JsonResponse(models, safe=False)
 
 def get_gens(request):
     """Get Generations from Make and Model"""
@@ -102,7 +101,7 @@ def get_gens(request):
         gens_db = Vehicle.objects.filter(make=make, model=model)
 
         gens = []
-        for g in gens_db:
-            gens.append(g.generation)
+        for gen in gens_db:
+            gens.append(gen.generation)
 
-    return HttpResponse(json.dumps(gens), content_type="application/json")
+    return JsonResponse(gens, safe=False)
