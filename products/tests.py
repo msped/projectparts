@@ -149,7 +149,7 @@ class ProductModelTests(TestCase):
             product_price="795",
             product_link="https://www.github.com",
             part_manufacturer=manufacturer,
-            fits_multiple=True            
+            fits_multiple=True
         )
         product.save()
 
