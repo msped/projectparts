@@ -52,11 +52,11 @@ h3 {
     font-size: 32pt;
 }
 
-.tickets-left-div, #tickets-left {
+.tickets-left-div, .tickets-left {
     text-align: center;
 }
 
-#tickets-left {
+.tickets-left {
     font-family: 'Hammersmith', sans-serif;
     font-size: 27pt;
 }
