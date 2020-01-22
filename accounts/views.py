@@ -12,8 +12,7 @@ from accounts.forms import (
     ShippingForm
 )
 from cart.models import Orders
-from checkout.models import Entries
-from .utils import add_session_items_to_db
+from .utils import add_session_items_to_db, get_users_orders
 
 def login(request):
     """Logs a user in / display login page"""
@@ -92,7 +91,7 @@ def profilepage(request):
                 messages.success(request, "User Information Updated.")
                 return redirect('profile')
     else:
-        if request.user.profile.phone_number == '' and \
+        if request.user.profile.phone_number == 'Phone No.' and \
            request.user.profile.address_line_1 == 'Address Line 1':
             user_form = UserDataForm(instance=request.user)
             profile_form = ProfileForm()
@@ -142,23 +141,7 @@ def users_orders(request):
             'users_orders': False
         })
 
-    all_users_orders = []
-
-    for item in orders:
-        order_answer = item.user_answer_correct
-        entries_per_order = []
-        entries = Entries.objects.filter(order=item.id)
-        for ent in entries:
-            entries_per_order.append(ent.ticket_number)
-        order_total = item.quantity * item.product.ticket_price
-        order_to_add = [
-            item,
-            order_total,
-            order_answer,
-            entries_per_order
-        ]
-
-        all_users_orders.append(order_to_add)
+    all_users_orders = get_users_orders(orders)
 
     paginator = Paginator(all_users_orders, 15)
     page = request.GET.get('page')
