@@ -24,6 +24,32 @@ class AccountViewsTest(TestCase):
         response = self.client.get('/accounts/login/')
         self.assertEqual(response.status_code, 200)
 
+    def test_login_page_response_logged_in(self):
+        """test response of the login age if the user is logged in
+        should redirect (302 response)"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.get('/accounts/login/', follow=True)
+        self.assertIn(
+            b'<h1 class="display-4">Welcome to Project Parts</h1>',
+            response.content
+        )
+
+    def test_login_with_inccorect_details(self):
+        """Test login with incorrect details"""
+        response = self.client.post(
+            '/accounts/login/',
+            {
+                'username': 'notanaccount@example.com',
+                'password': 'examplepassword'
+            },
+            follow=True
+        )
+        self.assertIn(b'Your email or password are incorrect', response.content)
+
     def test_profile_page_response_user_not_logged_in(self):
         """Test where the profile page should return to login page if
         no user logged in"""
@@ -90,6 +116,84 @@ class AccountViewsTest(TestCase):
         no user logged in"""
         response = self.client.get('/accounts/orders/', follow=True)
         self.assertIn(b'<h1>Login</h1>', response.content)
+
+    def test_register_when_not_logged_in(self):
+        """Test register page when a user isnt logged in"""
+        response = self.client.get('/accounts/register/')
+        self.assertIn(b'<h1>Register</h1>', response.content)
+
+    def test_register_when_logged_in(self):
+        """Test register page when a user is logged in
+        should redirect (302 response)"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.get('/accounts/register/', follow=True)
+        self.assertIn(
+            b'<h1 class="display-4">Welcome to Project Parts</h1>',
+            response.content
+        )
+
+    def test_successful_registration(self):
+        """Test registration of a user (successful)
+        should redirect"""
+        response = self.client.post(
+            '/accounts/register/',
+            {
+                'first_name': 'John',
+                'last_name': 'Doe',
+                'username': 'test',
+                'email': 'test@example.com',
+                'password1': 'examplepassword',
+                'password2': 'examplepassword'
+            },
+            follow=True
+        )
+        self.assertIn(b'You have successfully registered.', response.content)
+
+    def test_change_password_post(self):
+        """Test change password post successful"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.post(
+            '/accounts/change_password/',
+            {
+                'old_password': 'testpassword',
+                'new_password1': 'newtestpassword',
+                'new_password2': 'newtestpassword'
+            },
+            follow=True
+        )
+        self.assertIn(b'Password has been updated', response.content)
+
+    def test_profile_page_post_billing_information(self):
+        """Test post on profile page to update billing / shipping information"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.post(
+            '/accounts/profile/',
+            {
+                'address_line_1': '4 High Street',
+                'address_line_2': 'Address Line 2',
+                'town_city': 'Sandford',
+                'county': 'Cheshire',
+                'country': 'UK',
+                'postcode': 'WA7 2NZ',
+            },
+            follow=True
+        )
+        self.assertIn(
+            b'<input type="text" name="address_line_1" value="4 High Street" maxlength="40" class=" form-control" required id="id_address_line_1">',
+            response.content
+        )
 
 class AccountFormsTests(TestCase):
     """Test all forms within the accounts app"""
