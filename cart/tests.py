@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from products.models import Product, Vehicle, Categories, Manufacturer
 from competition.models import Competition
 from .models import Orders
+from .apps import CartConfig
 
 # Create your tests here.
 class CartAppTest(TestCase):
@@ -13,7 +14,13 @@ class CartAppTest(TestCase):
             'email': 'test@gmail.com',
             'password': 'testpassword'
         }
+        self.user2 = {
+            'username': 'test user 2',
+            'email': 'test2@gmail.com',
+            'password': 'testpassword2'
+        }
         User.objects.create_user(**self.user)
+        User.objects.create_user(**self.user2)
         Competition.objects.create(
             tickets=5000,
             tickets_left=5000,
@@ -73,8 +80,10 @@ class CartAppTest(TestCase):
         self.assertIn(b'<h1 class="text-center">Cart</h1>', response.content)
 
     # Test cart when a user is logged in (database)
-    def test_add_to_cart_view_logged_in(self):
-        """Test adding a product to the cart using the database"""
+    def test_add_to_cart_view_logged_in_not_in_cart(self):
+        """Test adding a product to the cart using the database with
+        item not in the cart"""
+        product = Product.objects.all().first()
         self.client.post(
             '/accounts/login/',
             self.user,
@@ -84,7 +93,35 @@ class CartAppTest(TestCase):
             '/cart/add/',
             {
                 'qty': '10',
-                'product_id': '1'
+                'product_id': str(product.id)
+            }
+        )
+        self.assertJSONEqual(
+            str(add_product.content, encoding='utf8'),
+            {'cart_amount': 1}
+        )
+
+    def test_add_to_cart_view_logged_in_in_cart(self):
+        """Test adding a product to the cart using the database with
+        item not the cart"""
+        product = Product.objects.all().first()
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        self.client.post(
+            '/cart/add/',
+            {
+                'qty': '10',
+                'product_id': str(product.id)
+            }
+        )
+        add_product = self.client.post(
+            '/cart/add/',
+            {
+                'qty': '10',
+                'product_id': str(product.id)
             }
         )
         self.assertJSONEqual(
@@ -171,21 +208,45 @@ class CartAppTest(TestCase):
         )
 
     # Test cart when a user isn't logged in (session)
-    def test_add_to_cart_view_logged_out(self):
+    def test_add_to_cart_view_logged_out_not_in_cart(self):
         """Test adding a product to the cart using the session"""
         product = Product.objects.all().first()
-        self.client.post(
+        add_product = self.client.post(
             '/cart/add/',
             {
                 'qty': '2',
                 'product_id': str(product.id)
             }
         )
-        add_product = self.client.get(
-            '/cart/add/' + str(product.id)
-        )
         session = self.client.session
         self.assertIn(str(product.id), session['cart'])
+        self.assertJSONEqual(
+            str(add_product.content, encoding='utf8'),
+            {'cart_amount': 1}
+        )
+
+    def test_add_to_cart_view_logged_out_in_cart(self):
+        """Test adding a product to the cart using the session with
+        the product in the cart"""
+        product = Product.objects.all().first()
+        product_id = str(product.id)
+        self.client.post(
+            '/cart/add/',
+            {
+                'qty': '2',
+                'product_id': product_id
+            }
+        )
+        add_product = self.client.post(
+            '/cart/add/',
+            {
+                'qty': '2',
+                'product_id': product_id
+            }
+        )
+        session = self.client.session
+        self.assertIn(product_id, session['cart'])
+        self.assertEqual(session['cart'][product_id], 4)
         self.assertJSONEqual(
             str(add_product.content, encoding='utf8'),
             {'cart_amount': 1}
@@ -252,3 +313,15 @@ class CartAppTest(TestCase):
             str(remove_order.content, encoding='utf8'),
             {'total': 0, 'cart_amount': 0}
         )
+
+    def test_cart_response_no_items(self):
+        """Test cart page response """
+        response = self.client.get('/cart/')
+        self.assertIn(
+            b'<p class="text-center no-cart-items">There are no items in your cart, add some <a href="/tickets/">tickets.</a></p>',
+            response.content
+        )
+
+    def test_cart_app(self):
+        """Test Cart App"""
+        self.assertEqual("cart", CartConfig.name)
