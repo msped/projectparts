@@ -44,6 +44,13 @@ class CategoriesModelTests(TestCase):
 class ProductAppViewsTest(TestCase):
     """Test case for views in the Products"""
 
+    def setUp(self):
+        Vehicle.objects.create(
+            make="Mercedes",
+            model="A Class",
+            generation="W176"
+        )
+
     def test_products_page_response_200(self):
         """Test response of the main products page"""
         response = self.client.get('/tickets/')
@@ -76,6 +83,31 @@ class ProductAppViewsTest(TestCase):
         prod.save()
         response = self.client.get('/tickets/' + str(prod.id) +'/')
         self.assertEqual(response.status_code, 200)
+
+    def test_get_models(self):
+        """Test return on get_models view and response"""
+        response = self.client.post(
+            '/tickets/models/',
+            {'make': 'Mercedes'}
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            ['A Class']
+        )
+
+    def test_get_gens(self):
+        """Test return on get_gens view and response"""
+        response = self.client.post(
+            '/tickets/gens/',
+            {
+                'make': 'Mercedes',
+                'model': 'A Class'
+            }
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            ['W176']
+        )
 
 class ProductModelTests(TestCase):
     """Tests for products Model"""
