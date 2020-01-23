@@ -88,3 +88,11 @@ class TestCompetitionViews(TestCase):
         comp.save()
         ticket_amount = self.client.get('/competition/get_current/')
         self.assertEqual(ticket_amount.content, b'4000')
+
+    def test_get_current_ticket_amount_no_comp_active(self):
+        """Test reponse of view that returns the current ticket
+        amount of the homepage if theres no competition active"""
+        comp = Competition.objects.create(is_active=False)
+        comp.save()
+        ticket_amount = self.client.get('/competition/get_current/')
+        self.assertEqual(ticket_amount.content, b'No Competition Active')
