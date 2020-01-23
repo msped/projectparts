@@ -35,7 +35,7 @@ def cart_contents(request):
             total += quantity * product.ticket_price
             product_amount += 1
             cart_items.append({
-                'id': id,
+                'id': product_id,
                 'quantity': quantity,
                 'product': product
             })
