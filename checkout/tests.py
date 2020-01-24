@@ -17,7 +17,13 @@ class TestCheckoutApp(TestCase):
             'email': 'test@gmail.com',
             'password': 'testpassword'
         }
+        self.user2 = {
+            'username': 'test user 2',
+            'email': 'test2@gmail.com',
+            'password': 'testpassword'
+        }
         User.objects.create_user(**self.user)
+        User.objects.create_user(**self.user2)
         user = User.objects.all().first()
         Competition(
             is_active=True,
@@ -131,3 +137,58 @@ class TestCheckoutApp(TestCase):
         orders = Orders.objects.all()
         ticket_amount = get_users_tickets(orders)
         self.assertEqual(ticket_amount, 5)
+
+    def test_checkout_view_no_tickets(self):
+        """Test redirect if user has no tickets"""
+        self.client.post(
+            '/accounts/login/',
+            self.user2,
+            follow=True
+        )
+        response = self.client.get('/checkout/', follow=True)
+        self.assertIn(b'You have no tickets to checkout.', response.content)
+
+    def test_checkout_view_no_user_answer(self):
+        """Test checkout view when no user answer is given"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.post(
+            '/checkout/',
+            {
+                'credit_card_number': '4242424242424242',
+                'cvv': '477',
+                'expiry_month': '5',
+                'expiry_year': '2022'
+            },
+            follow=True
+        )
+        self.assertIn(
+            b'Please select an answer to the question at the bottom of the page',
+            response.content
+        )
+
+    def test_checkout_view_incorrect_card_details(self):
+        """Test checkout view with incorrect card details"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        response = self.client.post(
+            '/checkout/',
+            {
+                'credit_card_number': '4278244242423242',
+                'cvv': '477',
+                'expiry_month': '2',
+                'expiry_year': '2311',
+                'user-answer': 'Yes'
+            },
+            follow=True
+        )
+        self.assertIn(
+            b'We are unable to take payment from that card.',
+            response.content
+        )
