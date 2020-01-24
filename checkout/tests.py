@@ -6,6 +6,7 @@ from products.models import Product, Vehicle, Categories, Manufacturer
 from .models import Entries
 from .utils import get_total, get_users_tickets
 from .forms import PaymentForm
+from .apps import CheckoutConfig
 
 # Create your tests here.
 class TestCheckoutApp(TestCase):
@@ -192,3 +193,7 @@ class TestCheckoutApp(TestCase):
             b'We are unable to take payment from that card.',
             response.content
         )
+
+    def test_checkout_app(self):
+        """Test Checkout App"""
+        self.assertEqual("checkout", CheckoutConfig.name)

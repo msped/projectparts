@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Competition
+from .apps import CompetitionConfig
 
 # Create your tests here.
 
@@ -96,3 +97,10 @@ class TestCompetitionViews(TestCase):
         comp.save()
         ticket_amount = self.client.get('/competition/get_current/')
         self.assertEqual(ticket_amount.content, b'No Competition Active')
+
+
+class TestCompetitionApp(TestCase):
+    """Test Competition App"""
+    def test_competition_app(self):
+        """Test Competition App"""
+        self.assertEqual("competition", CompetitionConfig.name)

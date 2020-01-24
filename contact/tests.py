@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .forms import ContactForm
+from .apps import ContactConfig
 
 # Create your tests here.
 
@@ -21,6 +22,24 @@ class TestContactPage(TestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_invalid_form_in_post(self):
+        """Test invalid for data and return variables"""
+        response = self.client.post(
+            '/contact/',
+            {
+                'email': "",
+                'subject': "Test Subject",
+                'message': "Here is a test message"
+            }
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {
+                'sent': False,
+                'error': 'Invalid Form'
+            }
+        )
 
 class TestContactForm(TestCase):
     """Contact form tests"""
@@ -68,3 +87,9 @@ class TestContactForm(TestCase):
             'message': ''
         })
         self.assertFalse(form.is_valid())
+
+class TestContactApp(TestCase):
+    """Test Contact App"""
+    def test_contact_app(self):
+        """Test Contact App"""
+        self.assertEqual("contact", ContactConfig.name)

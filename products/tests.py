@@ -1,5 +1,6 @@
 from django.test import TestCase
 from products.models import Product, Vehicle, Categories, Manufacturer
+from .apps import ProductsConfig
 
 # Create your tests here.
 
@@ -253,3 +254,9 @@ class ManufacturerModelTests(TestCase):
         manufacturer.save()
 
         self.assertEqual(manufacturer.name, 'CarbonWurks')
+
+class TestProductsApp(TestCase):
+    """Test Products App"""
+    def test_products_app(self):
+        """Test Products App"""
+        self.assertEqual("products", ProductsConfig.name)

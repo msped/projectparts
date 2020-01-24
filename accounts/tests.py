@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from competition.models import Competition
 from .forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
+from .apps import AccountsConfig
 
 # Create your tests here.
 
@@ -366,3 +367,9 @@ class AccountFormsTests(TestCase):
             'postcode': 'CW7 6AO'
         })
         self.assertFalse(form.is_valid())
+
+class TestAccountsApp(TestCase):
+    """Test Accounts App"""
+    def test_accounts_app(self):
+        """Test Accounts App"""
+        self.assertEqual("accounts", AccountsConfig.name)
