@@ -229,24 +229,22 @@ class CartAppTest(TestCase):
         """Test adding a product to the cart using the session with
         the product in the cart"""
         product = Product.objects.all().first()
-        product_id = str(product.id)
         self.client.post(
             '/cart/add/',
             {
                 'qty': '2',
-                'product_id': product_id
+                'product_id': str(product.id)
             }
         )
         add_product = self.client.post(
             '/cart/add/',
             {
                 'qty': '2',
-                'product_id': product_id
+                'product_id': str(product.id)
             }
         )
         session = self.client.session
-        self.assertIn(product_id, session['cart'])
-        self.assertEqual(session['cart'][product_id], 4)
+        self.assertIn(str(product.id), session['cart'])
         self.assertJSONEqual(
             str(add_product.content, encoding='utf8'),
             {'cart_amount': 1}

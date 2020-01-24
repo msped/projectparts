@@ -17,7 +17,7 @@ def add_to_cart(request):
 
     if request.method == "POST":
         quantity = int(request.POST.get('qty'))
-        product_id = int(request.POST.get('product_id'))
+        product_id = request.POST.get('product_id')
 
         if request.user.is_authenticated:
             comp = Competition.objects.get(is_active=True)
@@ -41,9 +41,10 @@ def add_to_cart(request):
         else:
             cart = request.session.get('cart', {})
             if product_id in cart:
-                cart[product_id] = int(cart[product_id]) + quantity
+                p_id = str(product_id)
+                cart[p_id] = int(cart[p_id]) + quantity
             else:
-                cart[product_id] = cart.get(int(product_id), quantity)
+                cart[product_id] = cart.get(product_id, quantity)
             request.session['cart'] = cart
 
     cart_amount = cart_contents(request)
