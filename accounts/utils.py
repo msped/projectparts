@@ -8,21 +8,19 @@ from checkout.models import Entries
 def add_session_items_to_db(request):
     """Function that adds users session cart to database"""
     cart = request.session.get('cart', {})
-    if not request.session.get('cart', None):
-        cart = request.session.get('cart', {})
-        user = User.objects.get(id=request.user.id)
-        for key, value in cart.items():
-            product = Product.objects.get(id=int(key))
-            comp = Competition.objects.get(is_active=True)
-            new_order = Orders.objects.create(
-                user=user,
-                related_competition=comp,
-                product=product,
-                quantity=int(value)
-            )
-            new_order.save()
-        request.session['cart'] = cart
-        cart_contents(request)
+    user = User.objects.get(id=request.user.id)
+    for key, value in cart.items():
+        product = Product.objects.get(id=int(key))
+        comp = Competition.objects.get(is_active=True)
+        new_order = Orders.objects.create(
+            user=user,
+            related_competition=comp,
+            product=product,
+            quantity=int(value)
+        )
+        new_order.save()
+    request.session['cart'] = cart
+    cart_contents(request)
 
 def get_users_orders(orders):
     """get all users orders and place in list"""
