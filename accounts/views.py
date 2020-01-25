@@ -135,7 +135,7 @@ def users_orders(request):
         orders = Orders.objects.filter(
             is_paid=True,
             user=request.user.id
-        ).order_by('-related_competition')
+        ).order_by('-id')
     except orders.DoesNotExist:
         return render(request, 'users_orders.html', {
             'users_orders': False
