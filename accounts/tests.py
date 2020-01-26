@@ -2,8 +2,12 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django import forms
 from competition.models import Competition
+from products.models import Product, Vehicle, Manufacturer, Categories
+from cart.models import Orders
+from checkout.models import Entries
 from .forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
 from .apps import AccountsConfig
+from .utils import get_users_orders
 
 # Create your tests here.
 
@@ -16,7 +20,13 @@ class AccountViewsTest(TestCase):
             'email': 'test@gmail.com',
             'password': 'testpassword'
         }
+        self.user2 = {
+            'username': 'test user 2',
+            'email': 'test2@gmail.com',
+            'password': 'testpassword'
+        }
         User.objects.create_user(**self.user)
+        User.objects.create_user(**self.user2)
 
         Competition(is_active=True).save()
 
@@ -373,3 +383,107 @@ class TestAccountsApp(TestCase):
     def test_accounts_app(self):
         """Test Accounts App"""
         self.assertEqual("accounts", AccountsConfig.name)
+
+class TestAccountsUtils(TestCase):
+    """Test Utils function in accounts app"""
+
+    def setUp(self):
+        """Set database for tests"""
+        self.user = {
+            'username': 'test user',
+            'email': 'test@gmail.com',
+            'password': 'testpassword'
+        }
+        User.objects.create_user(**self.user)
+        Competition.objects.create(is_active=True, next_competition=False)
+        category = Categories(
+            category="Exterior"
+        )
+        category.save()
+        vehicle = Vehicle(
+            make="Mercedes",
+            model="A Class",
+            generation="W176"
+        )
+        vehicle.save()
+        manufacturer = Manufacturer(
+            name="Eibach"
+        )
+        manufacturer.save()
+        product = Product(
+            name="Test Product",
+            description="Description",
+            img="",
+            category=category,
+            ticket_price="2.50",
+            product_price="795",
+            product_link="https://www.github.com",
+            fits=vehicle,
+            part_manufacturer=manufacturer
+        )
+        product.save()
+
+    def test_get_users_orders_correct_answer(self):
+        """Test get users orders where the order answer was correct"""
+        user = User.objects.filter().first()
+        comp = Competition.objects.filter().first()
+        product = Product.objects.filter().first()
+        ent_order = Orders.objects.create(
+            user=user,
+            related_competition=comp,
+            quantity=1,
+            product=product,
+            is_paid=True,
+            user_answer_correct=True
+        )
+        Entries.objects.create(
+            user=user,
+            competition_entry=comp,
+            order=ent_order,
+            ticket_number=25
+        )
+        orders = Orders.objects.filter(
+            user=user,
+            related_competition=comp,
+            product=product,
+            user_answer_correct=True,
+            is_paid=True,
+            quantity=1
+        )
+
+        response = get_users_orders(orders)
+
+        self.assertEqual(response[0][0].id, 1)
+        self.assertEqual(response[0][0].quantity, 1)
+        self.assertEqual(response[0][1], 2.50)
+        self.assertTrue(response[0][2])
+        self.assertListEqual(response[0][3], [25])
+
+    def test_get_users_orders_incorrect_answer(self):
+        """Test get users orders where the order answer was incorrect"""
+        user = User.objects.filter().first()
+        comp = Competition.objects.filter().first()
+        product = Product.objects.filter().first()
+        Orders.objects.create(
+            user=user,
+            related_competition=comp,
+            quantity=10,
+            product=product,
+            is_paid=True,
+            user_answer_correct=False
+        )
+        orders = Orders.objects.filter(
+            user=user,
+            related_competition=comp,
+            product=product,
+            user_answer_correct=False,
+            is_paid=True,
+            quantity=10
+        )
+
+        response = get_users_orders(orders)
+
+        self.assertEqual(response[0][0].id, 2)
+        self.assertEqual(response[0][0].quantity, 10)
+        self.assertEqual(response[0][1], 25.00)
+        self.assertFalse(response[0][2])
