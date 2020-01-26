@@ -197,3 +197,37 @@ class TestCheckoutApp(TestCase):
     def test_checkout_app(self):
         """Test Checkout App"""
         self.assertEqual("checkout", CheckoutConfig.name)
+
+    def test_checkout_view_too_many_tickets(self):
+        """Test error message if a user has too many tickets compared too
+        what is left in the competition"""
+        self.client.post(
+            '/accounts/login/',
+            self.user,
+            follow=True
+        )
+        user = User.objects.all().first()
+        product = Product.objects.all().first()
+        comp = Competition.objects.all().first()
+        Orders.objects.create(
+            user=user,
+            product=product,
+            is_paid=False,
+            related_competition=comp,
+            quantity=4000
+        )
+        response = self.client.post(
+            '/checkout/',
+            {
+                'credit_card_number': '4242424242424242',
+                'cvv': '444',
+                'expiry_month': '5',
+                'expiry_year': '2022',
+                'user-answer': 'Yes'
+            },
+            follow=True
+        )
+        self.assertIn(
+            b'The amount of tickets you have ordered, 4005, is greater\n                        than what is left in the competition, 4000.',
+            response.content
+        )
