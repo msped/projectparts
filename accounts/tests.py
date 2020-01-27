@@ -16,6 +16,8 @@ class AccountViewsTest(TestCase):
 
     def setUp(self):
         self.user = {
+            'first_name': 'John',
+            'last_name': 'Smith',
             'username': 'test user',
             'email': 'test@gmail.com',
             'password': 'testpassword'
@@ -76,6 +78,18 @@ class AccountViewsTest(TestCase):
         )
         response = self.client.get('/accounts/profile/', follow=True)
         self.assertIn(b'<h1>Profile</h1>', response.content)
+        self.assertIn(
+            b'<input type="text" name="first_name" value="John" class=" form-control" required id="id_first_name">',
+            response.content
+        )
+        self.assertIn(
+            b'<input type="text" name="last_name" value="Smith" class=" form-control" required id="id_last_name">',
+            response.content
+        )
+        self.assertIn(
+            b'<input type="email" name="email" value="test@gmail.com" class=" form-control" required id="id_email">',
+            response.content
+        )
 
     def test_logout_when_user_logged_in(self):
         """Test logout function"""

@@ -91,15 +91,9 @@ def profilepage(request):
                 messages.success(request, "User Information Updated.")
                 return redirect('profile')
     else:
-        if request.user.profile.phone_number == 'Phone No.' and \
-           request.user.profile.address_line_1 == 'Address Line 1':
-            user_form = UserDataForm(instance=request.user)
-            profile_form = ProfileForm()
-            shipping_form = ShippingForm()
-        else:
-            user_form = UserDataForm(instance=request.user)
-            profile_form = ProfileForm(instance=request.user.profile)
-            shipping_form = ShippingForm(instance=request.user.profile)
+        user_form = UserDataForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+        shipping_form = ShippingForm(instance=request.user.profile)
 
     forms = {
         'UserDataForm': user_form,
