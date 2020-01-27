@@ -16,7 +16,7 @@ def check_profile(request):
         ]
 
         for item in model_check:
-            if item is None:
+            if item == '':
                 profile_incomplete = True
                 break
 
