@@ -4,7 +4,7 @@ from competition.models import Competition
 from cart.models import Orders
 from products.models import Product, Vehicle, Categories, Manufacturer
 from .models import Entries
-from .utils import get_total, get_users_tickets
+from .utils import get_total, get_users_tickets, update_orders
 from .forms import PaymentForm
 from .apps import CheckoutConfig
 
@@ -231,3 +231,68 @@ class TestCheckoutApp(TestCase):
             b'The amount of tickets you have ordered, 4005, is greater\n                        than what is left in the competition, 4000.',
             response.content
         )
+
+class TestUtils(TestCase):
+    """Test Util functions"""
+
+    def setUp(self):
+        """Set up models for tests"""
+        self.user = {
+            'username': 'test user',
+            'email': 'test@gmail.com',
+            'password': 'testpassword'
+        }
+        User.objects.create_user(**self.user)
+        category = Categories.objects.create(
+            category="Exterior"
+        )
+        vehicle = Vehicle.objects.create(
+            make="Mercedes",
+            model="A Class",
+            generation="W176"
+        )
+        man = Manufacturer.objects.create(
+            name="Test Manu"
+        )
+        Product.objects.create(
+            name="Test Product",
+            description="Description",
+            img="media/default.jpg",
+            category=category,
+            ticket_price="2.50",
+            product_price="795",
+            product_link="https://www.github.com",
+            fits=vehicle,
+            part_manufacturer=man
+        )
+        Competition.objects.create()
+
+    def test_update_orders(self):
+        """Test that an order get updated with whether the user answer is
+        correct"""
+        comp = Competition.objects.filter().first()
+        product = Product.objects.filter().first()
+        user = User.objects.filter().first()
+        Orders.objects.create(
+            user=user,
+            product=product,
+            is_paid=False,
+            related_competition=comp,
+            quantity=5
+        )
+        order = Orders.objects.filter(
+            user=user,
+            product=product,
+            is_paid=False,
+            related_competition=comp,
+            quantity=5
+        )
+        update_orders(order, "Correct Answer", comp)
+        order = Orders.objects.get(
+            user=user,
+            product=product,
+            related_competition=comp,
+            quantity=5
+        )
+        self.assertTrue(order.is_paid)
+        self.assertNotEqual(order.order_date, '')
