@@ -1,6 +1,12 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
+from django.core import mail
 from .models import Competition
 from .apps import CompetitionConfig
+from .utlis import (
+    new_competition,
+    check_for_new_competition
+)   
 
 # Create your tests here.
 
@@ -104,3 +110,69 @@ class TestCompetitionApp(TestCase):
     def test_competition_app(self):
         """Test Competition App"""
         self.assertEqual("competition", CompetitionConfig.name)
+
+class TestUtils(TestCase):
+    """Test Util functions"""
+
+    def setUp(self):
+        """Set up models for testing"""
+        self.user = {
+            'first_name': 'Test 1',
+            'last_name': 'User 1',
+            'username': 'test user',
+            'email': 'test@gmail.com',
+            'password': 'testpassword'
+        }
+        self.user2 = {
+            'first_name': 'Test 2',
+            'last_name': 'User 2',
+            'username': 'test user 2',
+            'email': 'test2@gmail.com',
+            'password': 'testpassword2'
+        }
+        User.objects.create_user(**self.user)
+        User.objects.create_user(**self.user2)
+        Competition.objects.create(
+            tickets_left=499,
+            next_competition=False
+        )
+
+    def test_new_competition_result(self):
+        """Test that a new competition has been made"""
+        new_competition()
+
+        response = Competition.objects.filter(next_competition=True).exists()
+
+        # Check if model has been created
+        self.assertTrue(response)
+
+        # Check that mail has been sent to admins
+        self.assertEqual(len(mail.outbox), 1)
+
+        # Check that the subject is correct
+        self.assertEqual(
+            mail.outbox[0].subject,
+            'New Competition has been created.'
+        )
+
+    def test_check_for_new_competition_found(self):
+        """Test function that checks whether a new comeptition should be
+        created"""
+        comp = Competition.objects.create(
+            next_competition=True
+        )
+        check_for_new_competition(comp)
+
+        response = Competition.objects.filter(next_competition=True).exists()
+
+        self.assertTrue(response)
+
+    def test_check_for_new_competition_creates_new_comp(self):
+        """Test function that checks whether a new comeptition should be
+        created"""
+        comp = Competition.objects.get(tickets_left=499)
+        check_for_new_competition(comp)
+
+        response = Competition.objects.filter(next_competition=True).exists()
+
+        self.assertTrue(response)
