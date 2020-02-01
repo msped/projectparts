@@ -32,3 +32,12 @@ h1 {
     font-family: 'Hammersmith', monospace;
 }
 
+
+.loading {
+    display: none;
+}
+
+.loading img {
+    height: 40px;
+}
+

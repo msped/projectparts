@@ -18,10 +18,15 @@
         {% csrf_token %}
         {{ register_form | as_bootstrap }}
         <div class="form-group register-btn text-center">
-            <button type="submit" class="btn btn-light btn-outline-dark">Register</button>
+            <button type="submit" class="btn btn-light btn-outline-dark submit">Register</button>
+            <div class="loading"><img src="{% static 'images/loading.gif' %}" alt="Loading.."></div>
         </div>
     </form>
 
     <p class="login-link text-center">Already have an account? Login <a href="{% url 'login' %}">here.</a></p>
 </div>
 {% endblock content %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/login-register.js' %}"></script>
+{% endblock js %}

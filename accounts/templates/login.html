@@ -17,7 +17,8 @@
         <p id="forgot-password"><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
 
         <div class="form-group login-btn text-center">
-            <button type="submit" class="btn btn-light btn-outline-dark">Login</button>
+            <button type="submit" class="btn btn-light btn-outline-dark submit">Login</button>
+            <div class="loading"><img src="{% static 'images/loading.gif' %}" alt="Loading.."></div>
         </div>
     </form>
 
@@ -25,3 +26,7 @@
     <p class="text-center register-link">Don't have an account? Register <a href="{% url 'register' %}">here.</a></p>
 </div>
 {% endblock content %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/login-register.js' %}"></script>
+{% endblock js %}
