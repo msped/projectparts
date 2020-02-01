@@ -1,6 +1,6 @@
 # Project Parts
 
-Project Parts is an online competition to win car modifactions parts.
+Project Parts is an online competition to win car modifactions parts, it can be views [here](https://projectparts.herokuapp.com/).
 
 [![Build Status](https://travis-ci.org/msped/projectparts.svg?branch=master)](https://travis-ci.org/msped/projectparts)
 
@@ -93,7 +93,7 @@ In this section, you need to convince the assessor that you have conducted enoug
 
 Forms, URLs and models for each application with the project have been test using automated tests. You can run these tests with `python manage.py test` or if you wish to run a specific applications test type `python manage.py test *application_name*`.
 
-*NON AUTOMATED TESTS*
+[HTML](https://validator.w3.org/) & [CSS](http://jigsaw.w3.org/css-validator/) was validated with W3C validation service. Javascript was validated with [jshint](https://jshint.com/).
 
 ## Deployment
 
@@ -106,8 +106,33 @@ Different configuration files?
 Separate git branch?
 In addition, if it is not obvious, you should also describe how to run your code locally.
 
-Locally the code is ran using a virutal environment (venv). To access the venv you need to start the venv, for exmaple in my case `projectparts-env\scripts\activate.bat`. Once
-the venv has been started you can then run `python manage.py runserver` and go to `http://127.0.0.1:8000/` to see the development site on your local machine.
+### Locally
+
+In order to run the code locally you must first clone this repository, `git clone https://github.com/msped/projectparts.git`. Once cloned setup a virtual environment by first using `python -m venv *venv name*`. To access the venv you need to start the venv, for exmaple in my case `projectparts-env\scripts\activate.bat`. Once the venv has been started you can then install the packages using `pip intsall -r requirements.txt`. To run the code locally by running `python manage.py runserver` and go to `http://127.0.0.1:8000/` to see the development site on your local machine.
+
+In order for the site to work either locally or on heroku they will need the env / config variables outlined below.
+
+### Heroku
+
+In order to deploy to heroku I created a new app within Heroku on called projectparts choosing a region that I was in. For this project to work on Heroku it requires 'Heroku Postgres' and 'SendGrid' under resources / add-ons.
+
+Once the add-ons are up and running under the deploy tab I choose GitHub and connected to my repository. I choose to enable automatic deploys so that the site will update after each push to master. Below this section deploy the project from the master branch and wait for the build to complete.
+
+### .env / Config Vars
+
+SECRET_KEY - Random secret key
+STRIPE_PUBLISHABLE - Pushlishable key provided by stripe.js
+STRIPE_SECRET - Secret Key provided by stripe.js
+AWS_ACCESS_KEY_ID - Amazon Web Services Access for using S3 Bucket
+AWS_SECRET_ACCESS_KEY - Amazon Web Services Secret key.
+
+For local deployment you will need to use your own e-mail account to send e-mails:
+EMAIL_ADDRESS - This will be the email address you will be using to send emails from, in my case a gmail account.
+EMAIL_PASSWORD - The password associated with the above.
+
+On Heroku the sending of e-mail will be handled with the SendGrid add-on.
+SENDGRID_USERNAME - Provided by SendGrid API
+SENDGRID_PASSWORD - Provided by SendGrid API
 
 ## Credits
 
