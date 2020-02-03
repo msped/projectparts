@@ -8,6 +8,4 @@ before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
 script:
   - SECRET_KEY="Somethingorother"
-  - python manage.py makemigrations
-  - python manage.py migrate
   - python manage.py test
