@@ -21,8 +21,9 @@ td.entries-row {
 }
 
 .fas {
-    color: rgba(0, 0, 0, .5);
     font-size: 14pt;
+    color: #df5151;
+    text-decoration: none;
 }
 
 .fas:hover {
