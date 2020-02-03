@@ -7,5 +7,4 @@ services:
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
 script:
-  - SECRET_KEY="Somethingorother"
-  - python manage.py test
+  - SECRET_KEY="Somethingorother" python manage.py test
