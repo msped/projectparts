@@ -27,7 +27,10 @@ def contact_view(request):
             }
         return JsonResponse(data)
     else:
-        form = ContactForm()
+        if request.user.is_authenticated:
+            form = ContactForm(initial={'email': request.user.email})
+        else:
+            form = ContactForm()
 
         content = {
             'form': form,
