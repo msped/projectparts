@@ -1,5 +1,7 @@
 # Project Parts
 
+Before reading any further please be aware this site is using stripe.js to take payments. In order for it to work please use the credit card number `4242 4242 4242 4242`. If you use your own details a <strong><u>payment maybe taken.</u></strong>
+
 Project Parts is an online competition to win car modifactions parts, it can be views [here](https://projectparts.herokuapp.com/).
 
 [![Build Status](https://travis-ci.org/msped/projectparts.svg?branch=master)](https://travis-ci.org/msped/projectparts)
@@ -89,22 +91,13 @@ Below are the techbologies used with this project.
 
 ## Testing
 
-In this section, you need to convince the assessor that you have conducted enough testing to legitimately believe that the site works well. Essentially, in this part you will want to go over all of your user stories from the UX section and ensure that they all work as intended, with the project providing an easy and straightforward way for the users to achieve their goals.
-
 Forms, URLs and models for each application with the project have been test using automated tests. You can run these tests with `python manage.py test` or if you wish to run a specific applications test type `python manage.py test *application_name*`.
 
 [HTML](https://validator.w3.org/) & [CSS](http://jigsaw.w3.org/css-validator/) was validated with W3C validation service. Javascript was validated with [jshint](https://jshint.com/).
 
+Each page was tested on a screen size from desktop down to iPhone 5 (320x568). An issue will only arise if a user has a phone will with smaller screen resolution which shouldn't be an issue when Apple users using an iPhone 4 - iPhone 5S is 1.43%, smaller screens will cause an issue where tables are in use to display data like in the user orders page.
+
 ## Deployment
-
-This section should describe the process you went through to deploy the project to a hosting platform (e.g. GitHub Pages or Heroku).
-
-In particular, you should provide all details of the differences between the deployed version and the development version, if any, including:
-
-Different values for environment variables (Heroku Config Vars)?
-Different configuration files?
-Separate git branch?
-In addition, if it is not obvious, you should also describe how to run your code locally.
 
 ### Locally
 
@@ -118,21 +111,23 @@ In order to deploy to heroku I created a new app within Heroku on called project
 
 Once the add-ons are up and running under the deploy tab I choose GitHub and connected to my repository. I choose to enable automatic deploys so that the site will update after each push to master. Below this section deploy the project from the master branch and wait for the build to complete.
 
+You can see the project hosted [here](https://projectparts.herokuapp.com/).
+
 ### .env / Config Vars
 
-SECRET_KEY - Random secret key
-STRIPE_PUBLISHABLE - Pushlishable key provided by stripe.js
-STRIPE_SECRET - Secret Key provided by stripe.js
-AWS_ACCESS_KEY_ID - Amazon Web Services Access for using S3 Bucket
-AWS_SECRET_ACCESS_KEY - Amazon Web Services Secret key.
+SECRET_KEY - Random secret key</br>
+STRIPE_PUBLISHABLE - Pushlishable key provided by stripe.js</br>
+STRIPE_SECRET - Secret Key provided by stripe.js</br>
+AWS_ACCESS_KEY_ID - Amazon Web Services Access for using S3 Bucket</br>
+AWS_SECRET_ACCESS_KEY - Amazon Web Services Secret key.</br>
 
-For local deployment you will need to use your own e-mail account to send e-mails:
-EMAIL_ADDRESS - This will be the email address you will be using to send emails from, in my case a gmail account.
-EMAIL_PASSWORD - The password associated with the above.
+For local deployment you will need to use your own e-mail account to send e-mails:</br>
+EMAIL_ADDRESS - This will be the email address you will be using to send emails from, in my case a gmail account.</br>
+EMAIL_PASSWORD - The password associated with the above.</br>
 
-On Heroku the sending of e-mail will be handled with the SendGrid add-on.
-SENDGRID_USERNAME - Provided by SendGrid API
-SENDGRID_PASSWORD - Provided by SendGrid API
+On Heroku the sending of e-mail will be handled with the SendGrid add-on:</br>
+SENDGRID_USERNAME - Provided by SendGrid API</br>
+SENDGRID_PASSWORD - Provided by SendGrid API</br>
 
 ## Credits
 
