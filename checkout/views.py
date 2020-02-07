@@ -7,6 +7,7 @@ import stripe
 from competition.models import Competition
 from cart.models import Orders
 from cart.contexts  import cart_contents
+from accounts.contexts import check_profile
 from .utils import (
     get_total,
     get_users_tickets,
@@ -37,6 +38,15 @@ def checkout(request):
             "You have no tickets to checkout."
         )
         return redirect('products')
+
+    profile_check = check_profile(request)
+    if profile_check['profile_incomplete']:
+        messages.error(
+            request,
+            "Please fil out your details before placing an order. " +
+            "(So we can contact you if you win!)"
+        )
+        return redirect('profile')
 
     if request.method == "POST":
         payment_form = PaymentForm(request.POST)
