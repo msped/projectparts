@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.core.validators import ValidationError
 from django.contrib.auth.models import User
@@ -70,6 +71,13 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['phone_number']
+
+    def clean_phone_number(self):
+        """Check phone number is numbers only"""
+        clean_number = self.cleaned_data.get('phone_number')
+        if not re.match("^[0-9]*$", clean_number):
+            raise forms.ValidationError("Please enter a valid phone number")
+        return clean_number
 
 class ShippingForm(forms.ModelForm):
     """To change billing / shipping form"""

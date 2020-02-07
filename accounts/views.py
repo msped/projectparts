@@ -90,10 +90,10 @@ def profilepage(request):
                 shipping_form.save()
                 messages.success(request, "User Information Updated.")
                 return redirect('profile')
-    else:
-        user_form = UserDataForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-        shipping_form = ShippingForm(instance=request.user.profile)
+
+    user_form = UserDataForm(instance=request.user)
+    profile_form = ProfileForm(instance=request.user.profile)
+    shipping_form = ShippingForm(instance=request.user.profile)
 
     forms = {
         'UserDataForm': user_form,
