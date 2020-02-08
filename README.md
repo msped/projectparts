@@ -1,6 +1,6 @@
 # Project Parts
 
-Before reading any further please be aware this site is using stripe.js to take payments. In order for it to work please use the credit card number `4242 4242 4242 4242`. If you use your own details a <strong><u>payment maybe taken.</u></strong>
+Before reading any further please be aware this site is using stripe.js to take payments. In order for it to work please use the credit card number `4242424242424242` (`4242` four times). If you use your own details a <strong><u>payment maybe taken.</u></strong>
 
 Project Parts is an online competition to win car modifactions parts, it can be views [here](https://projectparts.herokuapp.com/).
 
@@ -39,8 +39,6 @@ Design of the database can be viewed [here](https://github.com/msped/projectpart
 ## Features
 
 ### Existing Features
-
-Feature 1 - allows users X to achieve Y, by having them fill out Z
 
 - Products page displays 15 products as a standard, showing full products when using search filters.
 
