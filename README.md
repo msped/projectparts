@@ -87,6 +87,8 @@ Below are the techbologies used with this project.
 
 - [Stripe](https://stripe.com/gb)
 
+- [PostgreSQL](https://www.postgresql.org/)
+
 ## Testing
 
 Forms, URLs and models for each application with the project have been test using automated tests. You can run these tests with `python manage.py test` or if you wish to run a specific applications test type `python manage.py test *application_name*`.
