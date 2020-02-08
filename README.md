@@ -10,7 +10,7 @@ Project Parts is an online competition to win car modifactions parts, it can be 
 
 Project parts is a competition website for car enthusiasts who wish to play for the more expensive car modification parts. The target audience is the car modification community.
 
-The site will offer 'tickets' at a fraction of the cost of the full product price. Each competition will have a set amount of tickets before the competition ends and an winner is drawn randomly. All enterants must get the question correct in-order to be entered into a competition.
+The site will offer 'tickets' at a fraction of the cost of the full product price. Each competition will have a set amount of tickets before the competition ends and a winner is drawn randomly. All enterants must get the question correct in-order to be entered into a competition.
 
 - A User will want to create a profile so that they can see previously entered competitions and there winner.
 
@@ -22,7 +22,7 @@ The site will offer 'tickets' at a fraction of the cost of the full product pric
 
 - A User will want to be able to see the price of the full product as if they were to buy it compared to the ticket price.
 
-- A User will want to be able to quick add set amount of tickets.
+- A User will want to be able to quick add set amount of tickets with the option to add a specific amount when viewing a product in more detail.
 
 - Users will want to be able to read more about each product on there own page with more description.
 
@@ -40,13 +40,13 @@ Design of the database can be viewed [here](https://github.com/msped/projectpart
 
 ### Existing Features
 
-- Products page displays 15 products as a standard, showing full products when using search filters.
+- All products are shown, 15 per page, unless a user search for specific vehicle.
 
 - When orders have been made they are viewable in the users profile.
 
 - Profile details are editable within a users profile. If a profile is incomplete a check engine light will display next to the users first name on the navbar.
 
-- Each carts item is automatically assigned an entry to number to the competition.
+- Each carts item is automatically assigned an entry to number to the competition if the user answer the competitions question correctly.
 
 - New competition is automatically created when active competition is below a certain number of entries.
 
@@ -62,7 +62,7 @@ More ideas I would like to implement on the site are:
 
 - Promotional e-mails with new or discounted products.
 
-- Add a vehicle API for better vehicle search functionality.
+- Add a vehicle API and/or bridge table for better search functionality.
 
 - To add a bundle feature for multiple products with a discount based on amount of products in a bundle.
 
@@ -101,7 +101,7 @@ Each page was tested on a screen size from desktop down to iPhone 5 (320x568). A
 
 ### Locally
 
-In order to run the code locally you must first clone this repository, `git clone https://github.com/msped/projectparts.git`. Once cloned setup a virtual environment by first using `python -m venv *venv name*`. To access the venv you need to start the venv, for exmaple in my case `projectparts-env\scripts\activate.bat`. Once the venv has been started you can then install the packages using `pip intsall -r requirements.txt`. To run the code locally by running `python manage.py runserver` and go to `http://127.0.0.1:8000/` to see the development site on your local machine.
+In order to run the code locally you must first clone this repository, `git clone https://github.com/msped/projectparts.git`. Once cloned setup a virtual environment by first using `python -m venv *venv name*`. To access the venv you need to start the venv, for exmaple in my case `projectparts-env\scripts\activate.bat`. Once the venv has been started you can then install the packages using `pip intsall -r requirements.txt`. You run the code locally by running `python manage.py runserver` and go to `http://127.0.0.1:8000/` to see the development site on your local machine.
 
 In order for the site to work either locally or on heroku they will need the env / config variables outlined below.
 
@@ -109,7 +109,7 @@ In order for the site to work either locally or on heroku they will need the env
 
 In order to deploy to heroku I created a new app within Heroku on called projectparts choosing a region that I was in. For this project to work on Heroku it requires 'Heroku Postgres' and 'SendGrid' under resources / add-ons.
 
-Once the add-ons are up and running under the deploy tab I choose GitHub and connected to my repository. I choose to enable automatic deploys so that the site will update after each push to master. Below this section deploy the project from the master branch and wait for the build to complete.
+Once the add-ons are up and running under the deploy tab I choose GitHub and connected to my repository. I chose to enable automatic deploys so that the site will update after each push to master. Below this section deploy the project from the master branch and wait for the build to complete.
 
 You can see the project hosted [here](https://projectparts.herokuapp.com/).
 
