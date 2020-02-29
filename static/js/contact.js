@@ -7,7 +7,6 @@ $(document).ready(function(){
             type: $(this).attr('method'),
             url: $(this).attr('action'),
             success: function(response){
-                console.log(response.sent);
                 if(response.sent){
                     $('.contact-form').css('display', 'none');
                     $('.contact-form-success').css('display', 'initial');
