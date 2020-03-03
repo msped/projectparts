@@ -55,3 +55,6 @@ class Fitments(models.Model):
         Vehicle,
         on_delete=models.DO_NOTHING
     )
+
+    def __str__(self):
+        return f"{self.products} - {self.vehicle}"
