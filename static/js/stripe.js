@@ -25,10 +25,10 @@ $(function() {
 
                 form.submit();
             } else {
-                $('#loading').hide();
-                $('#submit').show();
-                $("#stripe-error-messages").text(response.error.message);
-                $("#credit-card-errors").show();
+                $('.loading').hide();
+                $('.submit').show();
+                $(".stripe-error-messages").text(response.error.message);
+                $(".credit-card-errors").show();
                 $("#validate_card_btn").attr("disabled", false);
             }
         });
