@@ -1,20 +1,17 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-from .models import Product, Categories, Manufacturer, Vehicle
+from .utils import get_makes, get_products_from_fitments, get_sort_options
+from .models import Product, Categories, Manufacturer, Vehicle, Fitments
 
 # Create your views here.
 def products_view(request):
     """Shows all products"""
     products = Product.objects.all()
-    cars = Vehicle.objects.all()
     manufacturer_dropdown = Manufacturer.objects.all()
     categories_dropdown = Categories.objects.all()
 
-    makes = []
-    for car in cars:
-        if car.make not in makes:
-            makes.append(car.make)
+    makes = get_makes()
 
     make = request.GET.get('make')
     model = request.GET.get('model')
@@ -29,26 +26,31 @@ def products_view(request):
             model=model,
             generation=generation
         )
+        sort_options = get_sort_options(request.GET.get('sort'))
         if make and model and generation and manufacturer is None and categories is None:
-            products = Product.objects.filter(
-                fits=cars
+            fitments = Fitments.objects.filter(
+                vehicle=cars
             ).order_by(sort_options)
+            products = get_products_from_fitments(fitments)
         elif manufacturer and categories is None:
-            products = Product.objects.filter(
-                fits=cars,
-                part_manufacturer=manufacturer
+            fitments = Fitments.objects.filter(
+                vehicle=cars,
+                products__part_manufacturer=manufacturer
             ).order_by(sort_options)
+            products = get_products_from_fitments(fitments)
         elif categories and manufacturer is None:
-            products = Product.objects.filter(
-                fits=cars,
-                category=categories
+            fitments = Fitments.objects.filter(
+                vehicle=cars,
+                products__category=categories
             ).order_by(sort_options)
+            products = get_products_from_fitments(fitments)
         elif manufacturer and categories:
-            products = Product.objects.filter(
-                fits=cars,
-                part_manufacturer=manufacturer,
-                category=categories
+            fitments = Fitments.objects.filter(
+                vehicle=cars,
+                products__part_manufacturer=manufacturer,
+                products__category=categories
             ).order_by(sort_options)
+            products = get_products_from_fitments(fitments)
     else:
         if manufacturer and categories is None:
             products = Product.objects.filter(

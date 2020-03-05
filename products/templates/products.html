@@ -115,11 +115,6 @@
                 <div class="card-title">{{ product.name }}</div>
                 <div class="card-body">
                     <div class="details">
-                        {% if product.fits_multiple %}
-                        <p>Fits multiple vehicles.*</p>
-                        {% else %}
-                        <p>For: {{ product.fits }}</p>
-                        {% endif %}
                         <p>Ticket Price: £{{ product.ticket_price }}</p>
                     </div>
                 </div>
