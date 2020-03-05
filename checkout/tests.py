@@ -38,11 +38,6 @@ class TestCheckoutApp(TestCase):
         category = Categories.objects.create(
             category="Exterior"
         )
-        vehicle = Vehicle.objects.create(
-            make="Mercedes",
-            model="A Class",
-            generation="W176"
-        )
         man = Manufacturer.objects.create(
             name="Test Manu"
         )
@@ -54,7 +49,6 @@ class TestCheckoutApp(TestCase):
             ticket_price="2.50",
             product_price="795",
             product_link="https://www.github.com",
-            fits=vehicle,
             part_manufacturer=man
         )
         product = Product.objects.all().first()
@@ -234,7 +228,6 @@ class TestCheckoutApp(TestCase):
 
 class TestUtils(TestCase):
     """Test Util functions"""
-
     def setUp(self):
         """Set up models for tests"""
         self.user = {
@@ -262,7 +255,6 @@ class TestUtils(TestCase):
             ticket_price="2.50",
             product_price="795",
             product_link="https://www.github.com",
-            fits=vehicle,
             part_manufacturer=man
         )
         Competition.objects.create()

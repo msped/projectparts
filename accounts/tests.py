@@ -414,12 +414,6 @@ class TestAccountsUtils(TestCase):
             category="Exterior"
         )
         category.save()
-        vehicle = Vehicle(
-            make="Mercedes",
-            model="A Class",
-            generation="W176"
-        )
-        vehicle.save()
         manufacturer = Manufacturer(
             name="Eibach"
         )
@@ -432,7 +426,6 @@ class TestAccountsUtils(TestCase):
             ticket_price="2.50",
             product_price="795",
             product_link="https://www.github.com",
-            fits=vehicle,
             part_manufacturer=manufacturer
         )
         product.save()

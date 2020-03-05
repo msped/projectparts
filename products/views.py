@@ -80,8 +80,14 @@ def products_view(request):
 def product_detail(request, product_id):
     """Shows extra detail on a product"""
     product = Product.objects.get(id=product_id)
+    fits = Fitments.objects.filter(products=product)
 
-    return render(request, 'product_detail.html', {'product': product})
+    car_product_fits = []
+    for item in fits:
+        car_product_fits.append(item.vehicle)
+
+    return render(request, 'product_detail.html',
+                  {'product': product, 'fits': car_product_fits})
 
 def get_models(request):
     """Get Models from Make"""
