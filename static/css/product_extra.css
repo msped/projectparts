@@ -50,7 +50,7 @@ img {
     text-decoration: underline;
 }
 
-.product-fits p {
+.product-fits, .fitment-vehicles span {
     font-family: 'Hammersmith', sans-serif;
     font-size: 12pt;
 }
@@ -67,6 +67,29 @@ img {
 .added-to-cart p {
     font-family: 'Roboto', sans-serif;
     margin: 5px;
+}
+
+.fitment-card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    margin-bottom: 20px; 
+    border: 0 solid rgba(0,0,0,.125);
+}
+
+.fitment-header {
+    padding: .25rem 0;
+    background-color: #fff;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.card a {
+    text-decoration: none;
 }
 
 @media (min-width: 768px) {
