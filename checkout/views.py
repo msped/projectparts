@@ -59,7 +59,7 @@ def checkout(request):
                             comp.tickets_left
                         )
                 )
-                return redirect('cart')
+                return redirect('view_cart')
             else:
                 intent = stripe.PaymentIntent.create(
                     amount=int(total * 100),
