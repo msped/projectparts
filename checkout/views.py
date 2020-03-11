@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import stripe
@@ -10,9 +10,9 @@ from cart.contexts  import cart_contents
 from .utils import (
     get_total,
     get_users_tickets,
-    customer_paid
+    customer_paid,
+    is_user_answer_correct
 )
-from .forms import PaymentForm
 
 # Create your views here.
 
@@ -22,7 +22,6 @@ stripe.api_key = settings.STRIPE_SECRET
 def checkout(request):
     """Shows checkout page and handles checkout with stripe / DB changes"""
     comp = Competition.objects.get(is_active=True)
-    user = User.objects.get(id=request.user.id)
     orders = Orders.objects.filter(
         user=request.user.id,
         is_paid=False,
@@ -39,7 +38,6 @@ def checkout(request):
         return redirect('products')
 
     if request.method == "POST":
-        payment_form = PaymentForm(request.POST)
         user_answer = request.POST.get('user-answer')
 
         if user_answer is None:
@@ -47,6 +45,7 @@ def checkout(request):
                 request,
                 "Please select an answer to the question at the bottom of the page"
             )
+            return redirect('checkout')
         else:
             total = get_total(orders)
             tickets = get_users_tickets(orders)
@@ -60,51 +59,50 @@ def checkout(request):
                             comp.tickets_left
                         )
                 )
+                return redirect('cart')
             else:
-                if payment_form.is_valid():
-                    try:
-                        customer = stripe.Charge.create(
-                            amount=int(total * 100),
-                            currency="gbp",
-                            source='tok_visa'
-                        )
-                    except stripe.error.CardError:
-                        messages.error(request, "Your card has been declined.")
-
-                    if customer.paid:
-                        customer_paid(
-                            request,
-                            orders,
-                            user_answer,
-                            comp,
-                            tickets,
-                            user,
-                            total
-                        )
-                        return redirect('checkout_complete')
-                else:
-                    messages.error(
-                        request,
-                        "We are unable to take payment from that card."
-                    )
-    else:
-        payment_form = PaymentForm()
+                intent = stripe.PaymentIntent.create(
+                    amount=int(total * 100),
+                    currency='gbp',
+                    # Verify your integration in this guide by including this parameter
+                    metadata={'integration_check': 'accept_a_payment'},
+                )
+                is_user_answer_correct(request, user_answer, comp)
+                client_secret = intent.client_secret
+                return HttpResponse(client_secret)
 
     content = {
         'user': request.user,
         'orders': orders,
-        'comp': comp,
-        'payment_form': payment_form
+        'comp': comp
     }
     return render(request, 'checkout.html', content)
 
 @login_required
 def checkout_complete(request):
     """View to be displayed when the checkout has been completed"""
+    comp = Competition.objects.get(is_active=True)
+    orders = Orders.objects.filter(
+        user=request.user.id,
+        is_paid=False,
+        related_competition=comp.id
+    )
+
+    tickets = get_users_tickets(orders)
+    total = get_total(orders)
 
     user_correct = request.session['user_correct']
-    del request.session['user_correct']
+    if user_correct:
+        customer_paid(
+            request,
+            orders,
+            user_correct,
+            comp,
+            tickets,
+            total
+        )
 
+    del request.session['user_correct']
     content = {
         'user_correct': user_correct
     }
