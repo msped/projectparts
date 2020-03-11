@@ -165,29 +165,6 @@ class TestCheckoutApp(TestCase):
             response.content
         )
 
-    def test_checkout_view_incorrect_card_details(self):
-        """Test checkout view with incorrect card details"""
-        self.client.post(
-            '/accounts/login/',
-            self.user,
-            follow=True
-        )
-        response = self.client.post(
-            '/checkout/',
-            {
-                'credit_card_number': '4278244242423242',
-                'cvv': '477',
-                'expiry_month': '2',
-                'expiry_year': '2311',
-                'user-answer': 'Yes'
-            },
-            follow=True
-        )
-        self.assertIn(
-            b'We are unable to take payment from that card.',
-            response.content
-        )
-
     def test_checkout_app(self):
         """Test Checkout App"""
         self.assertEqual("checkout", CheckoutConfig.name)
@@ -279,7 +256,7 @@ class TestUtils(TestCase):
             related_competition=comp,
             quantity=5
         )
-        update_orders(order, "Correct Answer", comp)
+        update_orders(order, True)
         order = Orders.objects.get(
             user=user,
             product=product,
