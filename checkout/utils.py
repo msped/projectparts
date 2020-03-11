@@ -1,5 +1,6 @@
 from random import randint
 from datetime import date
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template import loader
 from django.utils.html import strip_tags
@@ -90,23 +91,19 @@ def get_users_tickets(orders):
         tickets += order.quantity
     return tickets
 
-def update_orders(orders, user_answer, comp):
+def update_orders(orders, user_correct):
     """Update users orders in database"""
     for item in orders:
         item.is_paid = True
         item.order_date = date.today()
-        if user_answer == comp.correct_answer:
+        if user_correct:
             item.user_answer_correct = True
         item.save()
 
-def customer_paid(request, orders, user_answer, comp, tickets, user, total):
+def customer_paid(request, orders, user_correct, comp, tickets, total):
     """Function handle all process if a customer has paid"""
-    update_orders(orders, user_answer, comp)
-    user_correct = is_user_answer_correct(
-        request,
-        user_answer,
-        comp
-    )
+    user = User.objects.get(id=request.user.id)
+    update_orders(orders, user_correct)
     if user_correct:
         create_entries(orders, user, comp, tickets)
     email_order(request, orders, total, user_correct)
