@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from products.models import Product
-from .models import Orders
+from .models import OrderItem
 
 def cart_contents(request):
     """
@@ -13,7 +13,7 @@ def cart_contents(request):
     cart = request.session.get('cart', {})
     if request.user.is_authenticated:
         try:
-            cart = Orders.objects.filter(
+            cart = OrderItem.objects.filter(
                 user=request.user.id,
                 is_paid=False
             )

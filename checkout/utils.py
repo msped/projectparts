@@ -1,5 +1,5 @@
 from random import randint
-from datetime import date
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template import loader
@@ -9,13 +9,15 @@ from competition.utlis import (
     pick_competition_winner,
     check_for_new_competition,
 )
+from cart.models import Order
+from competition.models import Competition
 
-def email_order(request, orders, total, user_correct):
+def email_order(request, order_item, total, user_correct):
     """Send out email to user with the order details"""
     users_entries = {}
-    for item in orders:
+    for item in order_item:
         entries_per_order = []
-        entries = Entries.objects.filter(order=item.id)
+        entries = Entries.objects.filter(order_item=item.id)
         for ent in entries:
             entries_per_order.append(ent.ticket_number)
         n_order = {
@@ -26,7 +28,7 @@ def email_order(request, orders, total, user_correct):
     html_email = loader.render_to_string(
         'email_templates/order_complete.html',
         {
-            'order': orders,
+            'order': order_item,
             'total': total,
             'user': request.user.first_name,
             'user_correct': user_correct,
@@ -44,17 +46,17 @@ def email_order(request, orders, total, user_correct):
         html_message=html_email
     )
 
-def get_total(orders):
+def get_total(order_item):
     """Gets total for orders"""
     total = 0
-    for item in orders:
+    for item in order_item:
         total += item.quantity * item.product.ticket_price
 
     return total
 
-def create_entries(orders, user, comp, tickets):
+def create_entries(order_item, user, comp, tickets, new_order):
     """Creates a users entries with a random number"""
-    for item in orders:
+    for item in order_item:
         tickets_per_order = item.quantity
         while tickets_per_order > 0:
             create = True
@@ -65,6 +67,7 @@ def create_entries(orders, user, comp, tickets):
                         'user': user,
                         'order': item
                     },
+                    order=new_order,
                     competition_entry=comp,
                     ticket_number=ticket_number
                 )
@@ -84,29 +87,42 @@ def is_user_answer_correct(request, user_answer, comp):
     request.session['user_correct'] = user_correct
     return user_correct
 
-def get_users_tickets(orders):
+def get_users_tickets(order_item):
     """Add up all of a users tickets"""
     tickets = 0
-    for order in orders:
+    for order in order_item:
         tickets += order.quantity
     return tickets
 
-def update_orders(orders, user_correct):
+def update_orders(user, comp, order_item, user_correct, payment_id):
     """Update users orders in database"""
-    for item in orders:
+    users_orders = []
+    for item in order_item:
+        users_orders.append(item.id)
         item.is_paid = True
-        item.order_date = date.today()
         if user_correct:
             item.user_answer_correct = True
         item.save()
+    new_order = Order.objects.create(
+        user=user,
+        related_competition=comp,
+        order_date=datetime.now(),
+        payment_id=payment_id
+    )
+    for item in order_item:
+        new_order.items.add(item)
+    new_order.save()
+    return new_order
 
-def customer_paid(request, orders, user_correct, comp, tickets, total):
+
+def customer_paid(request, order_item, user_correct, tickets, total, payment_id):
     """Function handle all process if a customer has paid"""
+    comp = Competition.objects.get(is_active=True)
     user = User.objects.get(id=request.user.id)
-    update_orders(orders, user_correct)
+    new_order = update_orders(user, comp, order_item, user_correct, payment_id)
     if user_correct:
-        create_entries(orders, user, comp, tickets)
-    email_order(request, orders, total, user_correct)
+        create_entries(order_item, user, comp, tickets, new_order)
+    email_order(request, order_item, total, user_correct)
     check_for_new_competition(comp)
     if comp.tickets_left == 0:
         pick_competition_winner()

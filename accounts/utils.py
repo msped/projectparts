@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from products.models import Product
-from competition.models import Competition
-from cart.models import Orders
+from cart.models import OrderItem
 from cart.contexts import cart_contents
 from checkout.models import Entries
 
@@ -11,10 +10,8 @@ def add_session_items_to_db(request):
     user = User.objects.get(id=request.user.id)
     for key, value in cart.items():
         product = Product.objects.get(id=int(key))
-        comp = Competition.objects.get(is_active=True)
-        new_order = Orders.objects.create(
+        new_order = OrderItem.objects.create(
             user=user,
-            related_competition=comp,
             product=product,
             quantity=int(value)
         )

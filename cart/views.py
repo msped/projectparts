@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from competition.models import Competition
 from products.models import Product
 from .contexts import cart_contents
-from .models import Orders
+from .models import OrderItem
 
 # Create your views here.
 
@@ -20,16 +19,14 @@ def add_to_cart(request):
         product_id = request.POST.get('product_id')
 
         if request.user.is_authenticated:
-            comp = Competition.objects.get(is_active=True)
             user = User.objects.get(id=request.user.id)
             product = Product.objects.get(id=product_id)
 
-            order, created = Orders.objects.get_or_create(
+            order, created = OrderItem.objects.get_or_create(
                 defaults={
                     'quantity': quantity
                 },
                 user=user,
-                related_competition=comp,
                 product=product,
                 is_paid=False
             )
@@ -59,7 +56,7 @@ def increase_item(request, order_id):
     """increases cart item by one"""
 
     if request.user.is_authenticated:
-        order = Orders.objects.get(id=order_id)
+        order = OrderItem.objects.get(id=order_id)
         if order.is_paid is False:
             qty = int(order.quantity) + 1
             order.quantity = qty
@@ -81,7 +78,7 @@ def increase_item(request, order_id):
 def decrease_item(request, order_id):
     """decreases cart item by one"""
     if request.user.is_authenticated:
-        order = Orders.objects.get(id=order_id)
+        order = OrderItem.objects.get(id=order_id)
         if order.is_paid is False:
             qty = int(order.quantity) - 1
             order.quantity = qty
@@ -105,7 +102,7 @@ def remove_item(request):
     if request.method == "POST":
         order_id = request.POST.get('order_id')
         if request.user.is_authenticated:
-            order = Orders.objects.filter(id=order_id)
+            order = OrderItem.objects.filter(id=order_id)
             order.delete()
         else:
             cart = request.session.get('cart', {})

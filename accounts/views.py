@@ -11,7 +11,7 @@ from accounts.forms import (
     ProfileForm,
     ShippingForm
 )
-from cart.models import Orders
+from cart.models import Order
 from .utils import add_session_items_to_db, get_users_orders
 
 def login(request):
@@ -126,8 +126,7 @@ def users_orders(request):
     """View for a user to view all orders that are made"""
 
     try:
-        orders = Orders.objects.filter(
-            is_paid=True,
+        orders = Order.objects.filter(
             user=request.user.id
         ).order_by('-id')
     except orders.DoesNotExist:

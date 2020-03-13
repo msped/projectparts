@@ -6,15 +6,59 @@ from competition.models import Competition
 
 # Create your models here.
 
-class Orders(models.Model):
-    """Model for users order / cart"""
+class OrderItem(models.Model):
+    """Model for a users order"""
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    related_competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
     is_paid = models.BooleanField(default=False)
-    user_answer_correct = models.BooleanField(default=False)
-    order_date = models.DateField(null=True)
 
     def __str__(self):
-        return f'Order {self.id} - Paid {self.is_paid}'
+        return f' {self.quantity} of {self.product.name}'
+
+    def get_total_item_price(self):
+        """Get total price for all tickets"""
+        return self.quantity * self.product.ticket_price
+
+    def get_final_price(self):
+        """Get price of all including coupon code"""
+        return self.get_total_item_price()
+
+
+class Coupon(models.Model):
+    """Model for discount codes"""
+    code = models.CharField(max_length=15)
+    amount = models.FloatField()
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.code
+
+class Order(models.Model):
+    """Model for an order"""
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    related_competition = models.ForeignKey(
+        Competition,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+    items = models.ManyToManyField(OrderItem)
+    order_date = models.DateTimeField()
+    payment_id = models.CharField(max_length=50)
+    coupon = models.ForeignKey(
+        Coupon,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.pk} | {self.order_date}'
+
+    def get_total(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_final_price()
+        if self.coupon:
+            total -= self.coupon.amount
+        return total

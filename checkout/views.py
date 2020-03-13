@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import stripe
 from competition.models import Competition
-from cart.models import Orders
+from cart.models import OrderItem, Order
 from cart.contexts  import cart_contents
 from .utils import (
     get_total,
@@ -22,10 +22,8 @@ stripe.api_key = settings.STRIPE_SECRET
 def checkout(request):
     """Shows checkout page and handles checkout with stripe / DB changes"""
     comp = Competition.objects.get(is_active=True)
-    orders = Orders.objects.filter(
-        user=request.user.id,
-        is_paid=False,
-        related_competition=comp.id
+    orders = OrderItem.objects.filter(
+        user=request.user.id
     )
 
     cart_count = cart_contents(request)
@@ -68,6 +66,7 @@ def checkout(request):
                     metadata={'integration_check': 'accept_a_payment'},
                 )
                 is_user_answer_correct(request, user_answer, comp)
+                request.session['payment_id'] = intent.id
                 client_secret = intent.client_secret
                 return HttpResponse(client_secret)
 
@@ -81,28 +80,28 @@ def checkout(request):
 @login_required
 def checkout_complete(request):
     """View to be displayed when the checkout has been completed"""
-    comp = Competition.objects.get(is_active=True)
-    orders = Orders.objects.filter(
+    order_item = OrderItem.objects.filter(
         user=request.user.id,
-        is_paid=False,
-        related_competition=comp.id
+        is_paid=False
     )
 
-    tickets = get_users_tickets(orders)
-    total = get_total(orders)
+    tickets = get_users_tickets(order_item)
+    total = get_total(order_item)
 
     user_correct = request.session['user_correct']
-    if user_correct:
-        customer_paid(
-            request,
-            orders,
-            user_correct,
-            comp,
-            tickets,
-            total
-        )
+    payment_id = request.session['payment_id']
+
+    customer_paid(
+        request,
+        order_item,
+        user_correct,
+        tickets,
+        total,
+        payment_id
+    )
 
     del request.session['user_correct']
+    del request.session['payment_id']
     content = {
         'user_correct': user_correct
     }
