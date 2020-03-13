@@ -42,6 +42,7 @@ class Order(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
+    answer_correct = models.BooleanField(default=False)
     items = models.ManyToManyField(OrderItem)
     order_date = models.DateTimeField()
     payment_id = models.CharField(max_length=50)
