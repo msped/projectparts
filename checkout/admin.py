@@ -3,4 +3,14 @@ from .models import Entries
 
 # Register your models here.
 
-admin.site.register(Entries)
+class EntriesFilter(admin.ModelAdmin):
+    """Filter to make entries model in admin read only"""
+    readonly_fields = (
+        'user',
+        'competition_entry',
+        'orderItem',
+        'order',
+        'ticket_number'
+    )
+
+admin.site.register(Entries, EntriesFilter)
