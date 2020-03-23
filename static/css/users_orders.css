@@ -6,8 +6,12 @@
     font-family: 'Hammersmith', sans-serif;
 }
 
-th, td {
+th, .td {
     font-size: 10pt;
+}
+
+.table th, .table td {
+    border: none;
 }
 
 td.entries-row {
@@ -30,8 +34,12 @@ td.entries-row {
     color: rgba(0, 0, 0, 1);
 }
 
-.order-table {
-    padding: 0;
+.card {
+    margin: .5rem 0
+}
+
+.card-body {
+    padding: 0 1.25rem 1.25rem 1.25rem;
 }
 
 @media (min-width: 768px) {
