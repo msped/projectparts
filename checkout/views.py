@@ -23,7 +23,8 @@ def checkout(request):
     """Shows checkout page and handles checkout with stripe / DB changes"""
     comp = Competition.objects.get(is_active=True)
     orders = OrderItem.objects.filter(
-        user=request.user.id
+        user=request.user.id,
+        is_paid=False
     )
 
     cart_count = cart_contents(request)
