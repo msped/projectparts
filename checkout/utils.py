@@ -17,7 +17,7 @@ def email_order(request, order_item, total, user_correct):
     users_entries = {}
     for item in order_item:
         entries_per_order = []
-        entries = Entries.objects.filter(order_item=item.id)
+        entries = Entries.objects.filter(orderItem=item.id)
         for ent in entries:
             entries_per_order.append(ent.ticket_number)
         n_order = {
@@ -40,7 +40,7 @@ def email_order(request, order_item, total, user_correct):
         'Your Order for Project Parts',
         message=message,
         from_email='noreply@projectparts.com',
-        fail_silently=True,
+        fail_silently=False,
         connection=None,
         recipient_list=[str(request.user.email)],
         html_message=html_email
@@ -65,7 +65,7 @@ def create_entries(order_item, user, comp, tickets, new_order):
                 entry, created = Entries.objects.get_or_create(
                     defaults={
                         'user': user,
-                        'order': item
+                        'orderItem': item
                     },
                     order=new_order,
                     competition_entry=comp,
@@ -86,7 +86,7 @@ def is_user_answer_correct(request, user_answer, comp):
         user_correct = True
     request.session['user_correct'] = user_correct
     return user_correct
-
+ 
 def get_users_tickets(order_item):
     """Add up all of a users tickets"""
     tickets = 0
@@ -97,17 +97,20 @@ def get_users_tickets(order_item):
 def update_orders(user, comp, order_item, user_correct, payment_id):
     """Update users orders in database"""
     users_orders = []
+    answer_correct = False
     for item in order_item:
         users_orders.append(item.id)
         item.is_paid = True
         if user_correct:
-            item.user_answer_correct = True
+            answer_correct = True
         item.save()
     new_order = Order.objects.create(
         user=user,
         related_competition=comp,
         order_date=datetime.now(),
-        payment_id=payment_id
+        payment_id=payment_id,
+        answer_correct=answer_correct
+
     )
     for item in order_item:
         new_order.items.add(item)
