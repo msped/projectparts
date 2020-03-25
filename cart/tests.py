@@ -1,8 +1,9 @@
+from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 from products.models import Product, Vehicle, Categories, Manufacturer
 from competition.models import Competition
-from .models import Orders
+from .models import Order, OrderItem
 from .apps import CartConfig
 
 # Create your tests here.
@@ -56,21 +57,41 @@ class CartAppTest(TestCase):
         )
         product.save()
 
-    def test_str(self):
+    def test_order_item_str(self):
         """Test str return"""
         user_test = User.objects.get(username='test user')
-        comp_test = Competition.objects.get(is_active=True)
         product_test = Product.objects.filter().first()
-        test_name = Orders.objects.create(
+        test_name = OrderItem.objects.create(
             user=user_test,
-            related_competition=comp_test,
             quantity=1,
             product=product_test
         )
         self.assertEqual(
             str(test_name),
-            'Order {} - Paid False'.format(test_name.id)
+            '1 of Test Product'
         )
+
+    def test_order_str(self):
+        """Test str return of the order model"""
+        user = User.objects.get(username='test user')
+        comp = Competition.objects.get(is_active=True)
+        product = Product.objects.filter().first()
+        item = OrderItem.objects.create(
+            user=user,
+            quantity=1,
+            product=product
+        )
+        order = Order.objects.create(
+            user=user,
+            related_competition=comp,
+            order_date=datetime.now(),
+            payment_id='test_id_stripe'
+        )
+        order.items.add(item)
+
+        self.assertEqual(order.user.username, 'test user')
+        self.assertEqual(order.related_competition.id, comp.id)
+        self.assertEqual(order.payment_id, 'test_id_stripe')
 
     def test_cart_page_response(self):
         """Test cart page response"""
@@ -135,12 +156,10 @@ class CartAppTest(TestCase):
             follow=True
         )
         user = User.objects.all().first()
-        comp = Competition.objects.all().first()
         product = Product.objects.all().first()
-        order = Orders.objects.create(
+        order = OrderItem.objects.create(
             user=user,
             quantity=1,
-            related_competition=comp,
             product=product
         )
         order.save()
@@ -160,12 +179,10 @@ class CartAppTest(TestCase):
             follow=True
         )
         user = User.objects.all().first()
-        comp = Competition.objects.all().first()
         product = Product.objects.all().first()
-        order = Orders.objects.create(
+        order = OrderItem.objects.create(
             user=user,
             quantity=2,
-            related_competition=comp,
             product=product
         )
         order.save()
@@ -185,12 +202,10 @@ class CartAppTest(TestCase):
             follow=True
         )
         user = User.objects.all().first()
-        comp = Competition.objects.all().first()
         product = Product.objects.all().first()
-        order = Orders.objects.create(
+        order = OrderItem.objects.create(
             user=user,
-            quantity=1,
-            related_competition=comp,
+            quantity=2,
             product=product
         )
         order.save()
