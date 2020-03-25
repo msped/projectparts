@@ -14,7 +14,7 @@ class OrderItem(models.Model):
     is_paid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f' {self.quantity} of {self.product.name}'
+        return f'{self.quantity} of {self.product.name}'
 
     def get_total_item_price(self):
         """Get total price for all tickets"""
