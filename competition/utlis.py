@@ -18,7 +18,7 @@ def new_competition():
     mail_admins(
         'New Competition has been created.',
         message,
-        fail_silently=True,
+        fail_silently=False,
         connection=None,
         html_message=html_message
     )
@@ -54,7 +54,7 @@ def end_of_competition_emails(current_comp, winning_ticket):
         current_comp.id,
         winning_ticket.user.first_name,
         winning_ticket.user.last_name,
-        winning_ticket.order.product
+        winning_ticket.orderItem.product
     )
     participants = (
         'A winner has been chosen! A new competition has also started.',
@@ -73,7 +73,7 @@ def end_of_competition_emails(current_comp, winning_ticket):
     """.format(
         current_comp.id,
         winning_ticket.ticket_number,
-        winning_ticket.order.product
+        winning_ticket.orderItem.product
     )
 
     winner = (
@@ -82,7 +82,7 @@ def end_of_competition_emails(current_comp, winning_ticket):
         'noreply@projectparts.com',
         winners_email
     )
-    send_mass_mail((participants, winner), fail_silently=True)
+    send_mass_mail((participants, winner), fail_silently=False)
 
 def pick_competition_winner():
     """Get Competition winner and send out emails"""
