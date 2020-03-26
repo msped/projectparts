@@ -1,9 +1,10 @@
+from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django import forms
 from competition.models import Competition
-from products.models import Product, Vehicle, Manufacturer, Categories
-from cart.models import Orders
+from products.models import Product, Manufacturer, Categories
+from cart.models import Order, OrderItem
 from checkout.models import Entries
 from .forms import UserLoginForm, UserRegisterForm, UserDataForm, ProfileForm, ShippingForm
 from .apps import AccountsConfig
@@ -429,68 +430,76 @@ class TestAccountsUtils(TestCase):
             part_manufacturer=manufacturer
         )
         product.save()
+        user = User.objects.get(
+            username='test user'
+        )
+        OrderItem(
+            user=user,
+            product=product,
+            is_paid=True,
+            quantity=5
+        ).save()
 
     def test_get_users_orders_correct_answer(self):
         """Test get users orders where the order answer was correct"""
-        user = User.objects.filter().first()
-        comp = Competition.objects.filter().first()
-        product = Product.objects.filter().first()
-        ent_order = Orders.objects.create(
+        user = User.objects.all().first()
+        comp = Competition.objects.all().first()
+        orderitems = OrderItem.objects.all().first()
+        orders = Order.objects.create(
             user=user,
             related_competition=comp,
-            quantity=1,
-            product=product,
-            is_paid=True,
-            user_answer_correct=True
+            answer_correct=True,
+            order_date=datetime.now(),
+            payment_id='test_payment_id'
         )
+        orders.items.add(orderitems)
         Entries.objects.create(
             user=user,
             competition_entry=comp,
-            order=ent_order,
-            ticket_number=25
+            orderItem=orderitems,
+            order=orders,
+            ticket_number=124
         )
-        orders = Orders.objects.filter(
+
+        orders_for_test = Order.objects.filter(
             user=user,
             related_competition=comp,
-            product=product,
-            user_answer_correct=True,
-            is_paid=True,
-            quantity=1
+            answer_correct=True,
+            payment_id='test_payment_id'
         )
 
-        response = get_users_orders(orders)
+        response = get_users_orders(orders_for_test)
 
         self.assertEqual(response[0][0].id, 1)
-        self.assertEqual(response[0][0].quantity, 1)
-        self.assertEqual(response[0][1], 2.50)
+        self.assertEqual(response[0][1], 12.50)
         self.assertTrue(response[0][2])
-        self.assertListEqual(response[0][3], [25])
+        self.assertEqual(response[0][3][0][0][0].name, 'Test Product')
+        self.assertEqual(response[0][3][0][0][2][0], 124)
 
     def test_get_users_orders_incorrect_answer(self):
         """Test get users orders where the order answer was incorrect"""
-        user = User.objects.filter().first()
-        comp = Competition.objects.filter().first()
-        product = Product.objects.filter().first()
-        Orders.objects.create(
+        user = User.objects.all().first()
+        comp = Competition.objects.all().first()
+        orderitems = OrderItem.objects.all().first()
+        orders = Order.objects.create(
             user=user,
             related_competition=comp,
-            quantity=10,
-            product=product,
-            is_paid=True,
-            user_answer_correct=False
+            answer_correct=False,
+            order_date=datetime.now(),
+            payment_id='test_payment_id'
         )
-        orders = Orders.objects.filter(
+        orders.items.add(orderitems)
+
+        orders_for_test = Order.objects.filter(
             user=user,
             related_competition=comp,
-            product=product,
-            user_answer_correct=False,
-            is_paid=True,
-            quantity=10
+            answer_correct=False,
+            payment_id='test_payment_id'
         )
 
-        response = get_users_orders(orders)
+        response = get_users_orders(orders_for_test)
 
         self.assertEqual(response[0][0].id, 2)
-        self.assertEqual(response[0][0].quantity, 10)
-        self.assertEqual(response[0][1], 25.00)
+        self.assertEqual(response[0][1], 12.50)
         self.assertFalse(response[0][2])
+        self.assertEqual(response[0][3][0][0][0].name, 'Test Product')
