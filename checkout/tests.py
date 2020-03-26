@@ -1,8 +1,9 @@
+from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 from competition.models import Competition
-from cart.models import Orders
-from products.models import Product, Vehicle, Categories, Manufacturer
+from cart.models import Order, OrderItem
+from products.models import Product, Categories, Manufacturer
 from .models import Entries
 from .utils import get_total, get_users_tickets, update_orders
 from .forms import PaymentForm
@@ -34,7 +35,6 @@ class TestCheckoutApp(TestCase):
             answer_3="Maybe",
             correct_answer="Yes"
         ).save()
-        comp = Competition.objects.all().first()
         category = Categories.objects.create(
             category="Exterior"
         )
@@ -52,11 +52,10 @@ class TestCheckoutApp(TestCase):
             part_manufacturer=man
         )
         product = Product.objects.all().first()
-        Orders(
+        OrderItem(
             user=user,
             product=product,
             is_paid=False,
-            related_competition=comp,
             quantity=5
         ).save()
 
@@ -84,26 +83,44 @@ class TestCheckoutApp(TestCase):
         """Test __str__ return"""
         user = User.objects.all().first()
         comp = Competition.objects.create(is_active=False, tickets_left=0)
-        order = Orders.objects.all().first()
+        orderitems = OrderItem.objects.all().first()
+        order = Order.objects.create(
+            user=user,
+            related_competition=comp,
+            answer_correct=True,
+            order_date=datetime.now(),
+            payment_id='test_payment_id'
+        )
+        order.items.add(orderitems)
         entry_str = Entries.objects.create(
             user=user,
             competition_entry=comp,
+            orderItem=orderitems,
             order=order,
-            ticket_number=100
+            ticket_number=124
         )
         self.assertEqual(
             str(entry_str),
-            'Competition {}: Ended | Ticket No: 100'.format(comp.id)
+            'Competition {}: Ended | Ticket No: 124'.format(comp.id)
         )
 
     def test_entries_model(self):
         """Test the entries model"""
         user = User.objects.all().first()
         comp = Competition.objects.all().first()
-        order = Orders.objects.all().first()
+        orderitems = OrderItem.objects.all().first()
+        order = Order.objects.create(
+            user=user,
+            related_competition=comp,
+            answer_correct=True,
+            order_date=datetime.now(),
+            payment_id='test_payment_id'
+        )
+        order.items.add(orderitems)
         entry = Entries.objects.create(
             user=user,
             competition_entry=comp,
+            orderItem=orderitems,
             order=order,
             ticket_number=124
         )
@@ -123,13 +140,13 @@ class TestCheckoutApp(TestCase):
 
     def test_get_total_util(self):
         """Test utils function get_total"""
-        orders = Orders.objects.all()
+        orders = OrderItem.objects.all()
         total = get_total(orders)
         self.assertEqual(float(total), 12.50)
 
     def test_get_users_tickets(self):
         """Test utils function to get users ticket amount"""
-        orders = Orders.objects.all()
+        orders = OrderItem.objects.all()
         ticket_amount = get_users_tickets(orders)
         self.assertEqual(ticket_amount, 5)
 
@@ -180,11 +197,10 @@ class TestCheckoutApp(TestCase):
         user = User.objects.all().first()
         product = Product.objects.all().first()
         comp = Competition.objects.all().first()
-        Orders.objects.create(
+        OrderItem.objects.create(
             user=user,
             product=product,
             is_paid=False,
-            related_competition=comp,
             quantity=4000
         )
         response = self.client.post(
@@ -216,11 +232,6 @@ class TestUtils(TestCase):
         category = Categories.objects.create(
             category="Exterior"
         )
-        vehicle = Vehicle.objects.create(
-            make="Mercedes",
-            model="A Class",
-            generation="W176"
-        )
         man = Manufacturer.objects.create(
             name="Test Manu"
         )
@@ -239,29 +250,21 @@ class TestUtils(TestCase):
     def test_update_orders(self):
         """Test that an order get updated with whether the user answer is
         correct"""
+        user = User.objects.filter().first()
         comp = Competition.objects.filter().first()
         product = Product.objects.filter().first()
-        user = User.objects.filter().first()
-        Orders.objects.create(
+        OrderItem.objects.create(
             user=user,
             product=product,
             is_paid=False,
-            related_competition=comp,
             quantity=5
         )
-        order = Orders.objects.filter(
+        order = OrderItem.objects.filter(
             user=user,
             product=product,
             is_paid=False,
-            related_competition=comp,
             quantity=5
         )
-        update_orders(order, True)
-        order = Orders.objects.get(
-            user=user,
-            product=product,
-            related_competition=comp,
-            quantity=5
-        )
-        self.assertTrue(order.is_paid)
-        self.assertNotEqual(order.order_date, '')
+        update_return = update_orders(user, comp, order, True, 'test_payment')
+
+        self.assertEqual(update_return.payment_id, 'test_payment')
