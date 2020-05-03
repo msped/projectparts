@@ -39,7 +39,6 @@ def cart_contents(request):
                 'quantity': quantity,
                 'product': product
             })
-
     return {
         'cart_items': cart_items,
         'total': total,
