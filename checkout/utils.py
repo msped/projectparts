@@ -1,5 +1,5 @@
 from random import randint
-from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template import loader
@@ -97,25 +97,20 @@ def get_users_tickets(order_item):
 def update_orders(user, comp, order_item, user_correct, payment_id):
     """Update users orders in database"""
     users_orders = []
-    answer_correct = False
     for item in order_item:
         users_orders.append(item.id)
         item.is_paid = True
-        if user_correct:
-            answer_correct = True
         item.save()
-    new_order = Order.objects.create(
+    order = Order.objects.get(
         user=user,
         related_competition=comp,
-        order_date=datetime.now(),
-        payment_id=payment_id,
-        answer_correct=answer_correct
-
+        ordered=False
     )
-    for item in order_item:
-        new_order.items.add(item)
-    new_order.save()
-    return new_order
+    order.payment_id = payment_id
+    order.order_date = timezone.now()
+    order.answer_correct = user_correct
+    order.ordered = True
+    return order
 
 
 def customer_paid(request, order_item, user_correct, tickets, total, payment_id):
