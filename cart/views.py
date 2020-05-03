@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.utils import timezone
 from products.models import Product
+from competition.models import Competition
 from .contexts import cart_contents
-from .models import OrderItem
+from .models import OrderItem, Order
 
 # Create your views here.
 
@@ -21,8 +23,9 @@ def add_to_cart(request):
         if request.user.is_authenticated:
             user = User.objects.get(id=request.user.id)
             product = Product.objects.get(id=product_id)
+            comp = Competition.objects.get(is_active=True)
 
-            order, created = OrderItem.objects.get_or_create(
+            order_item, created = OrderItem.objects.get_or_create(
                 defaults={
                     'quantity': quantity
                 },
@@ -30,10 +33,25 @@ def add_to_cart(request):
                 product=product,
                 is_paid=False
             )
+            order_qs = Order.objects.filter(
+                user=user,
+                ordered=False
+            )
 
-            if not created:
-                new_qty = order.quantity + quantity
-                order.quantity = new_qty
+            if order_qs.exists():
+                order = order_qs[0]
+                if order.items.filter(pk=order_item.id).exists():
+                    order_item.quantity = quantity
+                    order_item.save()
+                else:
+                    order.items.add(order_item)
+            else:
+                order = Order.objects.create(
+                    user=user,
+                    related_competition=comp,
+                    order_date=timezone.now()
+                )
+                order.items.add(order_item)
                 order.save()
         else:
             cart = request.session.get('cart', {})
@@ -43,7 +61,6 @@ def add_to_cart(request):
             else:
                 cart[product_id] = cart.get(product_id, quantity)
             request.session['cart'] = cart
-
     cart_amount = cart_contents(request)
 
     data = {
@@ -102,8 +119,15 @@ def remove_item(request):
     if request.method == "POST":
         order_id = request.POST.get('order_id')
         if request.user.is_authenticated:
-            order = OrderItem.objects.filter(id=order_id)
-            order.delete()
+            order_item = OrderItem.objects.get(
+                id=order_id
+            )
+            order = Order.objects.get(
+                user=request.user,
+                ordered=False
+            )
+            order.items.remove(order_item)
+            order_item.delete()
         else:
             cart = request.session.get('cart', {})
             cart.pop(order_id)
