@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django_simple_coupons.models import Coupon
 from products.models import Product
 from competition.models import Competition
 
@@ -24,16 +25,6 @@ class OrderItem(models.Model):
         """Get price of all including coupon code"""
         return self.get_total_item_price()
 
-
-class Coupon(models.Model):
-    """Model for discount codes"""
-    code = models.CharField(max_length=15)
-    amount = models.FloatField()
-    active = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.code
-
 class Order(models.Model):
     """Model for an order"""
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -56,11 +47,3 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.pk} | {self.order_date}'
-
-    def get_total(self):
-        total = 0
-        for order_item in self.items.all():
-            total += order_item.get_final_price()
-        if self.coupon:
-            total -= self.coupon.amount
-        return total
