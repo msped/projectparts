@@ -5,7 +5,8 @@ from .views import (
     remove_item,
     decrease_item,
     increase_item,
-    add_coupon
+    add_coupon,
+    remove_coupon
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     url(r'^remove_one/(?P<order_id>\d+)', decrease_item, name='decrease_item'),
     url(r'^remove/', remove_item, name='remove_item'),
     url(r'^add_coupon/', add_coupon, name='add_coupon'),
+    url(r'^remove_coupon/', remove_coupon, name='remove_coupon'),
 ]
