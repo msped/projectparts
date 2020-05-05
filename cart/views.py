@@ -172,3 +172,12 @@ def add_coupon(request):
             return redirect('view_cart')
     else:
         return redirect('view_cart')
+
+def remove_coupon(request):
+    """Remove Coupon Code from Order"""
+    user = User.objects.get(id=request.user.id)
+    order = Order.objects.get(user=user, ordered=False)
+    order.coupon = None
+    order.save()
+    messages.error(request, "Coupon code removed.")
+    return redirect('view_cart')
