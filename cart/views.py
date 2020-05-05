@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
+from django_simple_coupons.validations import validate_coupon
 from products.models import Product
 from competition.models import Competition
+from django_simple_coupons.models import Coupon
 from .contexts import cart_contents
 from .models import OrderItem, Order
 
@@ -11,7 +14,9 @@ from .models import OrderItem, Order
 
 def view_cart(request):
     """Renders the cart view"""
-    return render(request, 'cart.html')
+    user = User.objects.get(id=request.user.id)
+    order = Order.objects.get(user=user, ordered=False)
+    return render(request, 'cart.html', {'order': order})
 
 def add_to_cart(request):
     """Adds specified quantity of a product into the cart"""
@@ -135,9 +140,35 @@ def remove_item(request):
 
     cart_total = cart_contents(request)
 
-    data = {
-        'total': cart_total['total'],
-        'cart_amount': cart_total['product_count']
-    }
+    if cart_total['product_count'] == 0:
+        messages.error(request, "There are no items in your cart.")
+        return redirect('products')
+    else:
+        data = {
+            'total': cart_total['total'],
+            'cart_amount': cart_total['product_count']
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
+
+def add_coupon(request):
+    """Adds Coupon to Order"""
+    user = User.objects.get(id=request.user.id)
+    order = Order.objects.get(user=user, ordered=False)
+    if request.method == "POST":
+        coupon_code = request.POST['coupon_code']
+        validity_test = validate_coupon(coupon_code=coupon_code, user=user)
+        if validity_test['valid']:
+            coupon = Coupon.objects.get(code=coupon_code)
+            order.coupon = coupon
+            order.save()
+            messages.success(request, "Coupon has been add to cart.")
+            return redirect('view_cart')
+        else:
+            messages.error(
+                request,
+                "There was an error applying the coupon code."
+            )
+            return redirect('view_cart')
+    else:
+        return redirect('view_cart')
