@@ -47,3 +47,11 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.pk} | {self.order_date}'
+
+    def get_total(self):
+        total = 0
+        for item in self.items.all():
+            total += item.get_final_price()
+        if self.coupon:
+            total = total - ((total * self.coupon.discount.value) / 100)
+        return total
