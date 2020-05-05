@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from products.models import Product
+from competition.models import Competition
 from cart.models import OrderItem, Order
 from cart.contexts import cart_contents
 from checkout.models import Entries
@@ -8,14 +10,38 @@ def add_session_items_to_db(request):
     """Function that adds users session cart to database"""
     cart = request.session.get('cart', {})
     user = User.objects.get(id=request.user.id)
+    comp = Competition.objects.get(is_active=True)
     for key, value in cart.items():
         product = Product.objects.get(id=int(key))
-        new_order = OrderItem.objects.create(
+        order_item, created = OrderItem.objects.get_or_create(
+            defaults={
+                'quantity': int(value)
+            },
             user=user,
             product=product,
-            quantity=int(value)
+            is_paid=False
         )
-        new_order.save()
+        order_qs = Order.objects.filter(
+            user=user,
+            ordered=False
+        )
+
+        if order_qs.exists():
+            order = order_qs[0]
+            if order.items.filter(pk=order_item.id).exists():
+                order_item.quantity = int(value)
+                order_item.save()
+            else:
+                order.items.add(order_item)
+        else:
+            order = Order.objects.create(
+                user=user,
+                related_competition=comp,
+                order_date=timezone.now()
+            )
+            order.items.add(order_item)
+            order.save()
+
     request.session['cart'] = cart
     cart_contents(request)
 
