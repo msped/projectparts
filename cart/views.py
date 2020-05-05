@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django_simple_coupons.validations import validate_coupon
+from django_simple_coupons.models import Coupon
 from products.models import Product
 from competition.models import Competition
-from django_simple_coupons.models import Coupon
 from .contexts import cart_contents
 from .models import OrderItem, Order
 
@@ -14,9 +14,13 @@ from .models import OrderItem, Order
 
 def view_cart(request):
     """Renders the cart view"""
-    user = User.objects.get(id=request.user.id)
-    order = Order.objects.get(user=user, ordered=False)
-    return render(request, 'cart.html', {'order': order})
+    if request.user.is_authenticated:
+        user = User.objects.get(id=request.user.id)
+        order = Order.objects.get(user=user, ordered=False)
+        context = {'order': order}
+    else:
+        context = {}
+    return render(request, 'cart.html', context)
 
 def add_to_cart(request):
     """Adds specified quantity of a product into the cart"""
@@ -83,40 +87,49 @@ def increase_item(request, order_id):
             qty = int(order.quantity) + 1
             order.quantity = qty
             order.save()
+            data = {
+                'qty': qty,
+                'total': Order.objects.get(
+                    user_id=request.user.id,
+                    ordered=False).get_total()
+            }
     else:
         cart = request.session.get('cart', {})
         cart[order_id] = int(cart[order_id]) + 1
         qty = cart[order_id]
         request.session['cart'] = cart
-    cart_total = cart_contents(request)
-
-    data = {
-        'qty': qty,
-        'total': cart_total['total']
-    }
+        cart_total = cart_contents(request)
+        data = {
+            'qty': qty,
+            'total': cart_total['total']
+        }
 
     return JsonResponse(data)
 
 def decrease_item(request, order_id):
     """decreases cart item by one"""
     if request.user.is_authenticated:
-        order = OrderItem.objects.get(id=order_id)
-        if order.is_paid is False:
-            qty = int(order.quantity) - 1
-            order.quantity = qty
-            order.save()
+        orderitem = OrderItem.objects.get(id=order_id)
+        if orderitem.is_paid is False:
+            qty = int(orderitem.quantity) - 1
+            orderitem.quantity = qty
+            orderitem.save()
+            data = {
+                'qty': qty,
+                'total': Order.objects.get(
+                    user_id=request.user.id,
+                    ordered=False).get_total()
+            }
     else:
         cart = request.session.get('cart', {})
         cart[order_id] = int(cart[order_id]) - 1
         qty = cart[order_id]
         request.session['cart'] = cart
-    cart_total = cart_contents(request)
-
-    data = {
-        'qty': qty,
-        'total': cart_total['total']
-    }
-
+        cart_total = cart_contents(request)
+        data = {
+            'qty': qty,
+            'total': cart_total['total']
+        }
     return JsonResponse(data)
 
 def remove_item(request):
@@ -138,17 +151,16 @@ def remove_item(request):
             cart.pop(order_id)
             request.session['cart'] = cart
 
-    cart_total = cart_contents(request)
+        cart_total = cart_contents(request)
 
-    if cart_total['product_count'] == 0:
-        messages.error(request, "There are no items in your cart.")
-        return redirect('products')
-    else:
+        if cart_total['product_count'] == 0:
+            messages.error(request, "There are no items in your cart.")
+            return redirect('products')
+
         data = {
             'total': cart_total['total'],
             'cart_amount': cart_total['product_count']
         }
-
         return JsonResponse(data)
 
 def add_coupon(request):
@@ -162,7 +174,7 @@ def add_coupon(request):
             coupon = Coupon.objects.get(code=coupon_code)
             order.coupon = coupon
             order.save()
-            messages.success(request, "Coupon has been add to cart.")
+            messages.success(request, "Coupon has been added to cart.")
             return redirect('view_cart')
         else:
             messages.error(
