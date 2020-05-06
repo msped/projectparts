@@ -5,11 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import stripe
 from competition.models import Competition
-from cart.models import OrderItem, Order
-from cart.contexts  import cart_contents
+from cart.models import Order
 from .utils import (
-    get_total,
-    get_users_tickets,
     customer_paid,
     is_user_answer_correct
 )
@@ -22,14 +19,9 @@ stripe.api_key = settings.STRIPE_SECRET
 def checkout(request):
     """Shows checkout page and handles checkout with stripe / DB changes"""
     comp = Competition.objects.get(is_active=True)
-    orders = OrderItem.objects.filter(
-        user=request.user.id,
-        is_paid=False
-    )
+    order = Order.objects.get(user=request.user.id, ordered=False)
 
-    cart_count = cart_contents(request)
-
-    if cart_count['product_count'] == 0:
+    if order.ticket_amount() == 0:
         messages.error(
             request,
             "You have no tickets to checkout."
@@ -46,8 +38,8 @@ def checkout(request):
             )
             return redirect('checkout')
         else:
-            total = get_total(orders)
-            tickets = get_users_tickets(orders)
+            total = order.get_total()
+            tickets = order.ticket_amount()
 
             if tickets > comp.tickets_left:
                 messages.error(
@@ -62,18 +54,17 @@ def checkout(request):
             else:
                 intent = stripe.PaymentIntent.create(
                     amount=int(total * 100),
-                    currency='gbp',
-                    # Verify your integration in this guide by including this parameter
-                    metadata={'integration_check': 'accept_a_payment'},
+                    currency='gbp'
                 )
-                is_user_answer_correct(request, user_answer, comp)
-                request.session['payment_id'] = intent.id
+                user_correct = is_user_answer_correct(request, user_answer, comp)
+                payment_id = intent.id
                 client_secret = intent.client_secret
+                customer_paid(request, user_correct, tickets, total, payment_id)
                 return HttpResponse(client_secret)
 
     content = {
         'user': request.user,
-        'orders': orders,
+        'orders': order,
         'comp': comp
     }
     return render(request, 'checkout.html', content)
@@ -81,28 +72,10 @@ def checkout(request):
 @login_required
 def checkout_complete(request):
     """View to be displayed when the checkout has been completed"""
-    order_item = OrderItem.objects.filter(
-        user=request.user.id,
-        is_paid=False
-    )
-
-    tickets = get_users_tickets(order_item)
-    total = get_total(order_item)
 
     user_correct = request.session['user_correct']
-    payment_id = request.session['payment_id']
-
-    customer_paid(
-        request,
-        order_item,
-        user_correct,
-        tickets,
-        total,
-        payment_id
-    )
 
     del request.session['user_correct']
-    del request.session['payment_id']
     content = {
         'user_correct': user_correct
     }
