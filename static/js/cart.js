@@ -76,12 +76,18 @@ $(document).ready(function() {
                 type: 'POST',
                 success: function (d) {
                     $('#product-count').css('display', 'initial').text(d.cart_amount);
-                    order_total.text(d.total);
-                    setTimeout(function () {
-                        row.fadeOut('slow', function () {
-                            row.remove();
-                        });
-                    }, 500);
+                    if (d.cart_amount === 0){
+                        $('.products').empty().append('<div class="offset-lg-2 col-lg-8 offset-md-2 col-md-8 col-sm-12 col-12 text-center">'+
+                        '<p class="text-center no-cart-items">There are no items in your cart, add some <a href="/tickets/">tickets.</a></p>'+
+                    '</div>');
+                    } else {
+                        order_total.text(d.total);
+                        setTimeout(function () {
+                            row.fadeOut('slow', function () {
+                                row.remove();
+                            });
+                        }, 500);
+                    }                    
                 }
             });
         }
