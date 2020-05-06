@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_forms_bootstrap',
+    'django_simple_coupons',
     'accounts.apps.AccountsConfig',
     'home',
     'cart',
@@ -181,9 +182,6 @@ else:
 
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-
-
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@projectparts.com'
