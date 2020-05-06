@@ -9,13 +9,13 @@ from competition.utlis import (
     pick_competition_winner,
     check_for_new_competition,
 )
-from cart.models import Order
 from competition.models import Competition
+from cart.models import Order
 
-def email_order(request, order_item, total, user_correct):
+def email_order(request, order, total, user_correct):
     """Send out email to user with the order details"""
     users_entries = {}
-    for item in order_item:
+    for item in order.items.all():
         entries_per_order = []
         entries = Entries.objects.filter(orderItem=item.id)
         for ent in entries:
@@ -28,7 +28,7 @@ def email_order(request, order_item, total, user_correct):
     html_email = loader.render_to_string(
         'email_templates/order_complete.html',
         {
-            'order': order_item,
+            'order': order,
             'total': total,
             'user': request.user.first_name,
             'user_correct': user_correct,
@@ -46,17 +46,9 @@ def email_order(request, order_item, total, user_correct):
         html_message=html_email
     )
 
-def get_total(order_item):
-    """Gets total for orders"""
-    total = 0
-    for item in order_item:
-        total += item.quantity * item.product.ticket_price
-
-    return total
-
-def create_entries(order_item, user, comp, tickets, new_order):
+def create_entries(order, user, comp, tickets, new_order):
     """Creates a users entries with a random number"""
-    for item in order_item:
+    for item in order.items.all():
         tickets_per_order = item.quantity
         while tickets_per_order > 0:
             create = True
@@ -86,41 +78,31 @@ def is_user_answer_correct(request, user_answer, comp):
         user_correct = True
     request.session['user_correct'] = user_correct
     return user_correct
- 
-def get_users_tickets(order_item):
-    """Add up all of a users tickets"""
-    tickets = 0
-    for order in order_item:
-        tickets += order.quantity
-    return tickets
 
-def update_orders(user, comp, order_item, user_correct, payment_id):
+def update_orders(comp, order, user_correct, payment_id):
     """Update users orders in database"""
     users_orders = []
-    for item in order_item:
+    for item in order.items.all():
         users_orders.append(item.id)
         item.is_paid = True
         item.save()
-    order = Order.objects.get(
-        user=user,
-        related_competition=comp,
-        ordered=False
-    )
+    order.related_competition = comp
     order.payment_id = payment_id
     order.order_date = timezone.now()
     order.answer_correct = user_correct
     order.ordered = True
+    order.save()
     return order
 
-
-def customer_paid(request, order_item, user_correct, tickets, total, payment_id):
+def customer_paid(request, user_correct, tickets, total, payment_id):
     """Function handle all process if a customer has paid"""
     comp = Competition.objects.get(is_active=True)
     user = User.objects.get(id=request.user.id)
-    new_order = update_orders(user, comp, order_item, user_correct, payment_id)
+    order = Order.objects.get(user=user, ordered=False)
+    new_order = update_orders(comp, order, user_correct, payment_id)
     if user_correct:
-        create_entries(order_item, user, comp, tickets, new_order)
-    email_order(request, order_item, total, user_correct)
+        create_entries(order, user, comp, tickets, new_order)
+    email_order(request, order, total, user_correct)
     check_for_new_competition(comp)
     if comp.tickets_left == 0:
         pick_competition_winner()
