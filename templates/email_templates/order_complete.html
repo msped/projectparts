@@ -30,7 +30,7 @@
                                     </td>
                                     {% else %}
                                     <td style="padding: 20px 0 30px 0; color: #000000; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-                                        As you answered the question incorrectly you have not been entered into the draw with these orders, better luck next time!
+                                        As you answered the question incorrectly you have not been entered into the draw with tihs order, better luck next time!
                                     </td>
                                     {% endif %}
                                 </tr>
@@ -45,7 +45,7 @@
                                                             <th style="font-family: Arial, Helvetica, sans-serif; width: 20%;">Quantity</th>
                                                             <th style="font-family: Arial, Helvetica, sans-serif; width: 20%;">Price</th>
                                                         </tr>
-                                                        {% for item in order %}
+                                                        {% for item in order.items.all %}
                                                         <tr>
                                                             <td style="font-family: Arial, Helvetica, sans-serif; text-align: center; margin-top: 10px;">
                                                                 {{ item.product.name }}
@@ -60,7 +60,7 @@
                                                         {% if user_correct %}
                                                         <tr>
                                                             <td colspan="3" style="text-align: center;">
-                                                                <p>
+                                                                <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
                                                                     Entries: {{ users_entries|get_item:item.id }}
                                                                 </p>
                                                                </td>
@@ -74,6 +74,11 @@
                                                     </table>
                                                 </td>
                                             </tr>
+                                            {% if order.coupon != None %}
+                                            <tr>
+                                                <td style="font-family: Arial, Helvetica, sans-serif;">You saved £{{ order.show_savings }} with coupon {{ order.coupon }}</td>
+                                            </tr>
+                                            {% endif %}
                                         </table>
                                     </td>
                                 </tr>
