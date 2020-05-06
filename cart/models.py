@@ -55,3 +55,10 @@ class Order(models.Model):
         if self.coupon:
             total = total - ((total * self.coupon.discount.value) / 100)
         return total
+
+    def show_savings(self):
+        total = 0
+        for item in self.items.all():
+            total += item.get_final_price()
+        saving_amount = (total * self.coupon.discount.value) / 100
+        return saving_amount
