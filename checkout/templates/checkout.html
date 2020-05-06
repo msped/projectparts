@@ -19,24 +19,37 @@
 <div class="row">
     <div class="order-details p-3 col-lg-8 col-md-8 col-sm-12 col-xs-12">
         <h2>Order Details</h2>
-        <table class="table table-borderless">
-            <tr>
-                <th scope="col" class="order-product">Product</th>
-                <th scope="col" class="order-qty text-center">Quantity</th>
-                <th scope="col" class="order-price text-center">Price</th>
-            </tr>
-            {% for o in orders %}
-            <tr>
-                <td>{{ o.product }}</td>
-                <td class="text-center">{{ o.quantity }}</td>
-                <td class="text-center">{{ o.product.ticket_price }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="2"></td>
-                <td><b>Total: £{{ total }}</b></td>
-            </tr>
-        </table>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-borderless">
+                    <tr>
+                        <th scope="col" class="order-product">Product</th>
+                        <th scope="col" class="order-qty text-center">Quantity</th>
+                        <th scope="col" class="order-price text-center">Price</th>
+                    </tr>
+                    {% for o in orders.items.all %}
+                    <tr>
+                        <td>{{ o.product }}</td>
+                        <td class="text-center">{{ o.quantity }}</td>
+                        <td class="text-center">{{ o.product.ticket_price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"></td>
+                        <td><b>Total: £{{ orders.get_total }}</b></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-6">
+                {% if orders.coupon != None %}
+                <div class="d-inline">
+                    <p><strong>{{ orders.coupon.code }}</strong> - {{ orders.coupon.discount.value }}% Off</p>
+                    <p>You saved <strong>£{{ orders.show_savings }}</strong>!</p>
+                </div>                
+                {% endif %}
+            </div>
+        </div>
+        
     </div>
 
     <div class="profile-details col-lg-4 col-md-4 col-sm-12 col-xs-12">
