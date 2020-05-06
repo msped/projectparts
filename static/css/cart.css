@@ -10,10 +10,6 @@ h1 {
     margin-top: 5%;
 }
 
-.cart-items {
-    min-height: 300px;
-}
-
 .remove-one-item, .order-qty, .add-one-item {
     display: inline-block
 }
