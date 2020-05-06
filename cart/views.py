@@ -153,10 +153,6 @@ def remove_item(request):
 
         cart_total = cart_contents(request)
 
-        if cart_total['product_count'] == 0:
-            messages.error(request, "There are no items in your cart.")
-            return redirect('products')
-
         data = {
             'total': cart_total['total'],
             'cart_amount': cart_total['product_count']
