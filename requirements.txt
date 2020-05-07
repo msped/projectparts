@@ -9,6 +9,7 @@ coverage==5.0.1
 dj-database-url==0.5.0
 Django==3.0.2
 django-forms-bootstrap==3.1.0
+django-simple-coupons==0.5
 django-storages==1.8
 docutils==0.15.2
 gunicorn==20.0.4
