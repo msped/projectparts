@@ -1,0 +1,6 @@
+07/05/2020 v1.1
+    - Changed Order Model
+    - Changed associated functions with the new order Model
+    - Updated checkout for new Model
+    - Added Coupon Codes
+    - Changed users orders for new Model
