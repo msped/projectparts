@@ -16,10 +16,11 @@ def view_cart(request):
     """Renders the cart view"""
     if request.user.is_authenticated:
         user = User.objects.get(id=request.user.id)
-        order = Order.objects.get(user=user, ordered=False)
-        context = {'order': order}
-    else:
-        context = {}
+        try:
+            order = Order.objects.get(user=user, ordered=False)
+            context = {'order': order}
+        except Order.DoesNotExist:
+            context = {}
     return render(request, 'cart.html', context)
 
 def add_to_cart(request):
