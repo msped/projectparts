@@ -6,6 +6,7 @@ from django.conf import settings
 import stripe
 from competition.models import Competition
 from cart.models import Order
+from .models import Entries
 from .utils import (
     customer_paid,
     is_user_answer_correct
@@ -27,20 +28,16 @@ def checkout(request):
             "You have no tickets to checkout."
         )
         return redirect('products')
-
     if request.method == "POST":
         user_answer = request.POST.get('user-answer')
-
         if user_answer is None:
             messages.error(
                 request,
                 "Please select an answer to the question at the bottom of the page"
             )
-            return redirect('checkout')
         else:
             total = order.get_total()
             tickets = order.ticket_amount()
-
             if tickets > comp.tickets_left:
                 messages.error(
                     request,
@@ -73,10 +70,11 @@ def checkout(request):
 def checkout_complete(request):
     """View to be displayed when the checkout has been completed"""
 
-    user_correct = request.session['user_correct']
+    order_id = request.session['order_id']
+    order = Order.objects.get(id=order_id)
+    del request.session['order_id']
 
-    del request.session['user_correct']
     content = {
-        'user_correct': user_correct
+        'order': order
     }
     return render(request, 'checkout_complete.html', content)
