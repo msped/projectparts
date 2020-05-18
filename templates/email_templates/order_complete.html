@@ -1,7 +1,7 @@
 {% load custom_tags %}
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Thank you for your order | Project Parts</title>
+    <title>Thank you for your order {{ user }} | Project Parts</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css?family=Paytone+One&display=swap" rel="stylesheet">
 </head>
@@ -20,19 +20,13 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
                                     <td style="color: #000000; font-family: Arial, sans-serif; font-size: 24px;">
-                                        <b>Hello {{ user }}, Thank you for your order{% if user_correct %}, good luck!{% endif %}</b>
+                                        <b>Hello {{ user }}, Thank you for your order, good luck!</b>
                                     </td>
                                 </tr>
                                 <tr>
-                                    {% if user_correct %}
                                     <td style="padding: 20px 0 30px 0; color: #000000; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
                                         The winner will be announced via e-mail when the current competition has ended. You will recieve an e-mail informing you if you have won!
                                     </td>
-                                    {% else %}
-                                    <td style="padding: 20px 0 30px 0; color: #000000; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-                                        As you answered the question incorrectly you have not been entered into the draw with tihs order, better luck next time!
-                                    </td>
-                                    {% endif %}
                                 </tr>
                                 <tr>
                                     <td>
@@ -90,7 +84,7 @@
                             <table>
                                 <tr>
                                     <td style="padding: 0 25px 25px 0; font-family: Arial, Helvetica, sans-serif;">
-                                        Total: £{{ total }}
+                                        Total: £{{ order.get_total }}
                                     </td>
                                 </tr>
                             </table>
