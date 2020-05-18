@@ -12,8 +12,8 @@ from competition.utlis import (
 from competition.models import Competition
 from cart.models import Order
 
-def email_order(request, order, total, user_correct):
-    """Send out email to user with the order details"""
+def get_entries(order):
+    """Get all entries for an order and return as dict"""
     users_entries = {}
     for item in order.items.all():
         entries_per_order = []
@@ -24,18 +24,23 @@ def email_order(request, order, total, user_correct):
             item.id: entries_per_order
         }
         users_entries.update(n_order)
+    return users_entries
+
+def email_order(request, order, total, user_correct):
+    """Send out email to user with the order details"""
+    users_entries = get_entries(order)
 
     html_email = loader.render_to_string(
         'email_templates/order_complete.html',
         {
             'order': order,
-            'total': total,
             'user': request.user.first_name,
             'user_correct': user_correct,
             'users_entries': users_entries
         }
     )
     message = strip_tags(html_email)
+    print(request.user.email)
     send_mail(
         'Your Order for Project Parts',
         message=message,
@@ -76,7 +81,6 @@ def is_user_answer_correct(request, user_answer, comp):
     user_correct = False
     if user_answer == comp.correct_answer:
         user_correct = True
-    request.session['user_correct'] = user_correct
     return user_correct
 
 def update_orders(comp, order, user_correct, payment_id):
@@ -106,3 +110,4 @@ def customer_paid(request, user_correct, tickets, total, payment_id):
     check_for_new_competition(comp)
     if comp.tickets_left == 0:
         pick_competition_winner()
+    request.session['order_id'] = order.id
