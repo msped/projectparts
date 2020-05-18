@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load bootstrap_tags %}
+{% load custom_tags %}
 
 {% block css %}<link rel="stylesheet" href="{% static 'css/checkout_complete.css' %}">{% endblock css %}
 
@@ -9,50 +10,72 @@
 
 {% block content %}
 <div class="page-header">
-    <h1 class="text-center">We have received you order{% if user_correct %}, Good Luck!{% endif %}</h1>
+    <h1 class="text-center">Order Received</h1>
+    <h4 class="text-center">We have received you order, Good Luck!</h4>
 </div>
-
-<div>
-    <div class="row">
-        {% if user_correct %}
-        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            <div class="text-center">
-                <i class="fas fa-check"></i>
+<div class="row">
+    <div class="cart-items mb-2 offset-lg-2 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+        <table class="table table-borderless">
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col" class="text-center">Quantity</th>
+                <th scope="col" class="text-center">Price</th>
+            </tr>
+            {% for o in order.items.all %}
+            {% if forloop.counter|divisibleby:"2" %}<tr><td colspan="3" class="p-0"><hr></td></tr>{% endif %}
+            <tr>
+                <td >{{ o.product.name }}</td>
+                <td class="text-center">
+                    <span class="p-1">{{ o.quantity }}</span>
+                </td>
+                <td class="text-center">£{{ o.product.ticket_price }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="row">
+            <div class="col-6">
+                {% if order.coupon != None %}
+                <div class="d-inline">
+                    <span><strong>{{ order.coupon.code }}</strong> - {{ order.coupon.discount.value }}% Off</span> <br>
+                    <span>You saved <strong>£{{ order.show_savings }}</strong>!</span>
+                </div>
+                {% endif %}
+            </div>
+            <div class="total offset-3 col-3">
+                <p>Total: £ 
+                    <span id="order-total">
+                        {{ order.get_total }}
+                    </span>
+                </p>
             </div>
         </div>
-        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
-            <p>You got the answer correct with {{ correct_answer }} and have been entered into the draw. <br> 
-            The associated entry numbers have been sent via e-mail.</p>
-        </div>
-        {% else %}
-        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            <div class="text-center">
-                <i class="fas fa-times"></i>
-            </div>
-        </div>
-        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
-            <p>The answer you chose wasn't the correct answer so you won't be entered into the draw with this order.</p>
-        </div>
-        {% endif %}
+        
+        
     </div>
-    <div class="row">
-        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            <div class="text-center">
-                <i class="fas fa-list"></i>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
+                <div class="text-center">
+                    <i class="fas fa-list"></i>
+                </div>
             </div>
-        </div>
-        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
-           <p>We have e-mailed you this order, if it is not in your inbox please check your spam folder.</p>
+            <div class="info col-lg-9 col-md-9 col-sm-5 col-12">
+                <p>We have e-mailed you this order, if it is not in your inbox please check your spam folder.</p>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="offset-lg-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            <div class="text-center">
-                <i class="far fa-folder"></i>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <div class="text-center">
+                    <i class="far fa-folder"></i>
+                </div>
             </div>
-        </div>
-        <div class="info col-lg-8 col-md-8 col-sm-12 col-xs-12">
-            <p>If you wish to view your previous orders, <a href="{% url 'users_orders' %}">Click here.</a></p>
+            <div class="info col-lg-9 col-md-9 col-sm-12 col-12">
+                <p>If you wish to view your previous orders, <a href="{% url 'users_orders' %}">Click here.</a></p>
+            </div>
         </div>
     </div>
 </div>
