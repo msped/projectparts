@@ -14,7 +14,7 @@ def contact_view(request):
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-
+            message += f' \n from: {email}'
             send_mail(subject, message, email, [EMAIL_HOST_USER])
 
             data = {
