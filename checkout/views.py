@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import stripe
 from competition.models import Competition
 from cart.models import Order
-from .models import Entries
 from .utils import (
     customer_paid,
     is_user_answer_correct
@@ -17,6 +17,7 @@ from .utils import (
 stripe.api_key = settings.STRIPE_SECRET
 
 @login_required
+@csrf_exempt
 def checkout(request):
     """Shows checkout page and handles checkout with stripe / DB changes"""
     comp = Competition.objects.get(is_active=True)
