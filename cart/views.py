@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
@@ -133,6 +134,7 @@ def decrease_item(request, order_id):
         }
     return JsonResponse(data)
 
+@csrf_exempt
 def remove_item(request):
     """Remove an item from the cart"""
     if request.method == "POST":
