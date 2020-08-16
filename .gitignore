@@ -1,5 +1,5 @@
+env/
 assets/wireframes/projectparts.xd
-projectparts-env/
 *.sqlite3
 *.pyc
 __pycache__
