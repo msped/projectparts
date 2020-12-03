@@ -22,6 +22,10 @@ def view_cart(request):
             context = {'order': order}
         except Order.DoesNotExist:
             context = {}
+    else:
+        cart_amount = cart_contents(request)
+        if cart_amount['product_count'] == 0:
+            context = {}
     return render(request, 'cart.html', context)
 
 def add_to_cart(request):
