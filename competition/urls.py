@@ -1,7 +1,7 @@
-from django.conf.urls import url
-from .views import get_current_ticket_amount, winners
+from django.urls import path
+from .views import get_current_ticket_amount, Winners
 
 urlpatterns = [
-    url(r'get_current/', get_current_ticket_amount, name="get_current_tickets"),
-    url(r'winners/', winners, name="winners"),
+    path('get_current/', get_current_ticket_amount, name="get_current_tickets"),
+    path('winners/', Winners.as_view(), name="winners"),
 ]
