@@ -1,13 +1,14 @@
-from django.conf.urls import url, include
-from accounts.views import login, logout, register, profilepage, change_password, users_orders
+from django.contrib.auth.decorators import login_required
+from django.urls import path, include
+from accounts.views import Login, logout, Register, Profile, changePassword, userOrders
 from accounts import urls_reset
 
 urlpatterns = [
-    url(r'^login/', login, name="login"),
-    url(r'^register/', register, name="register"),
-    url(r'^logout/', logout, name="logout"),
-    url(r'^profile/', profilepage, name="profile"),
-    url(r'^password-reset/', include(urls_reset)),
-    url(r'^change_password/', change_password, name="change_password"),
-    url(r'^orders/', users_orders, name="users_orders"),
+    path('login/', Login.as_view(), name="login"),
+    path('register/', Register.as_view(), name="register"),
+    path('logout/', logout, name="logout"),
+    path('profile/', login_required(Profile.as_view()), name="profile"),
+    path('password-reset/', include(urls_reset)),
+    path('change_password/', login_required(changePassword.as_view()), name="change_password"),
+    path('orders/', login_required(userOrders.as_view()), name="users_orders"),
 ]
