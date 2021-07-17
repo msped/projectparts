@@ -1,14 +1,26 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.mail import send_mail
+from django.views import View
 from projectparts.settings import EMAIL_HOST_USER
 from .forms import ContactForm
 
 # Create your views here.
 
-def contact_view(request):
-    """View contact page"""
-    if request.method == "POST":
+class Contact(View):
+    template_name = 'contactus.html'
+    def get(self, request):
+        if request.user.is_authenticated:
+            form = ContactForm(initial={'email': request.user.email})
+        else:
+            form = ContactForm()
+
+        content = {
+            'form': form,
+        }
+        return render(request, self.template_name, content)
+
+    def post(self, request):
         form = ContactForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -26,14 +38,3 @@ def contact_view(request):
                 'error': "Invalid Form"
             }
         return JsonResponse(data)
-    else:
-        if request.user.is_authenticated:
-            form = ContactForm(initial={'email': request.user.email})
-        else:
-            form = ContactForm()
-
-        content = {
-            'form': form,
-        }
-    return render(request, "contactus.html", content)
-    
