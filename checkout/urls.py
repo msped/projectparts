@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 from .views import checkout, checkout_complete
 
 urlpatterns = [
-    url(r'^$', checkout, name="checkout"),
-    url(r'complete/', checkout_complete, name="checkout_complete")
+    path('', checkout, name="checkout"),
+    path('complete/', checkout_complete, name="checkout_complete")
 ]
