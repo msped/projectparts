@@ -27,6 +27,7 @@ class Manufacturer(models.Model):
 
 class Product(models.Model):
     """Model for each Product"""
+    slug = models.SlugField(blank=True, null=True)
     name = models.CharField(default='', max_length=254)
     description = models.TextField()
     img = models.ImageField(default='default.jpg', upload_to='')
