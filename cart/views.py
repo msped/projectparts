@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.http import JsonResponse
@@ -13,20 +14,23 @@ from .models import OrderItem, Order
 
 # Create your views here.
 
-def view_cart(request):
+class Cart(View):
     """Renders the cart view"""
-    if request.user.is_authenticated:
-        user = User.objects.get(id=request.user.id)
-        try:
-            order = Order.objects.get(user=user, ordered=False)
-            context = {'order': order}
-        except Order.DoesNotExist:
-            context = {}
-    else:
-        cart_amount = cart_contents(request)
-        if cart_amount['product_count'] == 0:
-            context = {}
-    return render(request, 'cart.html', context)
+    template_name = 'cart.html'
+    def get(self, request):
+        if request.user.is_authenticated:
+            user = User.objects.get(id=request.user.id)
+            try:
+                order = Order.objects.get(user=user, ordered=False)
+                context = {'order': order}
+            except Order.DoesNotExist:
+                context = {}
+        else:
+            cart_amount = cart_contents(request)
+            if cart_amount['product_count'] == 0:
+                context = {}
+        return render(request, self.template_name, context)
+
 
 def add_to_cart(request):
     """Adds specified quantity of a product into the cart"""
@@ -84,59 +88,60 @@ def add_to_cart(request):
 
     return JsonResponse(data)
 
-def increase_item(request, order_id):
+class increaseItem(View):
     """increases cart item by one"""
-
-    if request.user.is_authenticated:
-        order = OrderItem.objects.get(id=order_id)
-        if order.is_paid is False:
-            qty = int(order.quantity) + 1
-            order.quantity = qty
-            order.save()
+    def get(self, request, order_id):
+        if request.user.is_authenticated:
+            order = OrderItem.objects.get(id=order_id)
+            if order.is_paid is False:
+                qty = int(order.quantity) + 1
+                order.quantity = qty
+                order.save()
+                data = {
+                    'qty': qty,
+                    'total': Order.objects.get(
+                        user_id=request.user.id,
+                        ordered=False).get_total()
+                }
+        else:
+            cart = request.session.get('cart', {})
+            cart[order_id] = int(cart[order_id]) + 1
+            qty = cart[order_id]
+            request.session['cart'] = cart
+            cart_total = cart_contents(request)
             data = {
                 'qty': qty,
-                'total': Order.objects.get(
-                    user_id=request.user.id,
-                    ordered=False).get_total()
+                'total': cart_total['total']
             }
-    else:
-        cart = request.session.get('cart', {})
-        cart[order_id] = int(cart[order_id]) + 1
-        qty = cart[order_id]
-        request.session['cart'] = cart
-        cart_total = cart_contents(request)
-        data = {
-            'qty': qty,
-            'total': cart_total['total']
-        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
 
-def decrease_item(request, order_id):
+class decreaseItem(View):
     """decreases cart item by one"""
-    if request.user.is_authenticated:
-        orderitem = OrderItem.objects.get(id=order_id)
-        if orderitem.is_paid is False:
-            qty = int(orderitem.quantity) - 1
-            orderitem.quantity = qty
-            orderitem.save()
+    def get(self, request, order_id):
+        if request.user.is_authenticated:
+            orderitem = OrderItem.objects.get(id=order_id)
+            if orderitem.is_paid is False:
+                qty = int(orderitem.quantity) - 1
+                orderitem.quantity = qty
+                orderitem.save()
+                data = {
+                    'qty': qty,
+                    'total': Order.objects.get(
+                        user_id=request.user.id,
+                        ordered=False).get_total()
+                }
+        else:
+            cart = request.session.get('cart', {})
+            cart[order_id] = int(cart[order_id]) - 1
+            qty = cart[order_id]
+            request.session['cart'] = cart
+            cart_total = cart_contents(request)
             data = {
                 'qty': qty,
-                'total': Order.objects.get(
-                    user_id=request.user.id,
-                    ordered=False).get_total()
+                'total': cart_total['total']
             }
-    else:
-        cart = request.session.get('cart', {})
-        cart[order_id] = int(cart[order_id]) - 1
-        qty = cart[order_id]
-        request.session['cart'] = cart
-        cart_total = cart_contents(request)
-        data = {
-            'qty': qty,
-            'total': cart_total['total']
-        }
-    return JsonResponse(data)
+        return JsonResponse(data)
 
 @csrf_exempt
 def remove_item(request):
@@ -166,11 +171,22 @@ def remove_item(request):
         }
         return JsonResponse(data)
 
-def add_coupon(request):
+class addCoupon(View):
     """Adds Coupon to Order"""
-    user = User.objects.get(id=request.user.id)
-    order = Order.objects.get(user=user, ordered=False)
-    if request.method == "POST":
+    def getUser(self, user):
+        user = User.objects.get(id=user)
+        return user
+    
+    def getOrder(self, user):
+        order = Order.objects.get(user=user, ordered=False)
+        return order
+
+    def get(self, request):
+        return redirect('view_cart')
+    
+    def post(self, request):
+        user = self.getUser(request.user.id)
+        order = self.getOrder(user)
         coupon_code = request.POST['coupon_code']
         validity_test = validate_coupon(coupon_code=coupon_code, user=user)
         if validity_test['valid']:
@@ -185,14 +201,13 @@ def add_coupon(request):
                 "There was an error applying the coupon code."
             )
             return redirect('view_cart')
-    else:
-        return redirect('view_cart')
-
-def remove_coupon(request):
+        
+class removeCoupon(View):
     """Remove Coupon Code from Order"""
-    user = User.objects.get(id=request.user.id)
-    order = Order.objects.get(user=user, ordered=False)
-    order.coupon = None
-    order.save()
-    messages.error(request, "Coupon code removed.")
-    return redirect('view_cart')
+    def get(self, request):
+        user = User.objects.get(id=request.user.id)
+        order = Order.objects.get(user=user, ordered=False)
+        order.coupon = None
+        order.save()
+        messages.error(request, "Coupon code removed.")
+        return redirect('view_cart')
