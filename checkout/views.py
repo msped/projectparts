@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import stripe
@@ -16,20 +17,41 @@ from .utils import (
 
 stripe.api_key = settings.STRIPE_SECRET
 
-@login_required
-@csrf_exempt
-def checkout(request):
+class Checkout(View):
     """Shows checkout page and handles checkout with stripe / DB changes"""
-    comp = Competition.objects.get(is_active=True)
-    order = Order.objects.get(user=request.user.id, ordered=False)
+    template_name = 'checkout.html'
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Checkout, self).dispatch(request, *args, **kwargs)
 
-    if order.ticket_amount() == 0:
-        messages.error(
-            request,
-            "You have no tickets to checkout."
-        )
-        return redirect('products')
-    if request.method == "POST":
+    def getComp(self):
+        comp = Competition.objects.get(is_active=True)
+        return comp
+
+    def getOrder(self, user):
+        order = Order.objects.get(user=user, ordered=False)
+        return order
+
+    def get(self, request):
+        order = self.getOrder(request.user.id)
+        comp = self.getComp()
+        if order.ticket_amount() == 0:
+            messages.error(
+                request,
+                "You have no tickets to checkout."
+            )
+            return redirect('products')
+        else:
+            context = {
+            'user': request.user,
+            'orders': order,
+            'comp': comp
+        }
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        order = self.getOrder(request.user.id)
+        comp = self.getComp()
         user_answer = request.POST.get('user-answer')
         if user_answer is None:
             messages.error(
@@ -54,28 +76,19 @@ def checkout(request):
                     amount=int(total * 100),
                     currency='gbp'
                 )
-                user_correct = is_user_answer_correct(request, user_answer, comp)
+                user_correct = is_user_answer_correct(user_answer, comp)
                 payment_id = intent.id
                 client_secret = intent.client_secret
                 customer_paid(request, user_correct, tickets, total, payment_id)
                 return HttpResponse(client_secret)
 
-    content = {
-        'user': request.user,
-        'orders': order,
-        'comp': comp
-    }
-    return render(request, 'checkout.html', content)
-
-@login_required
-def checkout_complete(request):
+class checkoutComplete(View):
     """View to be displayed when the checkout has been completed"""
+    template_name = 'checkout_complete.html'
+    def get(self, request):
+        order_id = request.session['order_id']
+        order = Order.objects.get(id=order_id)
+        del request.session['order_id']
 
-    order_id = request.session['order_id']
-    order = Order.objects.get(id=order_id)
-    del request.session['order_id']
-
-    content = {
-        'order': order
-    }
-    return render(request, 'checkout_complete.html', content)
+        context = { 'order': order}
+        return render(request, 'checkout_complete.html', context)
