@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.views import View
 from .utils import get_makes, get_products_from_fitments, get_sort_options
 from .models import Product, Categories, Manufacturer, Vehicle, Fitments
 
@@ -77,17 +78,17 @@ def products_view(request):
         'categories': categories_dropdown
     })
 
-def product_detail(request, product_id):
-    """Shows extra detail on a product"""
-    product = Product.objects.get(id=product_id)
-    fits = Fitments.objects.filter(products=product)
+class productDetail(View):
+    template_name = 'product_detail.html'
+    def get(self, request, slug):
+        product = Product.objects.get(slug=slug)
+        fits = Fitments.objects.filter(products=product)
 
-    car_product_fits = []
-    for item in fits:
-        car_product_fits.append(item.vehicle)
-
-    return render(request, 'product_detail.html',
-                  {'product': product, 'fits': car_product_fits})
+        car_product_fits = []
+        for item in fits:
+            car_product_fits.append(item.vehicle)
+        context = {'product': product, 'fits': car_product_fits}
+        return render(request, 'product_detail.html', context)
 
 def get_models(request):
     """Get Models from Make"""

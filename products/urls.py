@@ -1,9 +1,9 @@
-from django.conf.urls import url
-from .views import products_view, product_detail, get_models, get_gens
+from django.urls import path
+from .views import products_view, productDetail, get_models, get_gens
 
 urlpatterns = [
-    url(r'^$', products_view, name="products"),
-    url(r'^(?P<product_id>\d+)/$', product_detail, name="product_detail"),
-    url(r'^models/', get_models, name="get_models"),
-    url(r'^gens/', get_gens, name="get_gens"),
+    path('', products_view, name="products"),
+    path('<slug:slug>', productDetail.as_view(), name="product_detail"),
+    path('models/', get_models, name="get_models"),
+    path('gens/', get_gens, name="get_gens"),
 ]
