@@ -1,7 +1,8 @@
-from django.conf.urls import url
-from .views import checkout, checkout_complete
+from django.contrib.auth.decorators import login_required
+from django.urls import path
+from .views import Checkout, checkoutComplete
 
 urlpatterns = [
-    url(r'^$', checkout, name="checkout"),
-    url(r'complete/', checkout_complete, name="checkout_complete")
+    path('', login_required(Checkout.as_view()), name="checkout"),
+    path('complete/', login_required(checkoutComplete.as_view()), name="checkout_complete")
 ]

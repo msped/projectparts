@@ -26,12 +26,7 @@
             <div class="card-block col-lg-9 col-md-9 col-sm-12 col-12">
                 <h2 class="card-title">Competition: {{ c.id }}</h2>
                 <p class="card-text">{{ c.winner.user.first_name }} has won a 
-                    {{ c.winner.orderItem.product }} for there 
-                    {% if c.winner.orderItem.product.fits_multiple %}
-                    vehicle 
-                    {% else %}
-                    {{ c.winner.orderItem.product.fits }}
-                    {% endif %}
+                    {{ c.winner.orderItem.product }}
                      with ticket number 
                     {{ c.winner.ticket_number }}.
                 </p>

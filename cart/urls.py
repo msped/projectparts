@@ -1,20 +1,20 @@
-from django.conf.urls import url
+from django.urls import path
 from .views import (
-    view_cart,
+    Cart,
+    addCoupon,
     add_to_cart,
+    decreaseItem,
+    increaseItem,
+    removeCoupon,
     remove_item,
-    decrease_item,
-    increase_item,
-    add_coupon,
-    remove_coupon
 )
 
 urlpatterns = [
-    url(r'^$', view_cart, name='view_cart'),
-    url(r'^add/', add_to_cart, name='add_to_cart'),
-    url(r'^add_one/(?P<order_id>\d+)', increase_item, name='increase_item'),
-    url(r'^remove_one/(?P<order_id>\d+)', decrease_item, name='decrease_item'),
-    url(r'^remove/', remove_item, name='remove_item'),
-    url(r'^add_coupon/', add_coupon, name='add_coupon'),
-    url(r'^remove_coupon/', remove_coupon, name='remove_coupon'),
+    path('', Cart.as_view(), name='view_cart'),
+    path('add/', add_to_cart, name='add_to_cart'),
+    path('add_one/<int:order_id>', increaseItem.as_view(), name='increase_item'),
+    path('remove_one/<int:order_id>', decreaseItem.as_view(), name='decrease_item'),
+    path('remove/', remove_item, name='remove_item'),
+    path('add_coupon/', addCoupon.as_view(), name='add_coupon'),
+    path('remove_coupon/', removeCoupon.as_view(), name='remove_coupon'),
 ]

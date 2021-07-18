@@ -26,7 +26,7 @@ def get_entries(order):
         users_entries.update(n_order)
     return users_entries
 
-def email_order(request, order, total, user_correct):
+def email_order(request, order, user_correct):
     """Send out email to user with the order details"""
     users_entries = get_entries(order)
 
@@ -40,7 +40,6 @@ def email_order(request, order, total, user_correct):
         }
     )
     message = strip_tags(html_email)
-    print(request.user.email)
     send_mail(
         'Your Order for Project Parts',
         message=message,
@@ -76,7 +75,7 @@ def create_entries(order, user, comp, tickets, new_order):
     comp.tickets_left = tickets_left - tickets
     comp.save()
 
-def is_user_answer_correct(request, user_answer, comp):
+def is_user_answer_correct(user_answer, comp):
     """Checks if a user answer is correct"""
     user_correct = False
     if user_answer == comp.correct_answer:
@@ -106,7 +105,7 @@ def customer_paid(request, user_correct, tickets, total, payment_id):
     new_order = update_orders(comp, order, user_correct, payment_id)
     if user_correct:
         create_entries(order, user, comp, tickets, new_order)
-    email_order(request, order, total, user_correct)
+    email_order(request, order, user_correct)
     check_for_new_competition(comp)
     if comp.tickets_left == 0:
         pick_competition_winner()

@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h1 class="text-center">{% if request.user.first_name %}{{ request.user.first_name }}'s{% else %}Your Orders{% endif %}</h1>
+    <h1 class="text-center">{% if request.user.first_name %}{{ request.user.first_name }}'s{% else %}Your{% endif %} Orders</h1>
     <p class="text-center text-muted">View all your previous orders here.</p>
 </div>
 
