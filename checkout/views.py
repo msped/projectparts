@@ -29,13 +29,16 @@ class Checkout(View):
         return comp
 
     def getOrder(self, user):
-        order = Order.objects.get(user=user, ordered=False)
+        try:
+            order = Order.objects.get(user=user, ordered=False)
+        except Order.DoesNotExist:
+            order = None
         return order
 
     def get(self, request):
         order = self.getOrder(request.user.id)
         comp = self.getComp()
-        if order.ticket_amount() == 0:
+        if order is None:
             messages.error(
                 request,
                 "You have no tickets to checkout."
@@ -53,11 +56,16 @@ class Checkout(View):
         order = self.getOrder(request.user.id)
         comp = self.getComp()
         user_answer = request.POST.get('user-answer')
-        if user_answer is None:
+        if order is None:
+            messages.error(request,
+            'You have no active order.')
+            return redirect('products')
+        elif user_answer is None:
             messages.error(
                 request,
                 "Please select an answer to the question at the bottom of the page"
             )
+            return redirect('checkout')
         else:
             total = order.get_total()
             tickets = order.ticket_amount()
