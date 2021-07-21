@@ -36,7 +36,7 @@ class Order(models.Model):
     answer_correct = models.BooleanField(default=False)
     items = models.ManyToManyField(OrderItem)
     order_date = models.DateTimeField()
-    payment_id = models.CharField(max_length=50)
+    payment_id = models.CharField(max_length=50, blank=True, null=True)
     ordered = models.BooleanField(default=False)
     coupon = models.ForeignKey(
         Coupon,
