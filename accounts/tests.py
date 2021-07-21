@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django import forms
@@ -449,7 +449,7 @@ class TestAccountsUtils(TestCase):
             user=user,
             related_competition=comp,
             answer_correct=True,
-            order_date=datetime.now(),
+            order_date=timezone.now(),
             payment_id='test_payment_id'
         )
         orders.items.add(orderitems)
@@ -485,7 +485,7 @@ class TestAccountsUtils(TestCase):
             user=user,
             related_competition=comp,
             answer_correct=False,
-            order_date=datetime.now(),
+            order_date=timezone.now(),
             payment_id='test_payment_id'
         )
         orders.items.add(orderitems)
