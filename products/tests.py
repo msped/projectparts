@@ -67,6 +67,7 @@ class ProductAppViewsTest(TestCase):
         )
         manufacturer.save()
         prod = Product(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             category=category,
@@ -76,7 +77,7 @@ class ProductAppViewsTest(TestCase):
             part_manufacturer=manufacturer
         )
         prod.save()
-        response = self.client.get('/tickets/' + str(prod.id) +'/')
+        response = self.client.get('/tickets/test-slug')
         self.assertEqual(response.status_code, 200)
 
     def test_get_models(self):
@@ -127,6 +128,7 @@ class ProductModelTests(TestCase):
         )
         manufacturer.save()
         product = Product(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             img="",
@@ -138,6 +140,7 @@ class ProductModelTests(TestCase):
         )
         product.save()
 
+        self.assertEqual(product.slug, 'test-slug')
         self.assertEqual(product.name, 'Test Product')
         self.assertEqual(product.description, 'Description')
         self.assertEqual(product.img, '')
@@ -158,6 +161,7 @@ class ProductModelTests(TestCase):
         )
         manufacturer.save()
         product = Product(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             img="",
@@ -169,6 +173,7 @@ class ProductModelTests(TestCase):
         )
         product.save()
 
+        self.assertEqual(product.slug, 'test-slug')
         self.assertEqual(product.name, 'Test Product')
         self.assertEqual(product.description, 'Description')
         self.assertEqual(product.img, '')
@@ -189,6 +194,7 @@ class ProductModelTests(TestCase):
         )
         manufacturer.save()
         product = Product(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             img="",
@@ -200,6 +206,7 @@ class ProductModelTests(TestCase):
         )
         product.save()
 
+        self.assertEqual(product.slug, 'test-slug')
         self.assertEqual(product.name, 'Test Product')
         self.assertEqual(product.description, 'Description')
         self.assertEqual(product.img, '')
@@ -246,6 +253,7 @@ class FitmentsModelTests(TestCase):
         )
         vehicle.save()
         product = Product(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             img="",
@@ -259,14 +267,14 @@ class FitmentsModelTests(TestCase):
         test_name = Fitments(products=product, vehicle=vehicle)
         self.assertEqual(str(test_name), 'Eibach Test Product - Mercedes A Class W176')
 
-    def test_fitments_creation(self):
-        """Test creation of a vehicle"""
-        manufacturer = Manufacturer(
-            name="CarbonWurks",
-        )
-        manufacturer.save()
+    # def test_fitments_creation(self):
+    #     """Test creation of a vehicle"""
+    #     manufacturer = Manufacturer(
+    #         name="CarbonWurks",
+    #     )
+    #     manufacturer.save()
 
-        self.assertEqual(manufacturer.name, 'CarbonWurks')
+    #     self.assertEqual(manufacturer.name, 'CarbonWurks')
 
 class TestProductsApp(TestCase):
     """Test Products App"""
