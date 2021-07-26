@@ -29,6 +29,9 @@ class Cart(View):
             cart_amount = cart_contents(request)
             if cart_amount['product_count'] == 0:
                 context = {}
+            else:
+                cart = request.session.get('cart', {})
+                context = {'order': cart}
         return render(request, self.template_name, context)
 
 
