@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth.models import User
 from products.models import Product, Vehicle, Categories, Manufacturer
@@ -57,6 +57,15 @@ class CartAppTest(TestCase):
         )
         product.save()
 
+        user = User.objects.get(email='test@gmail.com')
+        comp = Competition.objects.get(is_active=True)
+        order = Order(
+            user=user,
+            related_competition=comp,
+            order_date=timezone.now()
+        )
+        order.save()
+
     def test_order_item_str(self):
         """Test str return"""
         user_test = User.objects.get(username='test user')
@@ -84,7 +93,7 @@ class CartAppTest(TestCase):
         order = Order.objects.create(
             user=user,
             related_competition=comp,
-            order_date=datetime.now(),
+            order_date=timezone.now(),
             payment_id='test_id_stripe'
         )
         order.items.add(item)
@@ -157,18 +166,29 @@ class CartAppTest(TestCase):
         )
         user = User.objects.all().first()
         product = Product.objects.all().first()
-        order = OrderItem.objects.create(
+        comp = Competition.objects.all().first()
+        order = Order.objects.get(
             user=user,
-            quantity=1,
+            related_competition=comp
+        )
+        orderitem = OrderItem.objects.create(
+            user=user,
+            quantity=2,
             product=product
         )
-        order.save()
+        orderitem.save()
+        orderitem = OrderItem.objects.get(
+            user=user,
+            quantity=2,
+            product=product
+        )
+        order.items.add(orderitem)
         add_one_product = self.client.get(
-            '/cart/add_one/' + str(order.id)
+            '/cart/add_one/' + str(orderitem.id)
         )
         self.assertJSONEqual(
             str(add_one_product.content, encoding='utf8'),
-            {'qty': 2, 'total': '5.00'}
+            {'qty': 3, 'total': '7.50'}
         )
 
     def test_decrease_item_view_for_ajax_request_logged_in(self):
@@ -180,17 +200,29 @@ class CartAppTest(TestCase):
         )
         user = User.objects.all().first()
         product = Product.objects.all().first()
-        order = OrderItem.objects.create(
+        comp = Competition.objects.all().first()
+        order = Order.objects.get(
+            user=user,
+            related_competition=comp
+        )
+        orderitem = OrderItem.objects.create(
             user=user,
             quantity=2,
             product=product
         )
-        order.save()
-        add_one_product = self.client.get(
-            '/cart/remove_one/' + str(order.id)
+        orderitem.save()
+        orderitem = OrderItem.objects.get(
+            user=user,
+            quantity=2,
+            product=product
         )
+        order.items.add(orderitem)
+        remove_one_product = self.client.get(
+            '/cart/remove_one/' + str(orderitem.id)
+        )
+        # total has to be 
         self.assertJSONEqual(
-            str(add_one_product.content, encoding='utf8'),
+            str(remove_one_product.content, encoding='utf8'),
             {'qty': 1, 'total': '2.50'}
         )
 
@@ -265,19 +297,19 @@ class CartAppTest(TestCase):
 
     def test_increase_item_view_for_ajax_request_logged_out(self):
         """Test increase an orders quantity by one"""
-        product = Product.objects.all().first()
+        order = Order.objects.all().first()
         self.client.post(
             '/cart/add/',
             {
                 'qty': '2',
-                'product_id': str(product.id)
+                'product_id': str(order.id)
             }
         )
         add_one_product = self.client.get(
-            '/cart/add_one/' + str(product.id)
+            '/cart/add_one/' + str(order.id)
         )
         session = self.client.session
-        self.assertIn(str(product.id), session['cart'])
+        self.assertIn(str(order.id), session['cart'])
         self.assertJSONEqual(
             str(add_one_product.content, encoding='utf8'),
             {'qty': 3, 'total': '7.50'}
@@ -285,19 +317,19 @@ class CartAppTest(TestCase):
 
     def test_decrease_item_view_for_ajax_request_logged_out(self):
         """Test decrease an orders quantity by one"""
-        product = Product.objects.all().first()
+        order = Order.objects.all().first()
         self.client.post(
             '/cart/add/',
             {
                 'qty': '2',
-                'product_id': str(product.id)
+                'product_id': str(order.id)
             }
         )
         remove_one = self.client.get(
-            '/cart/remove_one/' +str(product.id)
+            '/cart/remove_one/' +str(order.id)
         )
         session = self.client.session
-        self.assertIn(str(product.id), session['cart'])
+        self.assertIn(str(order.id), session['cart'])
         self.assertJSONEqual(
             str(remove_one.content, encoding='utf8'),
             {'qty': 1, 'total': '2.50'}
