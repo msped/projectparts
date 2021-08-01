@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from django.views import View
+from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
@@ -24,10 +25,6 @@ class Checkout(View):
     def dispatch(self, request, *args, **kwargs):
         return super(Checkout, self).dispatch(request, *args, **kwargs)
 
-    def getComp(self):
-        comp = Competition.objects.get(is_active=True)
-        return comp
-
     def getOrder(self, user):
         try:
             order = Order.objects.get(user=user, ordered=False)
@@ -35,10 +32,15 @@ class Checkout(View):
             order = None
         return order
 
+    def getComp(self):
+        comp = Competition.objects.get(is_active=True)
+        return comp
+
     def get(self, request):
-        order = self.getOrder(request.user.id)
+        user = User.objects.get(id=request.user.id)
+        order = self.getOrder(user)
         comp = self.getComp()
-        if order is None:
+        if order is None or order.items.exists() == False:
             messages.error(
                 request,
                 "You have no tickets to checkout."
@@ -53,12 +55,17 @@ class Checkout(View):
         return render(request, self.template_name, context)
     
     def post(self, request):
-        order = self.getOrder(request.user.id)
+        user = User.objects.get(id=request.user.id)
+        order = self.getOrder(user)
         comp = self.getComp()
         user_answer = request.POST.get('user-answer')
         if order is None:
             messages.error(request,
             'You have no active order.')
+            return redirect('products')
+        elif order.items.exists() == False:
+            messages.error(request,
+            'You have no tickets to play, pick some!')
             return redirect('products')
         elif user_answer is None:
             messages.error(
