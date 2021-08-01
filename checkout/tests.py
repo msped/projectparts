@@ -1,12 +1,11 @@
-from datetime import datetime
+from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth.models import User
 from competition.models import Competition
 from cart.models import Order, OrderItem
 from products.models import Product, Categories, Manufacturer
 from .models import Entries
-from .utils import get_total, get_users_tickets, update_orders
-from .forms import PaymentForm
+from .utils import update_orders
 from .apps import CheckoutConfig
 
 # Create your tests here.
@@ -42,6 +41,7 @@ class TestCheckoutApp(TestCase):
             name="Test Manu"
         )
         Product.objects.create(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             img="media/default.jpg",
@@ -58,16 +58,6 @@ class TestCheckoutApp(TestCase):
             is_paid=False,
             quantity=5
         ).save()
-
-    def test_checkout_view_logged_in(self):
-        """Test the get request for checkout view"""
-        self.client.post(
-            '/accounts/login/',
-            self.user,
-            follow=True
-        )
-        response = self.client.get('/checkout/', follow=True)
-        self.assertIn(b'<h1>Checkout</h1>', response.content)
 
     def test_checkout_view_not_logged_in(self):
         """Test the get request for checkout view without user logged in"""
@@ -88,7 +78,7 @@ class TestCheckoutApp(TestCase):
             user=user,
             related_competition=comp,
             answer_correct=True,
-            order_date=datetime.now(),
+            order_date=timezone.now(),
             payment_id='test_payment_id'
         )
         order.items.add(orderitems)
@@ -113,7 +103,7 @@ class TestCheckoutApp(TestCase):
             user=user,
             related_competition=comp,
             answer_correct=True,
-            order_date=datetime.now(),
+            order_date=timezone.now(),
             payment_id='test_payment_id'
         )
         order.items.add(orderitems)
@@ -126,29 +116,6 @@ class TestCheckoutApp(TestCase):
         )
         self.assertEqual(entry.user.email, 'test@gmail.com')
         self.assertEqual(entry.ticket_number, 124)
-
-    def test_payment_form(self):
-        """Test payment form"""
-        form = PaymentForm({
-            'credit_card_number': '4242424242424242',
-            'cvv': '444',
-            'expiry_month': '12',
-            'expiry_year': '2020',
-            'stripe_id': 'testID'
-        })
-        self.assertTrue(form.is_valid())
-
-    def test_get_total_util(self):
-        """Test utils function get_total"""
-        orders = OrderItem.objects.all()
-        total = get_total(orders)
-        self.assertEqual(float(total), 12.50)
-
-    def test_get_users_tickets(self):
-        """Test utils function to get users ticket amount"""
-        orders = OrderItem.objects.all()
-        ticket_amount = get_users_tickets(orders)
-        self.assertEqual(ticket_amount, 5)
 
     def test_checkout_view_no_tickets(self):
         """Test redirect if user has no tickets"""
@@ -167,6 +134,17 @@ class TestCheckoutApp(TestCase):
             self.user,
             follow=True
         )
+        user = User.objects.get(username='test user')
+        comp = Competition.objects.get(is_active=True)
+        orderitems = OrderItem.objects.all().first()
+        order = Order.objects.create(
+            user=user,
+            related_competition=comp,
+            answer_correct=True,
+            order_date=timezone.now(),
+            payment_id='test_payment_id'
+        )
+        order.items.add(orderitems)
         response = self.client.post(
             '/checkout/',
             {
@@ -194,15 +172,31 @@ class TestCheckoutApp(TestCase):
             self.user,
             follow=True
         )
-        user = User.objects.all().first()
+        user = User.objects.get(username='test user')
         product = Product.objects.all().first()
         comp = Competition.objects.all().first()
-        OrderItem.objects.create(
+        order = Order.objects.create(
+            user=user,
+            related_competition=comp,
+            answer_correct=True,
+            order_date=timezone.now(),
+            payment_id='test_payment_id'
+        )
+        o_i = OrderItem.objects.create(
             user=user,
             product=product,
             is_paid=False,
-            quantity=4000
+            quantity=4001
         )
+        o_i.save()
+        orderitem = OrderItem.objects.get(
+            user=user,
+            product=product,
+            is_paid=False,
+            quantity=4001
+        )
+        order.items.add(orderitem)
+        order.save()
         response = self.client.post(
             '/checkout/',
             {
@@ -215,7 +209,7 @@ class TestCheckoutApp(TestCase):
             follow=True
         )
         self.assertIn(
-            b'The amount of tickets you have ordered, 4005, is greater\n                        than what is left in the competition, 4000.',
+            b'The amount of tickets you have ordered, 4001, is greater\n                        than what is left in the competition, 4000.',
             response.content
         )
 
@@ -236,6 +230,7 @@ class TestUtils(TestCase):
             name="Test Manu"
         )
         Product.objects.create(
+            slug="test-slug",
             name="Test Product",
             description="Description",
             img="media/default.jpg",
@@ -259,12 +254,28 @@ class TestUtils(TestCase):
             is_paid=False,
             quantity=5
         )
-        order = OrderItem.objects.filter(
+        orderItem = OrderItem.objects.get(
             user=user,
             product=product,
             is_paid=False,
             quantity=5
         )
-        update_return = update_orders(user, comp, order, True, 'test_payment')
+        tz_now=timezone.now()
+        new_order = Order.objects.create(
+            user=user,
+            related_competition=comp,
+            answer_correct=True,
+            order_date=tz_now,
+        )
+        new_order.items.add(orderItem)
+        new_order.save()
+        order = Order.objects.get(
+            user=user,
+            related_competition=comp,
+            answer_correct=True,
+            order_date=tz_now,
+        )
+        
+        update_return = update_orders(comp, order, True, 'test_payment')
 
         self.assertEqual(update_return.payment_id, 'test_payment')
