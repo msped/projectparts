@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
 
 load_dotenv()
 
@@ -44,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'django_forms_bootstrap',
     'django_simple_coupons',
     'accounts.apps.AccountsConfig',
@@ -162,9 +165,16 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
+
 if DEBUG == False:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+    
+cloudinary.config( 
+    cloud_name=os.environ.get("CLOUD_NAME"), 
+    api_key=os.environ.get("CLOUD_PUBLIC"), 
+    api_secret=os.environ.get("CLOUD_SECRET")
+)
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@projectparts.com'
