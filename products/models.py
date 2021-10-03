@@ -31,7 +31,7 @@ class Product(models.Model):
     slug = models.SlugField(blank=True, null=True)
     name = models.CharField(default='', max_length=254)
     description = models.TextField()
-    img = models.ImageField(default='default.jpg', upload_to='')
+    img = CloudinaryField('image', default='default.jpg')
     category = models.ForeignKey(Categories, on_delete=models.DO_NOTHING)
     ticket_price = models.DecimalField(max_digits=4, decimal_places=2)
     product_price = models.DecimalField(max_digits=7, decimal_places=2)
