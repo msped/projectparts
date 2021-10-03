@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cloudinary',
-    'cloudinary_storage',
     'django_forms_bootstrap',
     'django_simple_coupons',
     'accounts.apps.AccountsConfig',
