@@ -19,7 +19,7 @@
     <div class="card">
         <div class="row">
             <div class="header col-lg-3 col-md-3 col-sm-12 col-12">
-                <a href="{% url 'product_detail' c.winner.orderItem.product.id %}">
+                <a href="{% url 'product_detail' c.winner.orderItem.product.slug %}">
                     <img src="{{ c.winner.orderItem.product.img.url }}" class="card-img" alt="{{ c.winner.orderItem.product.name }}">
                 </a>
             </div>
