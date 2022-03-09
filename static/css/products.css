@@ -1,0 +1,160 @@
+.text-muted {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.card {
+    border: 1px solid #000
+}
+
+.card a {
+    text-decoration: none;
+}
+
+.search-box {
+    margin-top: 30px;
+}
+
+.search-card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    margin-bottom: 20px; 
+    border: 0 solid rgba(0,0,0,.125);
+}
+
+label {
+    font-family: 'Roboto', sans-serif;
+}
+
+h6 {
+    text-decoration: underline;
+}
+
+.search-header {
+    padding: .25rem 0;
+    background-color: #fff;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.cars, .search-options {
+    margin-bottom: 15px;
+}
+
+.search-btn {
+    margin: 15px 0;
+}
+
+.tickets {
+    margin: 3.5% 0 7% 0;
+}
+
+.card {
+    border: none;
+    margin-bottom: 2.5%;
+}
+
+.card-title {
+    font-family: 'Hammersmith', sans-serif;
+    color: #000;
+    font-size: 13pt;
+    padding-top: 5px;
+    margin: 0;
+}
+
+.image-div {
+    width: 100%;
+    height: 100%
+}
+
+.card-img {
+    border-radius: 7px;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background-position: center;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.card-body {
+    padding: .5rem .5rem 0 .5rem;
+}
+
+.card-footer {
+    background-color: #fff;
+    border-top: none;
+    padding: 0 1.25rem .5rem 1.25rem;
+}
+
+.details {
+    margin-bottom: 5%;
+}
+
+.details p {
+    font-family: 'Hammersmith', sans-serif;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+.table td {
+    border-top: none;
+}
+
+.table-sm td {
+    padding:0;
+}
+
+.quick-add {
+    padding: 0;
+}
+
+.added-to-cart p.text-center {
+    margin-bottom: 0;
+}
+
+.added-to-cart {
+    background-color: #3ac23c;
+    display: none;
+}
+
+.added-to-cart p {
+    font-family: 'Roboto', sans-serif;
+    margin: 5px;
+}
+
+.quick-add button {
+    padding: .2rem .2rem;
+}
+
+.quick-add button:hover {
+    color: #df5151;
+    background-color: #e2e6ea;
+}
+
+.fas {
+    font-size: 14pt;
+    color: #df5151;
+    text-decoration: none;
+}
+
+@media (min-width: 576px) {
+    .image-div {
+        height: 150px;
+    }
+}
+
+@media (min-width: 768px) {
+    .quick-add button {
+        padding: .3rem .3rem;
+    }
+}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/cart.css' %}">{% endblock css %}
+
+{% block title%}Cart{% endblock title %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="text-center">Cart</h1>
+    <p class="text-center text-muted">Edit your cart or go to checkout.</p>
+</div>
+
+<div class="products row">
+    {% if cart_items|length > 0 %}
+    <div class="cart-items mb-2 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+        <table class="table table-borderless">
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col"></th>
+            </tr>
+            {% for o in cart_items %}
+            <tr>
+                <td>{{ o.product.name }}</td>
+                <td>
+                    <span class="remove-one-item" id="remove-one-item">
+                        <i class="fas fa-minus-circle"></i>
+                    </span>
+                    <input type="hidden" class="order-id" value="{{ o.id }}">
+                    <p class="p-1 order-qty">{{ o.quantity }}</p>
+                    <span class="add-one-item">
+                        <i class="fas fa-plus-circle"></i>
+                    </span>
+                </td>
+                <td>£{{ o.product.ticket_price }}</td>
+                <td>
+                    <i class="far fa-trash-alt remove-item"></i>
+                    <input type="hidden" class="order-id" value="{{ o.id }}">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="total col-md-3 offset-md-9 col-4 offset-8">
+            <p>Total: £ <span id="order-total">
+                {% if user.is_authenticated %}
+                {{ order.get_total }}
+                {% else %}
+                {{ total }}
+                {% endif %}
+            </span></p>
+        </div>
+    </div>
+    <div class="coupon offset-lg-0 col-lg-4 offset-md-3 col-md-6 col-sm-12 col-12">
+        
+        {% if order.coupon != None %}
+        <p><strong>{{ order.coupon.code }}</strong> - {{ order.coupon.discount.value }}% Off</p>
+
+        <p>You saved <strong>£{{ order.show_savings }}</strong>!</p>
+
+        <a href="{% url 'remove_coupon' %}" class="btn btn-sm btn-danger">Remove Coupon</a>
+        {% else %}
+        <form action="{% url 'add_coupon' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Have a Coupon?</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" {% if not user.is_authenticated %}disabled{% endif %} id="coupon_code" name="coupon_code">
+                    <button class="btn btn-sm btn-success mx-2" {% if not user.is_authenticated %}disabled{% endif %} type="submit">Add Coupon</button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+        {% if not user.is_authenticated %}
+        <p><a href="{% url 'login' %}">log in</a> to apply a Coupon Code!</p>
+        {% endif %}
+    </div>
+    <div class="checkout mt-5 text-center col-12">
+        <a class="btn btn-outline-dark" href="{% url 'checkout' %}">Go to Checkout</a>
+    </div>
+    {% else %}
+    <div class="offset-lg-2 col-lg-8 offset-md-2 col-md-8 col-sm-12 col-12 text-center">
+        <p class="text-center no-cart-items">There are no items in your cart, add some <a href="{% url 'products' %}">tickets.</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock js %}

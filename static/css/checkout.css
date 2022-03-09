@@ -1,0 +1,28 @@
+h1, h2, h3, .competition-answer {
+    font-family: 'Hammersmith', sans-serif;
+    text-align: center;
+}
+
+.billing-shipping p, .user-details p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.order-details {
+    min-height: 300px;
+}
+
+.profile-details, .order-details, .card-details, .question {
+    margin-top: 25px;
+}
+
+.submit-button {
+    margin: 40px 0;
+}
+
+.loading {
+    display: none;
+}
+
+.loading img {
+    height: 40px;
+}

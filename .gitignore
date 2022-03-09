@@ -1,0 +1,10 @@
+env/
+assets/wireframes/projectparts.xd
+*.sqlite3
+*.pyc
+__pycache__
+.vscode
+.env
+media/
+.coverage
+htmlcov/

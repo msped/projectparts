@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/checkout.css' %}">{% endblock css %}
+
+{% block title%}Checkout{% endblock title %}
+
+{% block head_js %}
+<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+{% endblock head_js %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Checkout</h1>
+</div>
+
+<div class="row">
+    <div class="order-details p-3 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <h2>Order Details</h2>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-borderless">
+                    <tr>
+                        <th scope="col" class="order-product">Product</th>
+                        <th scope="col" class="order-qty text-center">Quantity</th>
+                        <th scope="col" class="order-price text-center">Price</th>
+                    </tr>
+                    {% for o in orders.items.all %}
+                    <tr>
+                        <td>{{ o.product }}</td>
+                        <td class="text-center">{{ o.quantity }}</td>
+                        <td class="text-center">{{ o.product.ticket_price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"></td>
+                        <td><b>Total: £{{ orders.get_total }}</b></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-6">
+                {% if orders.coupon != None %}
+                <div class="d-inline">
+                    <p><strong>{{ orders.coupon.code }}</strong> - {{ orders.coupon.discount.value }}% Off</p>
+                    <p>You saved <strong>£{{ orders.show_savings }}</strong>!</p>
+                </div>                
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="profile-details col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <h3>User Details</h3>
+        <div class="row">
+            <div class="user-details p-3 col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                <p>{{ user.first_name }} {{ user.last_name }}</p>
+                <p>{{ user.email }}</p>
+                <p>{{ user.profile.phone_number }}</p> 
+            </div>
+            <div class="billing-shipping p-3 col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                <p>{{ user.profile.address_line_1 }} <br>
+                {% if user.profile.address_line_2|length > 0 %}
+                {{ user.profile.address_line_2 }} <br>
+                {% endif %}
+                {{ user.profile.town_city }} <br>
+                {{ user.profile.county }} <br>
+                {{ user.profile.country }} <br>
+                {{ user.profile.postcode }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="POST" id="payment-form" action="{% url 'checkout' %}">
+    {% csrf_token %}
+    <h2>Card Details</h2>
+    <div class=" offset-lg-3 col-lg-6 offset-md-3 col-md-6 col-sm-12 col-xs-12">
+        <div id="card-element">
+            <!-- Elements will create input elements here -->
+        </div>
+        <br>
+        <!-- We'll put the error messages in this element -->
+        <div id="card-errors" role="alert"></div>
+    </div>
+    <div class="question offset-lg-3 col-lg-6 offset-md-3 col-md-6 col-sm-12 col-xs-12">
+        <h2>Question</h2>
+        <p class="text-center competition-question">{{ comp.question }}</p>
+        <select name="user-answer" id="user-answer" class="form-control">
+            <option selected disabled>Please select an option</option>
+            <option value="{{ comp.answer_1 }}">{{ comp.answer_1 }}</option>
+            <option value="{{ comp.answer_2 }}">{{ comp.answer_2 }}</option>
+            <option value="{{ comp.answer_3 }}">{{ comp.answer_3 }}</option>
+        </select>
+    </div>
+
+    <div class="submit-button text-center">
+        <p class="text-muted">By clicking the below you agree to our Terms & Conditions.</p>
+        <div class="loading"><img src="{% static 'images/loading.gif' %}" alt="Loading.."></div>
+        <button type="submit" class="btn btn-outline-primary submit">Finish and Pay</button>
+    </div>
+</form>
+
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
+{% endblock js %}

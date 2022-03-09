@@ -1,0 +1,99 @@
+h1 {
+    font-family: 'Hammersmith', sans-serif;
+    text-align: center;
+}
+
+h2, .text-muted {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+
+img {
+    border-radius: 7px;
+    margin: 50px 0;
+}
+
+.product-name {
+    height: 175px;
+}
+
+.product-info {
+    padding-top: 40px;
+}
+
+.ticket-price p, .product-price p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.select-tickets {
+    margin: 25px 0 30px 0;
+}
+
+.ticket-price p {
+    text-align: center;
+    font-size: 14pt;
+}
+
+.input-group>.form-control {
+    width: 25%;
+}
+
+.add-to-cart-btn  {
+    margin: 0 15px;
+}
+
+.description p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.description h2 {
+    text-decoration: underline;
+}
+
+.product-fits, .fitment-vehicles span {
+    font-family: 'Hammersmith', sans-serif;
+    font-size: 12pt;
+}
+
+.added-to-cart p.text-center {
+    margin-bottom: 0;
+}
+
+.added-to-cart {
+    background-color: #3ac23c;
+    display: none;
+}
+
+.added-to-cart p {
+    font-family: 'Roboto', sans-serif;
+    margin: 5px;
+}
+
+.fitment-card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    margin-bottom: 20px; 
+    border: 0 solid rgba(0,0,0,.125);
+}
+
+.fitment-header {
+    padding: .25rem 0;
+    background-color: #fff;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.card a {
+    text-decoration: none;
+}
+
+@media (min-width: 768px) {
+    .input-group>.form-control {
+        width: 35%; 
+    }
+}

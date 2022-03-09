@@ -1,0 +1,126 @@
+{% load custom_tags %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Thank you for your order {{ user }} | Project Parts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css?family=Paytone+One&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0; padding: 0;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%"> 
+        <tr>
+            <td style="padding: 10px 0 30px 0;">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #cccccc; border-collapse: collapse;">
+                    <tr>
+                        <td align="center" bgcolor="#ffffff" style="padding: 40px 0 0 0;">
+                            <p style="font-family: 'Paytone One', sans-serif; color: #000; font-size: 45pt; letter-spacing: -5px;">PROJECT PARTS</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td style="color: #000000; font-family: Arial, sans-serif; font-size: 24px;">
+                                        <b>Hello {{ user }}, Thank you for your order, good luck!</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 20px 0 30px 0; color: #000000; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
+                                        The winner will be announced via e-mail when the current competition has ended. You will recieve an e-mail informing you if you have won!
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr>
+                                                <td width="100%" valign="top">
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tr>
+                                                            <th style="font-family: Arial, Helvetica, sans-serif; width: 60%;">Product</th>
+                                                            <th style="font-family: Arial, Helvetica, sans-serif; width: 20%;">Quantity</th>
+                                                            <th style="font-family: Arial, Helvetica, sans-serif; width: 20%;">Price</th>
+                                                        </tr>
+                                                        {% for item in order.items.all %}
+                                                        <tr>
+                                                            <td style="font-family: Arial, Helvetica, sans-serif; text-align: center; margin-top: 10px;">
+                                                                {{ item.product.name }}
+                                                            </td>
+                                                            <td style="font-family: Arial, Helvetica, sans-serif; text-align: center;">
+                                                                {{ item.quantity }}
+                                                            </td>
+                                                            <td style="font-family: Arial, Helvetica, sans-serif; text-align: center;">
+                                                                £{{ item.product.ticket_price }}
+                                                            </td>
+                                                        </tr>
+                                                        {% if user_correct %}
+                                                        <tr>
+                                                            <td colspan="3" style="text-align: center;">
+                                                                <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10pt;">
+                                                                    Entries: {{ users_entries|get_item:item.id }}
+                                                                </p>
+                                                               </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        <tr>
+                                                            <td colspan="3" style="height: 10px;">
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            {% if order.coupon != None %}
+                                            <tr>
+                                                <td style="font-family: Arial, Helvetica, sans-serif;">You saved £{{ order.show_savings }} with coupon {{ order.coupon }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="25%">
+                            <table>
+                                <tr>
+                                    <td style="padding: 0 25px 25px 0; font-family: Arial, Helvetica, sans-serif;">
+                                        Total: £{{ order.get_total }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#ee4c50" style="padding: 30px 30px 30px 30px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <tr>
+                                    <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;" width="75%">
+                                        Project Parts, 2019
+                                    </td>
+                                    <td align="right" width="25%">
+                                        <table border="0" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">
+                                                    <a href="http://www.twitter.com/" style="color: #ffffff;">
+                                                        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/tw.gif" alt="Twitter" width="38" height="38" style="display: block;" border="0" />
+                                                    </a>
+                                                </td>
+                                                <td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
+                                                <td style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">
+                                                    <a href="http://www.facebook.com/" style="color: #ffffff;">
+                                                        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/fb.gif" alt="Facebook" width="38" height="38" style="display: block;" border="0" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

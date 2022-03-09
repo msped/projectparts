@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/products.css' %}">{% endblock css %}
+
+{% block title%}Select Tickets{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Tickets</h1>
+<p class="text-muted text-center">Pick the tickets you wish to play.</p>
+
+<!--Search-->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-box">
+    <form action="" method="GET">
+        <div class="row">
+            <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <label for="#make">Make</label>
+                <select class="form-control" name="make" id="make">
+                    <option value="" disabled {% if request.GET.make|length == 0 %} selected {% endif %}>Select an
+                        Option</option>
+                    {% for m in makes %}
+                    <option value="{{ m }}" {% ifequal request.GET.make m %} selected {% endifequal %}>{{ m }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <label for="#model">Model</label>
+                <select class="form-control" name="model" id="model">
+                    <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an
+                        Option</option>
+                    {% if request.GET.model|length > 0 %}
+                    <option value="{{ request.GET.model }}" selected> {{ request.GET.model}}</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="cars col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <label for="#generation">Generation</label>
+                <select class="form-control" name="generation" id="generation">
+                    <option value="" {% if request.GET.make|length == 0 %} selected {% endif %} disabled> Select an
+                        Option</option>
+                    {% if request.GET.model|length > 0 %}
+                    <option value="{{ request.GET.generation }}" selected> {{ request.GET.generation }}</option>
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="card search-card">
+            <div class="card-header search-header" id="headingTwo">
+                <h6 class="collapsed mb-0" data-toggle="collapse" data-target="#advanced-search" aria-expanded="false"
+                    aria-controls="advanced-search">
+                    More Options
+                </h6>
+            </div>
+            <div id="advanced-search" class="collapse" aria-labelledby="headingTwo" data-parent="#advanced-search">
+                <div class="card-body">
+                    <div class="row search-options">
+                        <div class="categories col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#categories">Categories</label>
+                            <select class="form-control" name="categories" id="categories">
+                                <option value="" disabled {% if request.GET.categories|length == 0 %} selected {% endif %}>Select an Option</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}"
+                                    {% ifequal request.GET.categories cat.id|stringformat:'i' %} selected
+                                    {% endifequal %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="manufacturer col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#manufacturer">Manufacturer</label>
+                            <select class="form-control" name="manufacturer" id="manufacturer">
+                                <option value="" disabled {% if request.GET.manufacturer|length == 0 %} selected {% endif %}>Select an Option</option>
+                                {% for man in manufacturer %}
+                                <option value="{{ man.id }}"
+                                    {% ifequal request.GET.manufacturer man.id|stringformat:'i' %} selected
+                                    {% endifequal %}>{{ man }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="sort-by col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <label for="#sort">Sort Options</label>
+                            <select class="form-control" name="sort" id="sort">
+                                <option value="name" {% ifequal request.GET.sort 'name' %} selected {% endifequal %}>A-Z
+                                </option>
+                                <option value="-name" {% ifequal request.GET.sort '-name' %} selected {% endifequal %}>
+                                    Z-A</option>
+                                <option value="ticket_price" {% ifequal request.GET.sort 'ticket_price' %} selected
+                                    {% endifequal %}>Low to High</option>
+                                <option value="-ticket_price" {% ifequal request.GET.sort '-ticket_price' %} selected
+                                    {% endifequal %}>High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="search-btn col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="text-center">
+                <a class="btn btn-outline-danger" href="{% url 'products' %}">Reset</a>
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row tickets">
+    {% for product in products %}
+    <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+        <div class="card">
+            <a href="{% url 'product_detail' product.slug %}">
+                <div class="image-div">
+                    <img src="{{ product.img.url }}" class="card-img" alt="{{ product.name }}">
+                </div>
+                <div class="card-title">{{ product.name }}</div>
+                <div class="card-body">
+                    <div class="details">
+                        <p>Ticket Price: £{{ product.ticket_price }}</p>
+                    </div>
+                </div>
+            </a>
+            <div class="row card-footer">
+                <div class="added-to-cart col-12">
+                    <p class="text-center">Added to Cart</p>
+                </div>
+                <div class="table-responsive add-options">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <form method="post" class="offset-lg-1 offset-md-1 offset-sm-1 col-lg-2 col-md-2 col-sm-2 col-2 quick-add add-qty-to-cart"
+                                        action="">
+                                        <input name="quantity" class="quantity" type="hidden" value="1">
+                                        <input name="product_id" class="product_id" type="hidden" value="{{ product.id }}">
+                                        <button class="btn btn-sm btn-light" type="submit">1</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add add-qty-to-cart"
+                                        action="">
+                                        <input name="quantity" type="hidden" class="quantity" value="5">
+                                        <input name="product_id" type="hidden" class="product_id" value="{{ product.id }}">
+                                        <button class="btn btn-sm btn-light" type="submit">5</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add add-qty-to-cart"
+                                        action="">
+                                        <input name="quantity" type="hidden" class="quantity" value="10">
+                                        <input name="product_id" type="hidden" class="product_id" value="{{ product.id }}">
+                                        <button class="btn btn-sm btn-light" type="submit">10</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" class="col-lg-2 col-md-2 col-sm-2 col-2 quick-add add-qty-to-cart"
+                                        action="">
+                                        <input name="quantity" type="hidden" class="quantity" value="20">
+                                        <input name="product_id" type="hidden" class="product_id" value="{{ product.id }}">
+                                        <button class="btn btn-sm btn-light" type="submit">20</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!--Solution for keep search results provdied by u/hale-hortler https://www.reddit.com/r/django/comments/e6dnl6/paginated_search_results_reset_when_going_to_next/ -->
+<div class="text-center">
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page=1{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-double-left"></i></a>
+            <a href="?page={{ products.previous_page_number }}{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-left"></i></a>
+        {% endif %}
+
+        <span class="current">
+            {{ products.number }} of {{ products.paginator.num_pages }}
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-right"></i></a>
+            <a href="?page={{ products.paginator.num_pages }}{% if request.GET|length > 0 %}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"><i class="fas fa-angle-double-right"></i></a>
+        {% endif %}
+    </span>
+</div>
+
+<div class="text-center">
+    <p class="text-muted">Pick your car to see more tailored results.</p>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    window.CSRF_TOKEN = "{{ csrf_token }}"
+</script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{% static 'js/products.js' %}"></script>
+<script src="{% static 'js/add_to_cart.js' %}"></script>
+{% endblock js %}

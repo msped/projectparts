@@ -1,0 +1,39 @@
+h1 {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.page-header p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.products {
+    margin-top: 5%;
+}
+
+.remove-one-item, .order-qty, .add-one-item {
+    display: inline-block
+}
+
+.add-one-item, .remove-one-item, .remove-item {
+    cursor: pointer;
+}
+
+tr td a {
+    text-decoration: none;
+}
+
+tr td a i {
+    color: #4F4F4F;
+}
+
+.no-cart-items {
+    font-family: 'Roboto', sans-serif;
+}
+
+.total p {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+td {
+    font-size: 11pt;
+}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/home.css' %}">{% endblock css %}
+
+{% block title%}Home{% endblock title %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container jumbo-class">
+        <h1 class="display-4">Welcome to Project Parts</h1>
+        <p class="lead">Win. Build. Hoon. <small>(responsibly)</small></p>
+        <a href="{% url 'products' %}" class="btn btn-outline-primary">Select your tickets</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h2>Enter in three easy steps!</h2>
+        <span class="sectionnew"></span>
+        <div class="row  easy-enter">
+            <div class="col-4">
+                <p>Pick your tickets</p>
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="col-4">
+                <p>Answer the question</p>
+                <i class="far fa-question-circle"></i>
+            </div>
+            <div class="col-4">
+                <p>Wait for an email!</p>
+                <i class="far fa-clock"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ticket-site-info">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 tickets-left-div">
+        <h3>Tickets Left</h3>
+        <p class="text-muted">
+            Amount of tickets left in the current competition
+        </p>
+        <span class="tickets-left" id="tickets-left">{{ tickets_left }}</span>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <p
+            >We've seen the prices of those parts you want, it's an expensive 
+            hobby ain't it?
+        </p>
+        <p>
+            That's why we exist, we give you the option to get those expensive
+            parts at the fraction of the cost. No bodge jobs here, all parts are
+            order from certified suppliers or the manufactures themselves and sent 
+            straight to your door. 
+        </p>
+        <p> 
+            Whether you're looking for a coilover kit or 
+            going to be going all out and riding on a cushion of air we have you 
+            covered, all you have to do is play!
+        </p>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{% static 'js/home.js' %}"></script> 
+{% endblock js %}

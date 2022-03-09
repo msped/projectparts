@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/register.css' %}">{% endblock css %}
+
+{% block title%}Register{% endblock title %}
+
+{% block content %}
+<div class="page-header text-center">
+    <h1>Register</h1>
+    <p class="text-muted">We will never share your details with anyone else.</p>
+</div>
+
+<div class="register-form col-lg-5 col-md-5 col-sm-12 col-xs-12">
+    <form method="POST">
+        {% csrf_token %}
+        {{ register_form | as_bootstrap }}
+        <div class="form-group register-btn text-center">
+            <button type="submit" class="btn btn-light btn-outline-dark submit">Register</button>
+            <div class="loading"><img src="{% static 'images/loading.gif' %}" alt="Loading.."></div>
+        </div>
+    </form>
+
+    <p class="login-link text-center">Already have an account? Login <a href="{% url 'login' %}">here.</a></p>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/login-register.js' %}"></script>
+{% endblock js %}

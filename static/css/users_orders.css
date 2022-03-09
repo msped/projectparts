@@ -1,0 +1,57 @@
+.page-header {
+    margin: 2.5% 0 5% 0
+}
+
+.page-header h1, .page-header p, h2 {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+th, .td {
+    font-size: 10pt;
+}
+
+.table th, .table td {
+    border: none;
+}
+
+td.entries-row {
+    border: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 8.5pt;
+}
+
+.current {
+    font-family: 'Roboto', sans-serif;
+}
+
+.fas {
+    font-size: 14pt;
+    color: #df5151;
+    text-decoration: none;
+}
+
+.fas:hover {
+    color: rgba(0, 0, 0, 1);
+}
+
+.card {
+    margin: .5rem 0
+}
+
+.card-body {
+    padding: 0 1.25rem 1.25rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .order-table {
+        padding: 15px;
+    }
+
+    th, td {
+        font-size: 12pt;
+    }
+
+    td.entries-row {
+        font-size: 10.5pt;
+    }
+}

@@ -1,0 +1,32 @@
+.page-header h1, .page-header p, button {
+    font-family: 'Hammersmith', sans-serif;
+}
+
+.contact-form, .contact-form-success {
+    margin-top: 40px;
+}
+
+.contact-form-success {
+    display: none;
+}
+
+.contact-form-success div i {
+    margin: 35px 0;
+}
+
+.contact-form-success p {
+    font-family: 'Roboto', sans-serif;
+}
+
+.fa-check-circle {
+    font-size: 75pt;
+    color: green;
+}
+
+.btn-outline-light {
+    color: #000;
+}
+
+textarea {
+    resize: none;
+}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load bootstrap_tags %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/product_extra.css' %}">{% endblock css %}
+
+{% block title%}{{ product.name }}{% endblock title %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-12">
+        <a class="btn btn-outline-primary" href="{{ request.META.HTTP_REFERER }}"><i class="fas fa-chevron-left"></i> Go back</a>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <img src="{{ product.img.url }}" class="img-fluid" alt="{{ product.name }}">
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12 product-info">
+        <div class="product-name">
+            <h1>{{ product.name }}</h1>
+        </div>
+        <div class="select-tickets">
+            <div class="ticket-price">
+                <p>Ticket Price: £{{ product.ticket_price }}</p>
+            </div>
+            <div class="add">
+                <div class="added-to-cart col-12">
+                    <p class="text-center">Added to Cart</p>
+                </div>
+                <div class="add-options">
+                    <form method="post" class="text-center add-qty-to-cart">
+                        {% csrf_token %}
+                        <div class="input-group offset-2 col-8">
+                            <input type="hidden" name="product_id" class="product_id" value="{{ product.id }}">
+                            <input name="quantity" class="form-control quantity" type="number" value="0" min="1" max="99">
+                            <button class="btn btn-sm btn-primary add-to-cart-btn" type="submit">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="description">
+    <h2>Description</h2>
+    <p>{{ product.description|linebreaks }}</p>
+    <br>
+    <p class="text-muted">Product Price: £{{ product.product_price }}</p>
+</div>
+
+<div class="product-fits">
+    <p>Manufacturer: {{ product.part_manufacturer }}</p>
+        <div class="accordion" id="accordionExample">
+            <div class="card fitment-card">
+                <div class="card-header fitment-header" id="headingOne">
+                    <h6 class="collapsed mb-0" data-toggle="collapse" data-target="#fitments" aria-expanded="false"
+                    aria-controls="advanced-search">
+                        Fits*
+                    </h6>
+                </div>
+        
+                <div id="fitments" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body fitment-vehicles">
+                        {% for car in fits %}
+                        <span>{{ car }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    <p class="text-muted">
+        *Please be aware we try to keep up to date with which products fit which 
+        vehicles however we aren't always 100% accurate. For more information 
+        please check the the manufacturer or the supplier 
+        <a href="{{ product.product_link }}" target="_blank">here.</a>
+    </p>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    window.CSRF_TOKEN = "{{ csrf_token }}"
+</script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{% static 'js/add_to_cart.js' %}"></script>
+{% endblock js %}
