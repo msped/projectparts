@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
+from competition.models import Competition
 from .forms import ContactForm
 from .apps import ContactConfig
 
@@ -6,6 +8,17 @@ from .apps import ContactConfig
 
 class TestContactPage(TestCase):
     """view tests"""
+    def setUp(self):
+        self.user = {
+            'first_name': 'John',
+            'last_name': 'Smith',
+            'username': 'test user',
+            'email': 'test@gmail.com',
+            'password': 'testpassword'
+        }
+        User.objects.create_user(**self.user)
+        Competition(is_active=True).save()
+
     def test_contact_page_response(self):
         """Test response of contact page"""
         response = self.client.get('/contact/')
@@ -39,6 +52,19 @@ class TestContactPage(TestCase):
                 'sent': False,
                 'error': 'Invalid Form'
             }
+        )
+
+    def test_email_populating_when_logged_in(self):
+        """Test that the email field is prepopulating with
+        logged in users email"""
+        self.client.post(
+            '/accounts/login/',
+            self.user
+        )
+        response = self.client.get('/contact/')
+        self.assertIn(
+            b'<input type="email" name="email" value="test@gmail.com"',
+            response.content
         )
 
 class TestContactForm(TestCase):
