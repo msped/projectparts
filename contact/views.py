@@ -20,21 +20,21 @@ class Contact(View):
         }
         return render(request, self.template_name, content)
 
-    def post(self, request):
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            message += f' \n from: {email}'
-            send_mail(subject, message, email, [EMAIL_HOST_USER])
+    # def post(self, request):
+    #     form = ContactForm(request.POST)
+    #     if form.is_valid():
+    #         email = form.cleaned_data['email']
+    #         subject = form.cleaned_data['subject']
+    #         message = form.cleaned_data['message']
+    #         message += f' \n from: {email}'
+    #         send_mail(subject, message, email, [EMAIL_HOST_USER])
 
-            data = {
-                'sent': True
-            }
-        else:
-            data = {
-                'sent': False,
-                'error': "Invalid Form"
-            }
-        return JsonResponse(data)
+    #         data = {
+    #             'sent': True
+    #         }
+    #     else:
+    #         data = {
+    #             'sent': False,
+    #             'error': "Invalid Form"
+    #         }
+    #     return JsonResponse(data)
