@@ -13,11 +13,14 @@
     <p class="text-muted text-center">Have any questions or products you want us to add? Send us an email below!</p>
 </div>
 <div class="contact-form offset-lg-3 col-lg-6 offset-md-3 col-md-6 col-sm-12 col-12">
+    <div class="alert alert-warning" role="alert">
+        This contact form is disabled, damn bots.
+    </div>
     <form action="{% url 'contact' %}" method="POST" id="contact-form">
         {% csrf_token %}
         {{ form|as_bootstrap }}
         <div class="text-center">
-            <button type="submit" class="btn btn-outline-light">Send</button>
+            <button type="submit" class="btn btn-outline-dark disabled" aria-disabled="true">Send</button>
         </div>
         <p id="form-errors"></p>
     </form>

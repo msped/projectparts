@@ -24,35 +24,35 @@ class TestContactPage(TestCase):
         response = self.client.get('/contact/')
         self.assertEqual(response.status_code, 200)
 
-    def test_contact_post(self):
-        """Test post for contact page"""
-        response = self.client.post(
-            '/contact/',
-            data={
-                'email': "test@google.com",
-                'subject': "Test Subject",
-                'message': "Here is a test message"
-            }
-        )
-        self.assertEqual(response.status_code, 200)
+    # def test_contact_post(self):
+    #     """Test post for contact page"""
+    #     response = self.client.post(
+    #         '/contact/',
+    #         data={
+    #             'email': "test@google.com",
+    #             'subject': "Test Subject",
+    #             'message': "Here is a test message"
+    #         }
+    #     )
+    #     self.assertEqual(response.status_code, 200)
 
-    def test_invalid_form_in_post(self):
-        """Test invalid for data and return variables"""
-        response = self.client.post(
-            '/contact/',
-            {
-                'email': "",
-                'subject': "Test Subject",
-                'message': "Here is a test message"
-            }
-        )
-        self.assertJSONEqual(
-            str(response.content, encoding='utf8'),
-            {
-                'sent': False,
-                'error': 'Invalid Form'
-            }
-        )
+    # def test_invalid_form_in_post(self):
+    #     """Test invalid for data and return variables"""
+    #     response = self.client.post(
+    #         '/contact/',
+    #         {
+    #             'email': "",
+    #             'subject': "Test Subject",
+    #             'message': "Here is a test message"
+    #         }
+    #     )
+    #     self.assertJSONEqual(
+    #         str(response.content, encoding='utf8'),
+    #         {
+    #             'sent': False,
+    #             'error': 'Invalid Form'
+    #         }
+    #     )
 
     def test_email_populating_when_logged_in(self):
         """Test that the email field is prepopulating with
